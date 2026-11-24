@@ -1,88 +1,75 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Заказ-наряд Аршаку</title>
-<style>
-  * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-  body { margin: 0; background: #f3f5f8; color: #1f2937; padding: 14px; display: flex; justify-content: center; }
-  .wrap { width: 100%; max-width: 460px; }
-  h1 { font-size: 20px; text-align: center; margin: 0 0 4px; }
-  .ver { text-align: center; font-size: 11px; color: #9ca3af; margin-bottom: 12px; }
-  .card { background: #fff; border-radius: 16px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 12px; }
-  .lbl { font-size: 12px; font-weight: 700; text-transform: uppercase; color: #6b7280; margin-bottom: 8px; display: block; }
-  .center { text-align: center; }
-  .mic { width: 115px; height: 115px; border-radius: 50%; border: none; background: #1a73e8; color: #fff; font-size: 48px; cursor: pointer; box-shadow: 0 6px 20px rgba(26,115,232,0.4); -webkit-tap-highlight-color: transparent; }
-  .mic.rec { background: #d93025; animation: pulse 1.2s infinite; }
-  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(217,48,37,0.6); } 70% { box-shadow: 0 0 0 22px rgba(217,48,37,0); } 100% { box-shadow: 0 0 0 0 rgba(217,48,37,0); } }
-  .st { margin-top: 12px; font-weight: 700; font-size: 15px; }
-  .err { margin-top: 8px; padding: 10px; background: #fef2f2; color: #b91c1c; border-radius: 10px; font-size: 13px; display: none; }
-  audio { width: 100%; height: 40px; margin-top: 12px; display: none; }
-  input { width: 100%; border: 1px solid #cbd5e1; border-radius: 10px; padding: 10px; font-size: 15px; margin-bottom: 8px; background: #f8fafc; }
-  .row { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
-  .btn { padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; background: #f8fafc; font-size: 13px; font-weight: 600; cursor: pointer; flex: 1; }
-  .btn.blue { background: #1a73e8; color: #fff; border-color: #1a73e8; }
-  .btn.green { background: #188038; color: #fff; border-color: #188038; }
-  .btn.dark { background: #374151; color: #fff; border-color: #374151; }
-  .hide { display: none; margin-top: 10px; }
-  .send { width: 100%; padding: 16px; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; background: #188038; color: #fff; cursor: pointer; margin-bottom: 8px; }
-  .clr { display: block; text-align: center; font-size: 13px; color: #6b7280; cursor: pointer; text-decoration: underline; margin-top: 6px; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Быстрый заказ Аршаку</title>
+  <style>
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { margin: 0; background: #f3f5f8; color: #1f2937; padding: 14px; display: flex; justify-content: center; }
+    .wrap { width: 100%; max-width: 460px; }
+    h1 { font-size: 20px; text-align: center; margin: 0 0 4px; }
+    .ver { text-align: center; font-size: 11px; color: #9ca3af; margin-bottom: 12px; }
+    .card { background: #fff; border-radius: 16px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 12px; }
+    .lbl { font-size: 12px; font-weight: 700; text-transform: uppercase; color: #6b7280; margin-bottom: 8px; display: block; }
+    .center { text-align: center; }
+    .mic { width: 115px; height: 115px; border-radius: 50%; border: none; background: #1a73e8; color: #fff; font-size: 48px; cursor: pointer; box-shadow: 0 6px 20px rgba(26,115,232,0.4); -webkit-tap-highlight-color: transparent; }
+    .mic.rec { background: #d93025; animation: pulse 1.2s infinite; }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(217,48,37,0.6); } 70% { box-shadow: 0 0 0 22px rgba(217,48,37,0); } 100% { box-shadow: 0 0 0 0 rgba(217,48,37,0); } }
+    .st { margin-top: 12px; font-weight: 700; font-size: 15px; }
+    .live { margin-top: 8px; padding: 10px; background: #f8fafc; border-radius: 10px; font-size: 14px; border: 1px dashed #cbd5e1; text-align: left; min-height: 44px; }
+    .err { margin-top: 8px; padding: 10px; background: #fef2f2; color: #b91c1c; border-radius: 10px; font-size: 13px; display: none; }
+    audio { width: 100%; height: 40px; margin-top: 12px; display: none; }
+    input { width: 100%; border: 1px solid #cbd5e1; border-radius: 10px; padding: 10px; font-size: 15px; margin-bottom: 8px; background: #f8fafc; }
+    .row { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 8px; }
+    .btn { padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; background: #f8fafc; font-size: 13px; font-weight: 600; cursor: pointer; flex: 1; }
+    .btn.active { background: #1a73e8; color: #fff; border-color: #1a73e8; }
+    .send { width: 100%; padding: 14px; border-radius: 12px; border: none; background: #16a34a; color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 4px; }
+  </style>
 </head>
 <body>
 <div class="wrap">
   <h1>🦷 Быстрый заказ Аршаку</h1>
-  <div class="ver">Версия 3.0 • Голосовой наряд</div>
+  <div class="ver">Версия 3.1 • Голосовой наряд</div>
 
   <div class="card center">
     <span class="lbl">1. Голосовой диктофон</span>
     <button id="micBtn" type="button" class="mic">🎙</button>
     <div id="st" class="st">Нажмите на микрофон и продиктуйте заказ</div>
+    <div id="live" class="live">Назовите: ID пациента, тип конструкции, материал и цвет...</div>
     <div id="errBox" class="err"></div>
     <audio id="player" controls playsinline></audio>
   </div>
 
   <div class="card">
-    <span class="lbl">2. Параметры (если не сказали в голос)</span>
+    <span class="lbl">2. Параметры заказа</span>
     <input id="pId" type="text" placeholder="ID пациента..." />
     <input id="pType" type="text" placeholder="Тип конструкции (коронка, винир)..." />
     <input id="pMat" type="text" placeholder="Материал (циркон, E.max)..." />
-    <input id="pCol" type="text" placeholder="Цвет (А2)..." style="margin-bottom:0" />
-  </div>
-
-  <div class="card center">
-    <span class="lbl">3. Фотопротокол</span>
-    <div id="phTxt" style="font-weight:600; margin-bottom:8px;">📷 Фотопротокол?</div>
-    <div class="row">
-      <label class="btn blue">📁 Выбрать фото<input id="files" type="file" accept="image/*" multiple style="display:none" /></label>
-      <button id="noPh" type="button" class="btn">Без фото</button>
+    <input id="pCol" type="text" placeholder="Цвет (A2, B1, BL2)..." />
+    
+    <span class="lbl" style="margin-top:8px;">Курьер</span>
+    <div class="row" id="courRow">
+      <button type="button" class="btn" data-val="Нужен курьер">Нужен курьер</button>
+      <button type="button" class="btn" data-val="Сами привезём">Сами привезём</button>
     </div>
-  </div>
 
-  <div class="card">
-    <span class="lbl">4. Вызов курьера</span>
-    <div class="row">
-      <button id="cYes" type="button" class="btn">🚚 Да, вызвать</button>
-      <button id="cNo" type="button" class="btn">💻 Нет, цифра</button>
-    </div>
-    <div id="cMore" class="hide">
-      <input id="cAddr" type="text" placeholder="Адрес клиники..." />
-      <div class="row" style="margin-bottom:8px;">
-        <button type="button" class="btn tchip" data-t="До 13:00">🌅 До 13:00</button>
-        <button type="button" class="btn tchip" data-t="После 13:00">🌇 После 13:00</button>
-        <button type="button" class="btn tchip" data-t="Срочно">⚡ Срочно</button>
-      </div>
-      <input id="cTime" type="text" placeholder="Или укажите удобное время..." style="margin-bottom:0" />
-    </div>
+    <button id="sendBtn" type="button" class="send">Перенести в Яндекс Форму ➔</button>
   </div>
-
-  <button id="sendBtn" type="button" class="send">🚀 Отправить Аршаку в лабораторию</button>
-  <span id="clrBtn" class="clr">Очистить форму</span>
 </div>
 
 <script>
-  let rec = false, mr = null, chunks = [], blob = null, ext = "webm", tInt = null, sec = 0, courier = null;
+  // === НАСТРОЙКИ (ВСТАВЬТЕ СВОИ ДАННЫЕ) ===
+  const CFG = {
+    formUrl: "https://yandex.ru", // Вставьте ссылку на форму
+    fId:     "answer_short_text_XXXXXXXXXXXXXXXX",     // Замените на реальный name поля ID
+    fType:   "answer_short_text_XXXXXXXXXXXXXXXX",     // Замените на реальный name поля Тип
+    fMat:    "answer_short_text_XXXXXXXXXXXXXXXX",     // Замените на реальный name поля Материал
+    fColor:  "answer_short_text_9008994757485004",
+    fCour:   "answer_short_text_9008994757499984"
+  };
+
+  let rec = false, mr = null, chunks = [], sr = null, spoken = "", tInt = null, sec = 0, courier = "";
   const $ = id => document.getElementById(id);
 
   function showErr(msg) {
@@ -90,6 +77,16 @@
     $('errBox').style.display = 'block';
   }
 
+  // Выбор курьера
+  document.querySelectorAll('#courRow .btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('#courRow .btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      courier = this.dataset.val;
+    });
+  });
+
+  // Запись голоса и распознавание речи
   $('micBtn').addEventListener('click', async function() {
     $('errBox').style.display = 'none';
 
@@ -98,8 +95,9 @@
       clearInterval(tInt);
       $('micBtn').classList.remove('rec');
       $('micBtn').textContent = "🎙";
-      $('st').textContent = "✅ Голосовое записано! Можно прослушать ниже";
+      $('st').textContent = "✅ Готово! Нажмите 🎙 чтобы додиктовать";
       if (mr && mr.state !== "inactive") mr.stop();
+      if (sr) { try { sr.stop(); } catch(e) {} }
       return;
     }
 
@@ -107,7 +105,7 @@
 
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       $('st').textContent = "Нажмите на микрофон";
-      showErr("Браузер блокирует микрофон. Если вы открыли ссылку внутри Telegram/WhatsApp — нажмите «Открыть в Safari / Chrome».");
+      showErr("Браузер блокирует микрофон. Откройте ссылку в Safari или Chrome (не внутри Telegram/WhatsApp).");
       return;
     }
 
@@ -115,19 +113,14 @@
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       chunks = [];
       mr = new MediaRecorder(stream);
-
-      mr.ondataavailable = function(e) {
-        if (e.data && e.data.size > 0) chunks.push(e.data);
-      };
-
-      mr.onstop = function() {
+      mr.ondataavailable = e => { if (e.data && e.data.size > 0) chunks.push(e.data); };
+      mr.onstop = () => {
         const mime = mr.mimeType || 'audio/mp4';
-        ext = mime.includes('webm') ? 'webm' : 'm4a';
-        blob = new Blob(chunks, { type: mime });
+        const blob = new Blob(chunks, { type: mime });
         const pl = $('player');
         pl.src = URL.createObjectURL(blob);
         pl.style.display = 'block';
-        stream.getTracks().forEach(function(t) { t.stop(); });
+        stream.getTracks().forEach(t => t.stop());
       };
 
       mr.start();
@@ -135,56 +128,71 @@
       sec = 0;
       $('micBtn').classList.add('rec');
       $('micBtn').textContent = "⏹";
-      $('st').textContent = "🔴 Идёт запись: 0 сек (нажмите ⏹ чтобы остановить)";
-      tInt = setInterval(function() {
+      $('st').textContent = "🔴 Слушаю... 0 сек";
+
+      tInt = setInterval(() => {
         sec++;
-        $('st').textContent = "🔴 Идёт запись: " + sec + " сек (нажмите ⏹ чтобы остановить)";
+        $('st').textContent = "🔴 Слушаю... " + sec + " сек";
       }, 1000);
+
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SR) {
+        sr = new SR();
+        sr.lang = 'ru-RU';
+        sr.continuous = true;
+        sr.interimResults = true;
+        sr.onresult = e => {
+          let tmp = "";
+          for (let i = e.resultIndex; i < e.results.length; i++) {
+            if (e.results[i].isFinal) {
+              spoken += " " + e.results[i].transcript;
+              parse(spoken);
+            } else {
+              tmp += e.results[i].transcript;
+            }
+          }
+          $('live').textContent = (spoken + " " + tmp).trim();
+        };
+        try { sr.start(); } catch(e) {}
+      }
     } catch (err) {
       $('st').textContent = "Нажмите на микрофон";
-      showErr("Не удалось включить микрофон (" + err.name + "). Разрешите доступ к микрофону в настройках браузера.");
+      showErr("Нет доступа к микрофону (" + err.name + "). Разрешите доступ в настройках браузера.");
     }
   });
 
-  $('files').addEventListener('change', function() {
-    $('noPh').classList.remove('dark');
-    $('phTxt').textContent = "✅ Выбрано фото: " + this.files.length + " шт.";
-  });
-  $('noPh').addEventListener('click', function() {
-    $('files').value = "";
-    this.classList.add('dark');
-    $('phTxt').textContent = "✅ Без фото";
-  });
-  $('cYes').addEventListener('click', function() {
-    courier = true; this.className = 'btn blue'; $('cNo').className = 'btn'; $('cMore').style.display = 'block';
-  });
-  $('cNo').addEventListener('click', function() {
-    courier = false; this.className = 'btn green'; $('cYes').className = 'btn'; $('cMore').style.display = 'none';
-  });
-  document.querySelectorAll('.tchip').forEach(function(b) {
-    b.addEventListener('click', function() { $('cTime').value = this.dataset.t; });
-  });
+  // Авторазбор текста по полям
+  function parse(txt) {
+    const t = txt.toLowerCase();
+    const idM = txt.match(/(?:айди|id|номер|карта|пациент)\s*([A-Za-zА-Яа-я0-9\-]+)/i);
+    if (idM && idM[1]) $('pId').value = idM[1];
+    if (/коронк/i.test(t)) $('pType').value = "Коронка";
+    if (/винир/i.test(t)) $('pType').value = "Винир";
+    if (/вкладк/i.test(t)) $('pType').value = "Вкладка";
+    if (/мост/i.test(t)) $('pType').value = "Мост";
+    if (/циркон/i.test(t)) $('pMat').value = "Циркон";
+    if (/емакс|имакс|max/i.test(t)) $('pMat').value = "E.max";
+    const cM = txt.match(/\b([ABCDАВС][1-4]|BL[1-4])\b/i);
+    if (cM && cM[1]) $('pCol').value = cM[1].toUpperCase().replace('А','A').replace('В','B').replace('С','C');
+  }
 
+  // Переход в Яндекс Форму с подстановкой параметров
   $('sendBtn').addEventListener('click', function() {
-    if (courier === null) { alert("Отметьте в пункте 4, нужен ли курьер (Да или Нет)."); return; }
-    const courText = courier ? "ДА (" + $('cAddr').value + ", " + $('cTime').value + ")" : "НЕТ (цифра)";
-    const summary = "ID пациента: " + ($('pId').value || "в голосе") +
-      "\nТип конструкции: " + ($('pType').value || "в голосе") +
-      "\nМатериал: " + ($('pMat').value || "в голосе") +
-      "\nЦвет: " + ($('pCol').value || "в голосе") +
-      "\nФотопротокол: " + $('phTxt').textContent +
-      "\nКурьер: " + courText;
-
-    if (blob) {
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = "Голос_Аршаку_" + ($('pId').value || "заказ") + "." + ext;
-      a.click();
+    if (!CFG.formUrl || CFG.formUrl.includes("ВАШ_ID_ФОРМЫ")) {
+      showErr("Укажите ссылку на Яндекс Форму в настройках CFG.formUrl в коде!");
+      return;
     }
-    window.location.href = "mailto:Dt.Arshak@yandex.ru?subject=" + encodeURIComponent("Заказ Аршаку: " + ($('pId').value || "новый")) + "&body=" + encodeURIComponent(summary);
-  });
 
-  $('clrBtn').addEventListener('click', function() { location.reload(); });
+    const params = new URLSearchParams();
+    if ($('pId').value)   params.append(CFG.fId, $('pId').value);
+    if ($('pType').value) params.append(CFG.fType, $('pType').value);
+    if ($('pMat').value)  params.append(CFG.fMat, $('pMat').value);
+    if ($('pCol').value)  params.append(CFG.fColor, $('pCol').value);
+    if (courier)          params.append(CFG.fCour, courier);
+
+    const finalUrl = CFG.formUrl + (CFG.formUrl.includes('?') ? '&' : '?') + params.toString();
+    window.open(finalUrl, '_blank');
+  });
 </script>
 </body>
 </html>
