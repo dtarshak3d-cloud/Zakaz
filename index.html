@@ -62,6 +62,15 @@
       </div>
       <div class="field"><label>Цвет</label><input type="text" id="pCol" placeholder="Например: А2, BL1"></div>
          <div class="field"><label>Примечание</label><textarea id="pNote" rows="2" placeholder="Сроки сдачи и детали работы..."></textarea></div>
+          <div class="field">
+      <label>Фотопротокол / Файлы</label>
+      <input type="text" id="pPhoto" placeholder="Куда отправили фото (если есть)">
+      <div class="delivery-btns" style="margin-top:6px; grid-template-columns: 1fr 1fr 1fr;">
+        <button type="button" class="del-btn" onclick="document.getElementById('pPhoto').value='Отправил в Telegram'">Telegram</button>
+        <button type="button" class="del-btn" onclick="document.getElementById('pPhoto').value='Отправил в MAX'">MAX</button>
+        <button type="button" class="del-btn" onclick="document.getElementById('pPhoto').value='Отправил в WhatsApp'">WhatsApp</button>
+      </div>
+    </div>
     <label>Доставка</label>
     <div class="delivery-btns"><button type="button" class="del-btn active" id="btnCourier">Нужен курьер</button><button type="button" class="del-btn" id="btnSelf">Сами привезём</button></div>
     <div class="field" id="courierBox"><label>Курьер: адрес и время</label><input type="text" id="pCour" placeholder="Откуда и во сколько забрать"></div>
@@ -91,6 +100,7 @@
         color: $('pCol') ? $('pCol').value : '',
         courier: $('pCour') ? $('pCour').value : '',
         note: $('pNote') ? $('pNote').value : '',
+        photo: $('pPhoto') ? $('pPhoto').value : '',
         rawText: $('rawText') ? $('rawText').value : ''
       });
       await fetch(GAS_URL + '?' + q.toString(), { mode: 'no-cors' });
@@ -169,16 +179,19 @@
       const cm = txt.match(/(?:курьер\s+нужен\s+на\s+адрес|нужен\s+курьер|курьер|забрать|по\s+адресу|адрес|из\s+клиники|с\s+улицы|улица|ул\.?)\s*[:\-]?\s*([^,.]+?)(?=\s+(?:нужно|надо|обратить|внимание|диск\s*колорит|дисколорит|особенн|пожелан|винтов|цемент|фиксац|срок|сдать|готово|примечан|$)|[,.]|$)/i);
       if (cm && cm.at(1) && cm.at(1).trim().length > 2 && $('pCour')) { $('pCour').value = cm.at(1).trim(); rm(cm.at(0)); }
     }
-
+    const phM = noteRest.match(/(?:фото[а-я]*|сним[а-я]*|файл[а-я]*)\s+(?:отправил[а-я]*|скинул[а-я]*|выслал[а-я]*|в|на)?\s*(?:в\s+)?(телеграм[а-я]*|telegram|макс[а-я]*|max|ватсап[а-я]*|вотсап[а-я]*|whatsapp)/i);
+    if (phM && phM.at(1) && $('pPhoto')) {
+      const m = phM.at(1).toLowerCase();
+      $('pPhoto').value = 'Отправил в ' + (m.startsWith('тел') || m.startsWith('tel') ? 'Telegram' : (m.startsWith('мак') || m.startsWith('max') ? 'MAX' : 'WhatsApp'));
+      rm(phM.at(0));
+    }
     const cleanNote = noteRest.replace(/^[\s,.;:\-]+|[\s,.;:\-]+$/g, '').replace(/\s+/g, ' ').trim();
     if ($('pNote')) $('pNote').value = cleanNote.length > 2 ? cleanNote.charAt(0).toUpperCase() + cleanNote.slice(1) : '';
   }
-
   if ($('aiParseBtn')) $('aiParseBtn').onclick = () => { localParse($('rawText').value); if ($('micStatus')) $('micStatus').textContent = 'Поля заполнены!'; };
   if ($('btnCourier')) $('btnCourier').onclick = () => { $('btnCourier').classList.add('active'); $('btnSelf').classList.remove('active'); if ($('courierBox')) $('courierBox').style.display = 'block'; };
   if ($('btnSelf')) $('btnSelf').onclick = () => { $('btnSelf').classList.add('active'); $('btnCourier').classList.remove('active'); if ($('courierBox')) $('courierBox').style.display = 'none'; if ($('pCour')) $('pCour').value = ''; };
-  if ($('clearBtn')) $('clearBtn').onclick = () => { ['rawText','pDoc','pId','pType','pMat','pCol','pCour','pNote'].forEach(id => { if ($(id)) $(id).value = ''; }); localStorage.removeItem('zakaz_doc'); if ($('btnSelf')) $('btnSelf').click(); if ($('sendStatus')) $('sendStatus').textContent = ''; };
-
+   if ($('clearBtn')) $('clearBtn').onclick = () => { ['rawText','pDoc','pId','pType','pMat','pCol','pCour','pNote','pPhoto'].forEach(id => { if ($(id)) $(id).value = ''; }); localStorage.removeItem('zakaz_doc'); if ($('btnSelf')) $('btnSelf').click(); if ($('sendStatus')) $('sendStatus').textContent = ''; };
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   let rec = null, listening = false;
   if (SR) {
