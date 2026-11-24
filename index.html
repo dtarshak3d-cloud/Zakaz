@@ -186,7 +186,7 @@
       rec.interimResults = true;
       rec.onresult = e => {
         let full = '';
-        for (let i = 0; i < e.results.length; i++) full += e.results[i].transcript;
+        for (let i = 0; i < e.results.length; i++) full += e.results[i].item(0).transcript;
         $('rawText').value = full;
         localParse(full);
       };
