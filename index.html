@@ -94,6 +94,11 @@
       color: #fff;
       animation: pulse 1.2s infinite;
     }
+    .mic-btn.loading {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #fff;
+      cursor: wait;
+    }
     @keyframes pulse {
       0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 75, 43, 0.7); }
       70% { transform: scale(1.06); box-shadow: 0 0 0 14px rgba(255, 75, 43, 0); }
@@ -104,6 +109,7 @@
       color: #cbdcf7;
       margin-top: 8px;
       text-align: center;
+      min-height: 16px;
     }
     textarea, input {
       width: 100%;
@@ -182,7 +188,7 @@
   <div class="app">
     <div class="header">
       <h1>🦷 Быстрый заказ Аршаку</h1>
-      <div class="ver">Версия 3.4 • Голосовой наряд</div>
+      <div class="ver">Версия 4.0 • ИИ-агент</div>
     </div>
 
     <div class="card">
@@ -239,9 +245,10 @@
   </div>
 
   <script>
-    // Точные настройки вашей Яндекс Формы
+    const WORKER_URL = 'https://' + 'zakaz.dt-arshak3d.workers.dev';
+    const FORM_URL = 'https://' + 'forms.yandex.ru/u/6b0532169029029bd3591509/';
+
     const CFG = {
-      formUrl: 'https://yandex.ru',
       fId: 'answer_short_text_9008994757384950',
       fType: 'answer_short_text_9008994757427168',
       fMat: 'answer_short_text_9008994757468248',
@@ -258,6 +265,7 @@
       $('btnCourier').classList.add('active');
       $('btnSelf').classList.remove('active');
       $('courierBox').style.display = 'block';
+      if ($('pCour').value === 'Сами привезём') $('pCour').value = '';
     };
     $('btnSelf').onclick = () => {
       needCourier = false;
@@ -270,63 +278,62 @@
     // Очистка полей
     $('clearBtn').onclick = () => {
       ['rawText', 'pId', 'pType', 'pMat', 'pCol', 'pCour'].forEach(id => $(id).value = '');
+      $('micStatus').textContent = 'Нажмите на микрофон и продиктуйте заказ';
       $('btnCourier').click();
     };
 
-    // Умный разбор текста по полям
-    function parse(text) {
-      const t = text.toLowerCase();
+    // Запись голоса через MediaRecorder (работает в Яндекс Браузере, Chrome, Safari)
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let isRecording = false;
 
-      // 1. ID пациента
-      const idM = text.match(/(?:id|айди|пациент|карта|номер|№)\s*[:\-]?\s*([а-яa-z0-9\-]+)/i);
-      if (idM && idM[1]) {
-        $('pId').value = idM[1].toUpperCase();
+    $('micBtn').onclick = async () => {
+      if (!isRecording) {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          audioChunks = [];
+          mediaRecorder = new MediaRecorder(stream);
+
+          mediaRecorder.ondataavailable = e => {
+            if (e.data.size > 0) audioChunks.push(e.data);
+          };
+
+          mediaRecorder.onstop = async () => {
+            stream.getTracks().forEach(track => track.stop());
+            const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
+            await sendAudioToAI(audioBlob);
+          };
+
+          mediaRecorder.start();
+          isRecording = true;
+          $('micBtn').classList.add('recording');
+          $('micBtn').textContent = '⏹';
+          $('micStatus').textContent = 'Идёт запись... Нажмите стоп, когда закончите';
+        } catch (err) {
+          $('micStatus').textContent = 'Нет доступа к микрофону: проверьте разрешения браузера';
+        }
       } else {
-        const numM = text.match(/\b(\d{3,6})\b/);
-        if (numM && !$('pId').value) $('pId').value = numM[1];
+        isRecording = false;
+        $('micBtn').classList.remove('recording');
+        $('micBtn').classList.add('loading');
+        $('micBtn').textContent = '⏳';
+        $('micStatus').textContent = 'ИИ расшифровывает и заполняет поля...';
+        mediaRecorder.stop();
       }
+    };
 
-      // 2. Тип конструкции
-      const types = [];
-      if (/коронк/i.test(t)) types.push('Коронка');
-      if (/мост/i.test(t)) types.push('Мост');
-      if (/винир/i.test(t)) types.push('Винир');
-      if (/вкладк/i.test(t)) types.push('Вкладка');
-      if (/абатмент/i.test(t)) types.push('Абатмент');
-      if (/имплант/i.test(t)) types.push('На импланте');
-      if (/бюгел/i.test(t)) types.push('Бюгельный протез');
-      if (/протез/i.test(t) && !/бюгел/i.test(t)) types.push('Протез');
-      if (/капп|кап[аыу]/i.test(t)) types.push('Каппа');
-      if (/шаблон/i.test(t)) types.push('Хирургический шаблон');
-      if (types.length) $('pType').value = types.join(', ');
+    async function sendAudioToAI(blob) {
+      try {
+        const res = await fetch(WORKER_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/octet-stream' },
+          body: blob
+        });
+        const data = await res.json();
 
-      // 3. Материал
-      const mats = [];
-      if (/циркон/i.test(t)) mats.push('Цирконий');
-      if (/e[\.\s]?max|емакс|имакс/i.test(t)) mats.push('E.max');
-      if (/металлокерамик/i.test(t)) mats.push('Металлокерамика');
-      if (/керамик/i.test(t) && !/металлокерамик/i.test(t)) mats.push('Керамика');
-      if (/пластмасс|акрил|pmma|пмма/i.test(t)) mats.push('PMMA / Пластмасса');
-      if (/титан/i.test(t)) mats.push('Титан');
-      if (/кобальт|хром/i.test(t)) mats.push('Кобальт-хром');
-      if (mats.length) $('pMat').value = mats.join(', ');
-
-      // 4. Цвет (VITA)
-      const cM = text.match(/(?:цвет\s*)?\b([abcdабсд][1-4]|bl[1-4]|бл[1-4]|om[1-3]|ом[1-3])\b/i);
-      if (cM && cM[1]) {
-        $('pCol').value = cM[1]
-          .toUpperCase()
-          .replace('А', 'A')
-          .replace('Б', 'B')
-          .replace('С', 'C')
-          .replace('Д', 'D')
-          .replace('БЛ', 'BL')
-          .replace('ОМ', 'OM');
-      }
-
-      // 5. Курьер / Доставка
-      if (/сами привез|без курьера/i.test(t)) {
-        $('btnSelf').click();
-      } else if (/курьер|забрат|адрес|клиник|улиц|ул\.|пр-т|проспект/i.test(t)) {
-        $('btnCourier').click();
-        const courM = text.match(/(?:курьер|забрать|адрес)\s*[:\-]?\s*(.+)$/i);
+        if (data.error) {
+          $('micStatus').textContent = 'Ошибка ИИ: ' + data.error;
+        } else {
+          if (data.text) $('rawText').value = data.text;
+          const f = data.fields || {};
+          if (f.id) $('pId').value = f.id;
