@@ -73,26 +73,56 @@
     <button type="button" class="mic-btn" id="micBtn">🎤</button>
     <div class="mic-status" id="micStatus">Нажмите на микрофон внизу и продиктуйте заказ</div>
   </div>
- <script>
+<script>
   const GAS_URL = 'https://google.com';
   const $ = id => document.getElementById(id);
+
+  $('sendBtn').onclick = async () => {
+    const btn = $('sendBtn');
+    btn.disabled = true;
+    $('sendStatus').textContent = 'Отправляем на Dt.Arshak@yandex.ru...';
+    try {
+      const q = new URLSearchParams({
+        action: 'sendEmail',
+        doctor: $('pDoc') ? $('pDoc').value : '',
+        id: $('pId') ? $('pId').value : '',
+        type: $('pType') ? $('pType').value : '',
+        material: $('pMat') ? $('pMat').value : '',
+        color: $('pCol') ? $('pCol').value : '',
+        courier: $('pCour') ? $('pCour').value : '',
+        note: $('pNote') ? $('pNote').value : '',
+        rawText: $('rawText') ? $('rawText').value : ''
+      });
+      await fetch(GAS_URL + '?' + q.toString(), { mode: 'no-cors' });
+      $('sendStatus').textContent = '✓ Отправлено на Dt.Arshak@yandex.ru!';
+    } catch (e) {
+      $('sendStatus').textContent = 'Ошибка: ' + e.message;
+    } finally {
+      btn.disabled = false;
+    }
+  };
+
   if (localStorage.getItem('zakaz_doc') && $('pDoc')) $('pDoc').value = localStorage.getItem('zakaz_doc');
   if ($('pDoc')) $('pDoc').addEventListener('input', e => localStorage.setItem('zakaz_doc', e.target.value));
+
   function localParse(raw) {
-    const txt = (raw || '').trim();
+    const txt = String(raw || '').trim();
     if (!txt) return;
     const low = txt.toLowerCase();
     let noteRest = txt;
     const rm = rx => { noteRest = noteRest.replace(rx, ' '); };
-    const cap = s => s.trim().replace(/\s+/g, ' ').replace(/(^|\s)\S/g, l => l.toUpperCase());
+    const cap = s => String(s || '').trim().replace(/\s+/g, ' ').replace(/(^|\s)\S/g, l => l.toUpperCase());
+
     const docM = txt.match(/(?:врач|доктор|фреш|клиника)\s+([^,.;\d]+?)(?=\s+(?:пациент|ид|id|номер|карта|№|одна|один|одну|две|два|три|четыре|пять|шесть|корон|винир|мост|протез|вклад|абатмент|капа|шаблон|циркон|дисиликат|силикат|материал|цвет|курьер|адрес|$)|[,.;\d]|$)/i);
-    if (docM && $('pDoc')) { $('pDoc').value = cap(docM[1]); localStorage.setItem('zakaz_doc', $('pDoc').value); rm(docM[0]); }
+    if (docM && docM.at(1) && $('pDoc')) { $('pDoc').value = cap(docM.at(1)); localStorage.setItem('zakaz_doc', $('pDoc').value); rm(docM.at(0)); }
+
     const idM = noteRest.match(/(?:пациент[а-я]*|ид|id|номер|карта|№)\s*(?:в|на)?\s*(\d{1,3}[:\-\s]?\d{2,4})/i) || noteRest.match(/\b(\d{3,6})\b/);
     const famM = noteRest.match(/(?:пациент[а-я]*|фамили[яи]|для)\s+(?:и\s+)?([^,.;\d]+?)(?=\s+(?:одна|один|одну|две|два|три|четыре|пять|шесть|корон|винир|мост|протез|вклад|абатмент|капа|шаблон|циркон|дисиликат|силикат|материал|цвет|курьер|адрес|$)|[,.;\d]|$)/i);
     const idParts = [];
-    if (famM) { idParts.push(cap(famM[1])); rm(famM[0]); }
-    if (idM) { idParts.push(idM[1].replace(/[:\-\s]/g, '')); rm(idM[0]); }
+    if (famM && famM.at(1)) { idParts.push(cap(famM.at(1))); rm(famM.at(0)); }
+    if (idM && idM.at(1)) { idParts.push(idM.at(1).replace(/[:\-\s]/g, '')); rm(idM.at(0)); }
     if (idParts.length && $('pId')) $('pId').value = idParts.join(' ');
+
     const numW = {'одна':1,'один':1,'одну':1,'две':2,'два':2,'три':3,'четыре':4,'пять':5,'шесть':6,'семь':7,'восемь':8,'девять':9,'десять':10,'одиннадцать':11,'двенадцать':12,'тринадцать':13,'четырнадцать':14,'пятнадцать':15,'шестнадцать':16,'семнадцать':17,'восемьнадцать':18,'девятнадцать':19,'двадцать':20};
     const tRules = [
       ['короно[чк]*[а-я]* на имплант|коронок на имплант|коронки на имплант|коронка на имплант|на имплант', n => n > 1 ? `${n} ${n < 5 ? 'коронки' : 'коронок'} на имплантатах` : (n === 1 ? '1 коронка на имплантате' : 'Коронка на имплантате')],
@@ -111,6 +141,7 @@
       low.replace(rx, (m, q) => { const n = q ? (numW[q.toLowerCase()] || parseInt(q, 10)) : 0; foundTypes.push(fmt(n)); rm(m); return ' '; });
     }
     if (foundTypes.length && $('pType')) $('pType').value = [...new Set(foundTypes)].join(', ');
+
     const mats = [['дисиликат\\s*лития','E.max (дисиликат лития)'],['силикат\\s*лития','E.max (дисиликат лития)'],['диоксид\\s*циркония','Диоксид циркония'],['циркон','Диоксид циркония'],['emax','E.max'],['е\\s*макс','E.max'],['емакс','E.max'],['металлокерам','Металлокерамика'],['керамик','Керамика'],['титан','Титан'],['акрил','Акрил'],['нейлон','Нейлон'],['pmma','PMMA'],['пмма','PMMA'],['пластмасс','Пластмасса']];
     let foundMats = [];
     for (const [k, v] of mats) {
@@ -118,30 +149,35 @@
       if (mRx.test(low)) { foundMats.push(v); rm(mRx); }
     }
     if (foundMats.length && $('pMat')) $('pMat').value = [...new Set(foundMats)].join(', ');
+
     const numC = {'один':'1','два':'2','три':'3','четыре':'4'};
     const blM = low.match(/(?:цвет|оттенок|цвета)?\s*(?:б?лич|bleach|bl)\s*(1|2|3|4|один|два|три|четыре)/);
     const caM = low.match(/(?:цвета|цвет)\s*([1-4](?:[\.,]5|\s+с\s+половиной)?)(?=\s|$|[.,])/);
-    if (blM && $('pCol')) { $('pCol').value = 'BL' + (numC[blM[1]] || blM[1]); rm(blM[0]); }
-    else if (caM && $('pCol')) { $('pCol').value = 'A' + caM[1].replace(/\s+с\s+половиной/, '.5').replace(',', '.'); rm(caM[0]); }
+    if (blM && blM.at(1) && $('pCol')) { $('pCol').value = 'BL' + (numC[blM.at(1)] || blM.at(1)); rm(blM.at(0)); }
+    else if (caM && caM.at(1) && $('pCol')) { $('pCol').value = 'A' + caM.at(1).replace(/\s+с\s+половиной/, '.5').replace(',', '.'); rm(caM.at(0)); }
     else {
       const cM = txt.match(/(?:цвет|оттенок)?\s*(?:^|\s)([аaбbсcдd]\s*(?:[1-4]|один|два|три|четыре)(?:[\.,]5|\s+с\s+половиной)?|ом\s*[1-3])(?=\s|$|[.,])/i);
-      if (cM && $('pCol')) { let v = cM[1].toUpperCase().replace(/\s+с\s+половиной/i, '.5').replace(',', '.').replace(/ОДИН|ДВА|ТРИ|ЧЕТЫРЕ/gi, m => numC[m.toLowerCase()]).replace(/\s+/g,''); $('pCol').value = v.replace('А','A').replace('Б','B').replace('С','C').replace('Д','D'); rm(cM[0]); }
+      if (cM && cM.at(1) && $('pCol')) { let v = cM.at(1).toUpperCase().replace(/\s+с\s+половиной/i, '.5').replace(',', '.').replace(/ОДИН|ДВА|ТРИ|ЧЕТЫРЕ/gi, m => numC[m.toLowerCase()]).replace(/\s+/g,''); $('pCol').value = v.replace('А','A').replace('Б','B').replace('С','C').replace('Д','D'); rm(cM.at(0)); }
     }
+
     if (low.includes('не нужен') || low.includes('сами') || low.includes('привезем') || low.includes('привезём')) {
       if ($('btnSelf')) $('btnSelf').click();
       rm(/курьер\s+не\s+нужен|сами\s+привез[а-яё]*/gi);
     } else if (low.includes('курьер') || low.includes('забрать') || low.includes('адрес') || low.includes('улиц') || low.includes('клиник')) {
       if ($('btnCourier')) $('btnCourier').click();
       const cm = txt.match(/(?:курьер\s+нужен\s+на\s+адрес|нужен\s+курьер|курьер|забрать|по\s+адресу|адрес|из\s+клиники|с\s+улицы|улица|ул\.?)\s*[:\-]?\s*([^,.]+?)(?=\s+(?:нужно|надо|обратить|внимание|диск\s*колорит|дисколорит|особенн|пожелан|винтов|цемент|фиксац|срок|сдать|готово|примечан|$)|[,.]|$)/i);
-      if (cm && cm[1].trim().length > 2 && $('pCour')) { $('pCour').value = cm[1].trim(); rm(cm[0]); }
+      if (cm && cm.at(1) && cm.at(1).trim().length > 2 && $('pCour')) { $('pCour').value = cm.at(1).trim(); rm(cm.at(0)); }
     }
+
     const cleanNote = noteRest.replace(/^[\s,.;:\-]+|[\s,.;:\-]+$/g, '').replace(/\s+/g, ' ').trim();
     if ($('pNote')) $('pNote').value = cleanNote.length > 2 ? cleanNote.charAt(0).toUpperCase() + cleanNote.slice(1) : '';
   }
+
   if ($('aiParseBtn')) $('aiParseBtn').onclick = () => { localParse($('rawText').value); if ($('micStatus')) $('micStatus').textContent = 'Поля заполнены!'; };
   if ($('btnCourier')) $('btnCourier').onclick = () => { $('btnCourier').classList.add('active'); $('btnSelf').classList.remove('active'); if ($('courierBox')) $('courierBox').style.display = 'block'; };
   if ($('btnSelf')) $('btnSelf').onclick = () => { $('btnSelf').classList.add('active'); $('btnCourier').classList.remove('active'); if ($('courierBox')) $('courierBox').style.display = 'none'; if ($('pCour')) $('pCour').value = ''; };
   if ($('clearBtn')) $('clearBtn').onclick = () => { ['rawText','pId','pType','pMat','pCol','pCour','pNote'].forEach(id => { if ($(id)) $(id).value = ''; }); if ($('btnSelf')) $('btnSelf').click(); if ($('sendStatus')) $('sendStatus').textContent = ''; };
+
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   let rec = null, listening = false;
   if (SR) {
@@ -149,8 +185,9 @@
     rec.onresult = e => {
       let f = '';
       for (let i = 0; i < e.results.length; i++) {
-        const it = e.results[i];
-        if (it && it[0] && it[0].transcript) f += it[0].transcript;
+        const it = e.results.item ? e.results.item(i) : e.results.at(i);
+        const al = it.item ? it.item(0) : it.at(0);
+        if (al && al.transcript) f += al.transcript;
       }
       if ($('rawText')) $('rawText').value = f;
       localParse(f);
@@ -161,30 +198,6 @@
     if (!rec) return;
     if (!listening) { rec.start(); listening = true; $('micBtn').className = 'mic-btn rec'; if ($('micStatus')) $('micStatus').textContent = 'Говорите... Нажмите ещё раз, чтобы закончить'; }
     else { rec.stop(); }
-  };
-  if ($('sendBtn')) $('sendBtn').onclick = async () => {
-    const btn = $('sendBtn');
-    btn.disabled = true;
-    if ($('sendStatus')) $('sendStatus').textContent = 'Отправляем на Dt.Arshak@yandex.ru...';
-    try {
-      const q = new URLSearchParams({
-        action: 'sendEmail',
-        doctor: $('pDoc') ? $('pDoc').value : '',
-        id: $('pId') ? $('pId').value : '',
-        type: $('pType') ? $('pType').value : '',
-        material: $('pMat') ? $('pMat').value : '',
-        color: $('pCol') ? $('pCol').value : '',
-        courier: $('pCour') ? $('pCour').value : '',
-        note: $('pNote') ? $('pNote').value : '',
-        rawText: $('rawText') ? $('rawText').value : ''
-      });
-      await fetch(GAS_URL + '?' + q.toString(), { mode: 'no-cors' });
-      if ($('sendStatus')) $('sendStatus').textContent = '✓ Отправлено на Dt.Arshak@yandex.ru!';
-    } catch (e) {
-      if ($('sendStatus')) $('sendStatus').textContent = 'Ошибка: ' + e.message;
-    } finally {
-      btn.disabled = false;
-    }
   };
 </script>
 </body>
