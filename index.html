@@ -188,7 +188,7 @@
   <div class="app">
     <div class="header">
       <h1>🦷 Быстрый заказ Аршаку</h1>
-      <div class="ver">Версия 4.0 • ИИ-агент</div>
+      <div class="ver">Версия 4.1 • ИИ-агент</div>
     </div>
 
     <div class="card">
@@ -258,7 +258,6 @@
 
     const $ = id => document.getElementById(id);
 
-    // Переключение доставки
     let needCourier = true;
     $('btnCourier').onclick = () => {
       needCourier = true;
@@ -275,14 +274,12 @@
       $('pCour').value = 'Сами привезём';
     };
 
-    // Очистка полей
     $('clearBtn').onclick = () => {
       ['rawText', 'pId', 'pType', 'pMat', 'pCol', 'pCour'].forEach(id => $(id).value = '');
       $('micStatus').textContent = 'Нажмите на микрофон и продиктуйте заказ';
       $('btnCourier').click();
     };
 
-    // Запись голоса через MediaRecorder (работает в Яндекс Браузере, Chrome, Safari)
     let mediaRecorder = null;
     let audioChunks = [];
     let isRecording = false;
@@ -291,49 +288,41 @@
       if (!isRecording) {
         try {
           const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          audioChunks = [];
           mediaRecorder = new MediaRecorder(stream);
-
+          audioChunks = [];
           mediaRecorder.ondataavailable = e => {
             if (e.data.size > 0) audioChunks.push(e.data);
           };
-
           mediaRecorder.onstop = async () => {
-            stream.getTracks().forEach(track => track.stop());
-            const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
-            await sendAudioToAI(audioBlob);
+            stream.getTracks().forEach(t => t.stop());
+            const blob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
+            $('micBtn').className = 'mic-btn loading';
+            $('micBtn').textContent = '⏳';
+            $('micStatus').textContent = 'ИИ распознаёт речь и заполняет поля...';
+            try {
+              const res = await fetch(WORKER_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/octet-stream' },
+                body: blob
+              });
+              const data = await res.json();
+              if (data.error) throw new Error(data.error);
+              if (data.text) $('rawText').value = data.text;
+              if (data.fields) {
+                if (data.fields.id) $('pId').value = data.fields.id;
+                if (data.fields.type) $('pType').value = data.fields.type;
+                if (data.fields.material) $('pMat').value = data.fields.material;
+                if (data.fields.color) $('pCol').value = data.fields.color;
+                if (data.fields.courier) {
+                  $('btnCourier').click();
+                  $('pCour').value = data.fields.courier;
+                }
+              }
+              $('micStatus').textContent = '✅ Готово! Проверьте поля ниже';
+            } catch (err) {
+              $('micStatus').textContent = '⚠️ Ошибка ИИ: ' + err.message;
+            } finally {
+              $('micBtn').className = 'mic-btn';
+              $('micBtn').textContent = '🎤';
+            }
           };
-
-          mediaRecorder.start();
-          isRecording = true;
-          $('micBtn').classList.add('recording');
-          $('micBtn').textContent = '⏹';
-          $('micStatus').textContent = 'Идёт запись... Нажмите стоп, когда закончите';
-        } catch (err) {
-          $('micStatus').textContent = 'Нет доступа к микрофону: проверьте разрешения браузера';
-        }
-      } else {
-        isRecording = false;
-        $('micBtn').classList.remove('recording');
-        $('micBtn').classList.add('loading');
-        $('micBtn').textContent = '⏳';
-        $('micStatus').textContent = 'ИИ расшифровывает и заполняет поля...';
-        mediaRecorder.stop();
-      }
-    };
-
-    async function sendAudioToAI(blob) {
-      try {
-        const res = await fetch(WORKER_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/octet-stream' },
-          body: blob
-        });
-        const data = await res.json();
-
-        if (data.error) {
-          $('micStatus').textContent = 'Ошибка ИИ: ' + data.error;
-        } else {
-          if (data.text) $('rawText').value = data.text;
-          const f = data.fields || {};
-          if (f.id) $('pId').value = f.id;
