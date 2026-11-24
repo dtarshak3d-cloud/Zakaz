@@ -1,88 +1,180 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Быстрый заказ Аршаку</title>
   <style>
-    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body {
-      margin: 0; padding: 16px;
-      background: linear-gradient(160deg, #1b3358 0%, #2b4c7e 100%);
-      color: #fff; min-height: 100vh;
-      display: flex; justify-content: center; align-items: flex-start;
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
-    .app { width: 100%; max-width: 480px; }
-    .header { text-align: center; margin-bottom: 16px; }
-    .header h1 { margin: 0; font-size: 22px; font-weight: 700; }
-    .header p { margin: 4px 0 0; font-size: 13px; color: #b8c9e6; }
-    .card {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 16px;
+    body {
+      margin: 0;
       padding: 16px;
+      background: linear-gradient(160deg, #1b3358 0%, #2b4c7e 100%);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .app {
+      width: 100%;
+      max-width: 480px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .header .ver {
+      font-size: 12px;
+      color: #a8c5f0;
+      margin-top: 4px;
+    }
+    .card {
+      background: rgba(15, 28, 48, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      padding: 14px;
       margin-bottom: 14px;
     }
-    .card-top {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 12px; font-size: 13px; font-weight: 600; color: #dbe6f7;
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #9ec1f7;
     }
     .clear-btn {
-      background: none; border: none; color: #9ec0f5;
-      text-decoration: underline; cursor: pointer; font-size: 12px; padding: 0;
+      background: none;
+      border: none;
+      color: #9ec1f7;
+      text-decoration: underline;
+      font-size: 12px;
+      cursor: pointer;
+      padding: 0;
     }
-    .mic-wrap { text-align: center; margin: 10px 0 14px; }
+    .mic-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 10px 0 14px;
+    }
     .mic-btn {
-      width: 74px; height: 74px; border-radius: 50%; border: none;
-      background: linear-gradient(135deg, #4da3ff, #2575fc);
-      color: #fff; font-size: 30px; cursor: pointer;
-      box-shadow: 0 6px 20px rgba(37, 117, 252, 0.45);
-      transition: transform 0.15s, background 0.2s;
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: #0b1c36;
+      font-size: 30px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(79, 172, 254, 0.45);
+      transition: transform 0.15s, box-shadow 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .mic-btn:active { transform: scale(0.95); }
     .mic-btn.recording {
-      background: linear-gradient(135deg, #ff4b5c, #d92638);
-      box-shadow: 0 0 0 10px rgba(255, 75, 92, 0.25);
-      animation: pulse 1.3s infinite;
+      background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+      color: #fff;
+      animation: pulse 1.2s infinite;
     }
     @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(255, 75, 92, 0.5); }
-      70% { box-shadow: 0 0 0 14px rgba(255, 75, 92, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(255, 75, 92, 0); }
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 75, 43, 0.7); }
+      70% { transform: scale(1.06); box-shadow: 0 0 0 14px rgba(255, 75, 43, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 75, 43, 0); }
     }
-    .mic-hint { font-size: 13px; color: #dbe6f7; margin-top: 8px; }
-    textarea, input[type="text"] {
-      width: 100%; border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      background: rgba(15, 28, 48, 0.55);
-      color: #fff; padding: 10px 12px; font-size: 14px; outline: none;
+    .mic-hint {
+      font-size: 12px;
+      color: #cbdcf7;
+      margin-top: 8px;
+      text-align: center;
     }
-    textarea::placeholder, input::placeholder { color: #8fa6c9; }
-    textarea:focus, input:focus { border-color: #6ab0ff; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .field { margin-bottom: 10px; }
-    .field label { display: block; font-size: 12px; color: #b8c9e6; margin-bottom: 4px; }
-    .toggle-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-    .toggle-btn {
-      padding: 10px; border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      background: rgba(15, 28, 48, 0.45);
-      color: #dbe6f7; font-size: 13px; font-weight: 600; cursor: pointer;
+    textarea, input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
     }
-    .toggle-btn.active {
-      background: #2f80ed; border-color: #6ab0ff; color: #fff;
+    textarea::placeholder, input::placeholder {
+      color: rgba(255, 255, 255, 0.45);
+    }
+    textarea:focus, input:focus {
+      border-color: #4facfe;
+    }
+    .row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .field {
+      flex: 1;
+      margin-bottom: 10px;
+    }
+    .row .field {
+      margin-bottom: 0;
+    }
+    label {
+      display: block;
+      font-size: 12px;
+      color: #b7cff5;
+      margin-bottom: 4px;
+    }
+    .delivery-btns {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .del-btn {
+      flex: 1;
+      padding: 9px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.07);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .del-btn.active {
+      background: #3b82f6;
+      border-color: #60a5fa;
     }
     .submit-btn {
-      width: 100%; padding: 14px; border: none; border-radius: 12px;
-      background: linear-gradient(135deg, #27ae60, #219653);
-      color: #fff; font-size: 16px; font-weight: 700; cursor: pointer;
-      box-shadow: 0 6px 18px rgba(39, 174, 96, 0.4);
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(22, 163, 74, 0.4);
       margin-top: 6px;
     }
-    .submit-btn:active { transform: scale(0.98); }
-    .status-msg {
-      margin-top: 8px; font-size: 12px; text-align: center; color: #ffd166; min-height: 16px;
+    .submit-btn:active {
+      transform: scale(0.99);
     }
   </style>
 </head>
@@ -90,59 +182,56 @@
   <div class="app">
     <div class="header">
       <h1>🦷 Быстрый заказ Аршаку</h1>
-      <p>Версия 3.3 • Голосовой наряд</p>
+      <div class="ver">Версия 3.4 • Голосовой наряд</div>
     </div>
 
     <div class="card">
-      <div class="card-top">
+      <div class="card-header">
         <span>1. Голосовой диктофон 🎙️</span>
-        <button type="button" class="clear-btn" id="clearAll">Очистить всё</button>
+        <button type="button" class="clear-btn" id="clearBtn">Очистить всё</button>
       </div>
       <div class="mic-wrap">
-        <button type="button" class="mic-btn" id="micBtn">🎤</button>
+        <button type="button" class="mic-btn" id="micBtn" title="Нажмите для диктовки">🎤</button>
         <div class="mic-hint" id="micStatus">Нажмите на микрофон и продиктуйте заказ</div>
       </div>
       <textarea id="rawText" rows="3" placeholder="Назовите: ID пациента, тип конструкции, материал, цвет и адрес/время курьера..."></textarea>
-      <div class="status-msg" id="browserWarn"></div>
     </div>
 
     <div class="card">
-      <div class="card-top">
+      <div class="card-header">
         <span>2. Параметры заказа</span>
       </div>
 
       <div class="field">
         <label>ID пациента</label>
-        <input type="text" id="pId" placeholder="Например: 4512" />
+        <input type="text" id="pId" placeholder="Например: 4512">
       </div>
 
-      <div class="grid-2">
+      <div class="row">
         <div class="field">
           <label>Тип конструкции</label>
-          <input type="text" id="pType" placeholder="Коронка, мост..." />
+          <input type="text" id="pType" placeholder="Коронка, мост...">
         </div>
         <div class="field">
           <label>Материал</label>
-          <input type="text" id="pMat" placeholder="Цирконий, E.max..." />
+          <input type="text" id="pMat" placeholder="Цирконий, E.max...">
         </div>
       </div>
 
       <div class="field">
         <label>Цвет</label>
-        <input type="text" id="pCol" placeholder="Например: A2, B1" />
+        <input type="text" id="pCol" placeholder="Например: A2, B1">
       </div>
 
-      <div class="field">
-        <label>Доставка</label>
-        <div class="toggle-row">
-          <button type="button" class="toggle-btn active" id="btnCourier">Нужен курьер</button>
-          <button type="button" class="toggle-btn" id="btnSelf">Сами привезём</button>
-        </div>
+      <label>Доставка</label>
+      <div class="delivery-btns">
+        <button type="button" class="del-btn active" id="btnCourier">Нужен курьер</button>
+        <button type="button" class="del-btn" id="btnSelf">Сами привезём</button>
       </div>
 
-      <div class="field" id="courierAddressBox">
+      <div class="field" id="courierBox">
         <label>Курьер: адрес и время</label>
-        <input type="text" id="pCur" placeholder="Адрес клиники, к какому времени забрать" />
+        <input type="text" id="pCour" placeholder="Адрес клиники, к какому времени забрать">
       </div>
 
       <button type="button" class="submit-btn" id="sendBtn">Отправить Аршаку в лабораторию ➔</button>
@@ -150,119 +239,94 @@
   </div>
 
   <script>
+    // Точные настройки вашей Яндекс Формы
     const CFG = {
       formUrl: 'https://yandex.ru',
-      fId:   'answer_short_text_9008994757384950',
+      fId: 'answer_short_text_9008994757384950',
       fType: 'answer_short_text_9008994757427168',
-      fMat:  'answer_short_text_9008994757468248',
-      fCol:  'answer_short_text_9008994757485004',
-      fCur:  'answer_short_text_9008994757499984'
+      fMat: 'answer_short_text_9008994757468248',
+      fCol: 'answer_short_text_9008994757485004',
+      fCour: 'answer_short_text_9008994757499984'
     };
 
-    const $ = (id) => document.getElementById(id);
-    let needCourier = true;
+    const $ = id => document.getElementById(id);
 
-    // Переключатель доставки
+    // Переключение доставки
+    let needCourier = true;
     $('btnCourier').onclick = () => {
       needCourier = true;
       $('btnCourier').classList.add('active');
       $('btnSelf').classList.remove('active');
-      $('courierAddressBox').style.display = 'block';
+      $('courierBox').style.display = 'block';
     };
-
     $('btnSelf').onclick = () => {
       needCourier = false;
       $('btnSelf').classList.add('active');
       $('btnCourier').classList.remove('active');
-      $('courierAddressBox').style.display = 'none';
+      $('courierBox').style.display = 'none';
+      $('pCour').value = 'Сами привезём';
     };
 
     // Очистка полей
-    $('clearAll').onclick = () => {
-      ['rawText', 'pId', 'pType', 'pMat', 'pCol', 'pCur'].forEach(id => $(id).value = '');
+    $('clearBtn').onclick = () => {
+      ['rawText', 'pId', 'pType', 'pMat', 'pCol', 'pCour'].forEach(id => $(id).value = '');
+      $('btnCourier').click();
     };
 
-    // Авторазбор текста по полям
-    function parseSpeech(text) {
+    // Умный разбор текста по полям
+    function parse(text) {
       const t = text.toLowerCase();
 
-      // ID пациента
-      const idMatch = t.match(/(?:id|айди|ид|карта|пациент|номер)\s*№?\s*([a-zа-я0-9\-]+)/i);
-      if (idMatch && idMatch[1]) {
-        $('pId').value = idMatch[1].toUpperCase();
+      // 1. ID пациента
+      const idM = text.match(/(?:id|айди|пациент|карта|номер|№)\s*[:\-]?\s*([а-яa-z0-9\-]+)/i);
+      if (idM && idM[1]) {
+        $('pId').value = idM[1].toUpperCase();
+      } else {
+        const numM = text.match(/\b(\d{3,6})\b/);
+        if (numM && !$('pId').value) $('pId').value = numM[1];
       }
 
-      // Тип конструкции
+      // 2. Тип конструкции
       const types = [];
       if (/коронк/i.test(t)) types.push('Коронка');
       if (/мост/i.test(t)) types.push('Мост');
       if (/винир/i.test(t)) types.push('Винир');
       if (/вкладк/i.test(t)) types.push('Вкладка');
+      if (/абатмент/i.test(t)) types.push('Абатмент');
       if (/имплант/i.test(t)) types.push('На импланте');
-      if (/протез/i.test(t)) types.push('Протез');
-      if (/кап[па]/i.test(t)) types.push('Каппа');
+      if (/бюгел/i.test(t)) types.push('Бюгельный протез');
+      if (/протез/i.test(t) && !/бюгел/i.test(t)) types.push('Протез');
+      if (/капп|кап[аыу]/i.test(t)) types.push('Каппа');
+      if (/шаблон/i.test(t)) types.push('Хирургический шаблон');
       if (types.length) $('pType').value = types.join(', ');
 
-      // Материал
-      if (/циркон/i.test(t)) $('pMat').value = 'Цирконий';
-      else if (/емакс|e[\s\.\-]?max|имакс/i.test(t)) $('pMat').value = 'E.max';
-      else if (/металлокерам/i.test(t)) $('pMat').value = 'Металлокерамика';
-      else if (/керам/i.test(t)) $('pMat').value = 'Керамика';
-      else if (/пластмасс|акрил|временн/i.test(t)) $('pMat').value = 'Пластмасса / Временная';
+      // 3. Материал
+      const mats = [];
+      if (/циркон/i.test(t)) mats.push('Цирконий');
+      if (/e[\.\s]?max|емакс|имакс/i.test(t)) mats.push('E.max');
+      if (/металлокерамик/i.test(t)) mats.push('Металлокерамика');
+      if (/керамик/i.test(t) && !/металлокерамик/i.test(t)) mats.push('Керамика');
+      if (/пластмасс|акрил|pmma|пмма/i.test(t)) mats.push('PMMA / Пластмасса');
+      if (/титан/i.test(t)) mats.push('Титан');
+      if (/кобальт|хром/i.test(t)) mats.push('Кобальт-хром');
+      if (mats.length) $('pMat').value = mats.join(', ');
 
-      // Цвет (Vita A1-D4, BL1-BL4)
-      const colMatch = text.match(/(?:цвет\s*)?\b([abcdабсд][1-4]|bl[1-4])\b/i);
-      if (colMatch && colMatch[1]) {
-        $('pCol').value = colMatch[1]
+      // 4. Цвет (VITA)
+      const cM = text.match(/(?:цвет\s*)?\b([abcdабсд][1-4]|bl[1-4]|бл[1-4]|om[1-3]|ом[1-3])\b/i);
+      if (cM && cM[1]) {
+        $('pCol').value = cM[1]
           .toUpperCase()
           .replace('А', 'A')
           .replace('Б', 'B')
-          .replace('В', 'B')
           .replace('С', 'C')
-          .replace('Д', 'D');
+          .replace('Д', 'D')
+          .replace('БЛ', 'BL')
+          .replace('ОМ', 'OM');
       }
 
-      // Доставка / курьер
-      if (/сами привез|без курьера|самовывоз/i.test(t)) {
+      // 5. Курьер / Доставка
+      if (/сами привез|без курьера/i.test(t)) {
         $('btnSelf').click();
-      } else if (/курьер|забрать|адрес/i.test(t)) {
+      } else if (/курьер|забрат|адрес|клиник|улиц|ул\.|пр-т|проспект/i.test(t)) {
         $('btnCourier').click();
-        const curMatch = text.match(/(?:курьер|забрать|адрес)[:\s,]+(.+)$/i);
-        if (curMatch && curMatch[1]) {
-          $('pCur').value = curMatch[1].trim();
-        }
-      }
-    }
-
-    $('rawText').addEventListener('input', (e) => parseSpeech(e.target.value));
-
-    // Голосовой ввод
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    let recognition = null;
-    let isRecording = false;
-
-    if (SpeechRecognition) {
-      recognition = new SpeechRecognition();
-      recognition.lang = 'ru-RU';
-      recognition.continuous = true;
-      recognition.interimResults = true;
-
-      let finalBuffer = '';
-
-      recognition.onstart = () => {
-        isRecording = true;
-        finalBuffer = $('rawText').value ? $('rawText').value + ' ' : '';
-        $('micBtn').classList.add('recording');
-        $('micStatus').textContent = 'Идёт запись... Говорите (нажмите снова для стопа)';
-        $('browserWarn').textContent = '';
-      };
-
-      recognition.onresult = (event) => {
-        let interim = '';
-        for (let i = event.resultIndex; i < event.results.length; ++i) {
-          if (event.results[i].isFinal) {
-            finalBuffer += event.results[i].transcript + ' ';
-          } else {
-            interim += event.results[i].transcript;
-          }
-        }
+        const courM = text.match(/(?:курьер|забрать|адрес)\s*[:\-]?\s*(.+)$/i);
