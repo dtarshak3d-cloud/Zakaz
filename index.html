@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Заказ-наряд Аршаку в лабораторию</title>
+  <style>
+    :root {
+      --bg: #f3f5f8;
+      --card: #ffffff;
+      --primary: #1a73e8;
+      --danger: #d93025;
+      --success: #188038;
+      --text: #1f2937;
+      --muted: #6b7280;
+    }
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { margin: 0; background: var(--bg); color: var(--text); padding: 14px; display: flex; justify-content: center; }
+    .container { width: 100%; max-width: 480px; }
+    .header { text-align: center; margin-bottom: 14px; }
+    .header h1 { font-size: 20px; margin: 0 0 4px; }
+    .header p { font-size: 13px; color: var(--muted); margin: 0; }
+
+    .card {
+      background: var(--card); border-radius: 14px; padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 12px;
+    }
+    .step-title { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; display: block; }
+
+    /* Диктофон */
+    .mic-area { text-align: center; }
+    .mic-btn {
+      width: 80px; height: 80px; border-radius: 50%; border: none;
+      background: var(--primary); color: #fff; font-size: 34px; cursor: pointer;
+      box-shadow: 0 4px 14px rgba(26,115,232,0.35); transition: 0.2s;
+    }
+    .mic-btn.recording { background: var(--danger); animation: pulse 1.2s infinite; }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(217,48,37,0.6); }
+      70% { box-shadow: 0 0 0 16px rgba(217,48,37,0); }
+      100% { box-shadow: 0 0 0 0 rgba(217,48,37,0); }
+    }
+    .mic-status { margin-top: 8px; font-weight: 600; font-size: 14px; }
+    .mic-hint {
+      margin-top: 10px; padding: 9px 12px; background: #f8fafc; border-radius: 10px;
+      font-size: 13px; color: #475569; border: 1px solid #e2e8f0;
+    }
+    .audio-preview { margin-top: 10px; display: none; }
+    .audio-preview.show { display: block; }
+    .audio-preview audio { width: 100%; height: 36px; }
+
+    /* Поля ввода */
+    .field-group { margin-bottom: 10px; }
+    .field-group:last-child { margin-bottom: 0; }
+    .field-label { display: block; font-size: 12px; font-weight: 600; color: #4b5563; margin-bottom: 4px; }
+    input[type="text"] {
+      width: 100%; border: 1px solid #cbd5e1; border-radius: 10px; padding: 10px 12px;
+      font-size: 15px; color: var(--text); outline: none; background: #f8fafc;
+    }
+    input[type="text"]:focus { border-color: var(--primary); background: #fff; }
+
+    /* Фотопротокол */
+    .photo-box { border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 14px; text-align: center; background: #f8fafc; }
+    .photo-box.done { border-color: var(--success); background: #f0fdf4; }
+    .btn-row { display: flex; gap: 8px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
+    .file-btn {
+      background: var(--primary); color: #fff; padding: 9px 16px; border-radius: 8px;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+    }
+    .gray-btn {
+      background: #e5e7eb; color: #374151; border: none; padding: 9px 16px;
+      border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
+    }
+    .gray-btn.active { background: #374151; color: #fff; }
+
+    /* Курьер */
+    .courier-btns { display: flex; gap: 8px; }
+    .c-btn {
+      flex: 1; padding: 11px; border-radius: 10px; border: 1px solid #cbd5e1;
+      background: #f8fafc; font-size: 14px; font-weight: 600; cursor: pointer;
+    }
+    .c-btn.yes { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .c-btn.no { background: var(--success); color: #fff; border-color: var(--success); }
+    .courier-more { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb; }
+    .courier-more.show { display: block; }
+    .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+    .t-chip {
+      background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155;
+      padding: 7px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;
+    }
+    .t-chip.sel { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    /* Отправка */
+    .submit-btn {
+      width: 100%; padding: 16px; border: none; border-radius: 12px; font-size: 16px; font-weight: 700;
+      background: var(--success); color: #fff; cursor: pointer; box-shadow: 0 4px 12px rgba(24,128,56,0.25);
+    }
+    .submit-btn:disabled { background: #9ca3af; cursor: wait; }
+    .reset-link { display: block; text-align: center; margin-top: 12px; font-size: 13px; color: var(--muted); cursor: pointer; text-decoration: underline; }
+    .success-screen {
+      display: none; background: #fff; border-radius: 16px; padding: 28px 20px; text-align: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+    .success-screen.show { display: block; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div id="mainForm">
+    <div class="header">
+      <h1>🦷 Быстрый заказ Аршаку</h1>
+      <p>Надиктуйте заказ голосом и отправьте в 1 клик</p>
+    </div>
+
+    <!-- 1. Голос -->
+    <div class="card mic-area">
+      <span class="step-title">1. Голосовое сообщение Аршаку</span>
+      <button id="micBtn" type="button" class="mic-btn" onclick="toggleRecord()">🎙</button>
+      <div id="micStatus" class="mic-status">Нажмите, чтобы надиктовать заказ</div>
+      <div class="mic-hint">
+        Назовите: <b>ID пациента, тип конструкции, материал и цвет</b>
+      </div>
+      <div id="audioPreview" class="audio-preview">
+        <audio id="audioPlayer" controls></audio>
+      </div>
+    </div>
+
+    <!-- 2. Ключевые параметры -->
+    <div class="card">
+      <span class="step-title">2. Параметры заказа (если не назвали в голос)</span>
+      <div class="field-group">
+        <label class="field-label" for="inp-id">ID пациента / Номер карты</label>
+        <input id="inp-id" type="text" placeholder="Например: ID 4082 или № карты..." />
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="inp-type">Тип конструкции</label>
+        <input id="inp-type" type="text" placeholder="Например: коронка, винир, вкладка..." />
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="inp-material">Материал</label>
+        <input id="inp-material" type="text" placeholder="Например: циркон, E.max..." />
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="inp-color">Цвет</label>
+        <input id="inp-color" type="text" placeholder="Например: А2..." />
+      </div>
+    </div>
+
+    <!-- 3. Фотопротокол -->
+    <div class="card">
+      <span class="step-title">3. Фотопротокол</span>
+      <div id="photoBox" class="photo-box">
+        <div id="photoText" style="font-size:15px; font-weight:600; color:#1f2937;">📷 Фотопротокол?</div>
+        <div class="btn-row">
+          <label class="file-btn">
+            📁 Выбрать фото
+            <input id="fileInput" type="file" multiple accept="image/*,.raw,.cr2,.nef,.arw,.dng" style="display:none" onchange="onPhotoSelect()" />
+          </label>
+          <button type="button" id="btnNoPhoto" class="gray-btn" onclick="onNoPhoto()">Без фото</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Курьер -->
+    <div class="card">
+      <span class="step-title">4. Вызов курьера</span>
+      <div style="font-size:14px; font-weight:600; margin-bottom:8px;">Нужно забрать слепки / модели?</div>
+      <div class="courier-btns">
+        <button type="button" id="btnYes" class="c-btn" onclick="setCourier(true)">🚚 Да, вызвать</button>
+        <button type="button" id="btnNo" class="c-btn" onclick="setCourier(false)">💻 Нет, цифра</button>
+      </div>
+
+      <div id="courierMore" class="courier-more">
+        <input id="inp-addr" type="text" placeholder="Адрес клиники..." style="margin-bottom:8px;" />
+        <div style="font-size:12px; color:#6b7280; margin-bottom:6px;">Когда лучше подъехать:</div>
+        <div class="chips">
+          <button type="button" class="t-chip" onclick="pickTime(this, 'Первая половина дня (до 13:00)')">🌅 До 13:00</button>
+          <button type="button" class="t-chip" onclick="pickTime(this, 'Вторая половина дня (после 13:00)')">🌇 После 13:00</button>
+          <button type="button" class="t-chip" onclick="pickTime(this, 'Ближайшее время')">⚡ Срочно</button>
+        </div>
+        <input id="inp-time" type="text" placeholder="Или укажите удобное время..." />
+      </div>
+    </div>
+
+    <button id="submitBtn" type="button" class="submit-btn" onclick="sendOrder()">🚀 Отправить Аршаку в лабораторию</button>
+    <span class="reset-link" onclick="resetAll()">Очистить форму</span>
+  </div>
+
+  <!-- Экран успешной отправки -->
+  <div id="successScreen" class="success-screen">
+    <div style="font-size: 48px; margin-bottom: 10px;">✅</div>
+    <h2 style="margin: 0 0 8px; font-size: 20px;">Заказ отправлен Аршаку!</h2>
+    <p id="successDetails" style="color: #4b5563; font-size: 14px; line-height: 1.5; margin-bottom: 20px;"></p>
+    <button type="button" class="submit-btn" onclick="newOrder()">➕ Оформить ещё один заказ</button>
+  </div>
+</div>
+
+<script>
+  // МОЖНО ВПИСАТЬ АДРЕС КЛИНИКИ В КАВЫЧКАХ НИЖЕ:
+  const CLINIC_ADDRESS = "";
+
+  // НАСТРОЙКИ ТВОЕЙ ЯНДЕКС ФОРМЫ:
+  const YANDEX_FORM_ACTION = "https://yandex.ru";
+  const FIELD_ID       = "answer_short_text_9008994757384950";
+  const FIELD_TYPE     = "answer_short_text_9008994757427168";
+  const FIELD_MATERIAL = "answer_short_text_9008994757468248";
+  const FIELD_COLOR    = "answer_short_text_9008994757485004";
+  const FIELD_COURIER  = "answer_short_text_9008994757499984";
+  const FIELD_FILES    = "answer_files_9008994757641940";
+
+  let mediaRecorder = null;
+  let audioChunks = [];
+  let audioBlob = null;
+  let timerInt = null;
+  let sec = 0;
+  let needCourier = null;
