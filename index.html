@@ -49,7 +49,7 @@
     </div>
     <div class="card">
       <div class="card-head"><span>1. Голосовая диктовка</span><button type="button" class="clear-btn" id="clearBtn">Очистить всё</button></div>
-      <textarea id="rawText" placeholder="Назовите врача/клинику, пациента (ID или фамилию), работу, материал, цвет, доставку и примечания..."></textarea>
+         <textarea id="rawText" placeholder="Назовите врача/клинику, пациента (ID или фамилию), работу (одиночками или мостом, кол-во опор и промежутков, балка), материал, цвет, фотопротокол и доставку..."></textarea>
       <button type="button" class="ai-btn" id="aiParseBtn">Разобрать текст по полям</button>
     </div>
     <div class="card blue">
@@ -57,7 +57,7 @@
       <div class="field"><label>Врач / Клиника</label><input type="text" id="pDoc" placeholder="Например: Врач Петросян / Клиника Дент"></div>
       <div class="field"><label>ID пациента</label><input type="text" id="pId" placeholder="Например: 4512 или Смирнов"></div>
       <div class="grid">
-        <div class="field"><label>Тип конструкции</label><input type="text" id="pType" placeholder="Коронка, на имплантате..."></div>
+              <div class="field"><label>Тип конструкции</label><input type="text" id="pType" placeholder="Мост (опоры/промеж.), одиночки, балка..."></div>
         <div class="field"><label>Материал</label><input type="text" id="pMat" placeholder="Цирконий, E.max..."></div>
       </div>
       <div class="field"><label>Цвет</label><input type="text" id="pCol" placeholder="Например: А2, BL1"></div>
