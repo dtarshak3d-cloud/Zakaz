@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Заказ-наряд Аршаку в лабораторию</title>
+  <title>Быстрый заказ Аршаку в лабораторию</title>
   <style>
     :root {
       --bg: #f3f5f8;
@@ -95,118 +95,101 @@
       width: 100%; padding: 16px; border: none; border-radius: 12px; font-size: 16px; font-weight: 700;
       background: var(--success); color: #fff; cursor: pointer; box-shadow: 0 4px 12px rgba(24,128,56,0.25);
     }
-    .submit-btn:disabled { background: #9ca3af; cursor: wait; }
     .reset-link { display: block; text-align: center; margin-top: 12px; font-size: 13px; color: var(--muted); cursor: pointer; text-decoration: underline; }
-    .success-screen {
-      display: none; background: #fff; border-radius: 16px; padding: 28px 20px; text-align: center;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-    }
-    .success-screen.show { display: block; }
   </style>
 </head>
 <body>
 <div class="container">
-  <div id="mainForm">
-    <div class="header">
-      <h1>🦷 Быстрый заказ Аршаку</h1>
-      <p>Надиктуйте заказ голосом и отправьте в 1 клик</p>
-    </div>
-
-    <!-- 1. Голос -->
-    <div class="card mic-area">
-      <span class="step-title">1. Голосовое сообщение Аршаку</span>
-      <button id="micBtn" type="button" class="mic-btn" onclick="toggleRecord()">🎙</button>
-      <div id="micStatus" class="mic-status">Нажмите, чтобы надиктовать заказ</div>
-      <div class="mic-hint">
-        Назовите: <b>ID пациента, тип конструкции, материал и цвет</b>
-      </div>
-      <div id="audioPreview" class="audio-preview">
-        <audio id="audioPlayer" controls></audio>
-      </div>
-    </div>
-
-    <!-- 2. Ключевые параметры -->
-    <div class="card">
-      <span class="step-title">2. Параметры заказа (если не назвали в голос)</span>
-      <div class="field-group">
-        <label class="field-label" for="inp-id">ID пациента / Номер карты</label>
-        <input id="inp-id" type="text" placeholder="Например: ID 4082 или № карты..." />
-      </div>
-      <div class="field-group">
-        <label class="field-label" for="inp-type">Тип конструкции</label>
-        <input id="inp-type" type="text" placeholder="Например: коронка, винир, вкладка..." />
-      </div>
-      <div class="field-group">
-        <label class="field-label" for="inp-material">Материал</label>
-        <input id="inp-material" type="text" placeholder="Например: циркон, E.max..." />
-      </div>
-      <div class="field-group">
-        <label class="field-label" for="inp-color">Цвет</label>
-        <input id="inp-color" type="text" placeholder="Например: А2..." />
-      </div>
-    </div>
-
-    <!-- 3. Фотопротокол -->
-    <div class="card">
-      <span class="step-title">3. Фотопротокол</span>
-      <div id="photoBox" class="photo-box">
-        <div id="photoText" style="font-size:15px; font-weight:600; color:#1f2937;">📷 Фотопротокол?</div>
-        <div class="btn-row">
-          <label class="file-btn">
-            📁 Выбрать фото
-            <input id="fileInput" type="file" multiple accept="image/*,.raw,.cr2,.nef,.arw,.dng" style="display:none" onchange="onPhotoSelect()" />
-          </label>
-          <button type="button" id="btnNoPhoto" class="gray-btn" onclick="onNoPhoto()">Без фото</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 4. Курьер -->
-    <div class="card">
-      <span class="step-title">4. Вызов курьера</span>
-      <div style="font-size:14px; font-weight:600; margin-bottom:8px;">Нужно забрать слепки / модели?</div>
-      <div class="courier-btns">
-        <button type="button" id="btnYes" class="c-btn" onclick="setCourier(true)">🚚 Да, вызвать</button>
-        <button type="button" id="btnNo" class="c-btn" onclick="setCourier(false)">💻 Нет, цифра</button>
-      </div>
-
-      <div id="courierMore" class="courier-more">
-        <input id="inp-addr" type="text" placeholder="Адрес клиники..." style="margin-bottom:8px;" />
-        <div style="font-size:12px; color:#6b7280; margin-bottom:6px;">Когда лучше подъехать:</div>
-        <div class="chips">
-          <button type="button" class="t-chip" onclick="pickTime(this, 'Первая половина дня (до 13:00)')">🌅 До 13:00</button>
-          <button type="button" class="t-chip" onclick="pickTime(this, 'Вторая половина дня (после 13:00)')">🌇 После 13:00</button>
-          <button type="button" class="t-chip" onclick="pickTime(this, 'Ближайшее время')">⚡ Срочно</button>
-        </div>
-        <input id="inp-time" type="text" placeholder="Или укажите удобное время..." />
-      </div>
-    </div>
-
-    <button id="submitBtn" type="button" class="submit-btn" onclick="sendOrder()">🚀 Отправить Аршаку в лабораторию</button>
-    <span class="reset-link" onclick="resetAll()">Очистить форму</span>
+  <div class="header">
+    <h1>🦷 Быстрый заказ Аршаку</h1>
+    <p>Надиктуйте заказ голосом и отправьте в 1 клик</p>
   </div>
 
-  <!-- Экран успешной отправки -->
-  <div id="successScreen" class="success-screen">
-    <div style="font-size: 48px; margin-bottom: 10px;">✅</div>
-    <h2 style="margin: 0 0 8px; font-size: 20px;">Заказ отправлен Аршаку!</h2>
-    <p id="successDetails" style="color: #4b5563; font-size: 14px; line-height: 1.5; margin-bottom: 20px;"></p>
-    <button type="button" class="submit-btn" onclick="newOrder()">➕ Оформить ещё один заказ</button>
+  <!-- 1. Голос -->
+  <div class="card mic-area">
+    <span class="step-title">1. Голосовое сообщение Аршаку</span>
+    <button id="micBtn" type="button" class="mic-btn" onclick="toggleRecord()">🎙</button>
+    <div id="micStatus" class="mic-status">Нажмите, чтобы надиктовать заказ</div>
+    <div class="mic-hint">
+      Назовите: <b>ID пациента, тип конструкции, материал и цвет</b>
+    </div>
+    <div id="audioPreview" class="audio-preview">
+      <audio id="audioPlayer" controls></audio>
+    </div>
   </div>
+
+  <!-- 2. Ключевые параметры -->
+  <div class="card">
+    <span class="step-title">2. Параметры заказа (если не назвали в голос)</span>
+    <div class="field-group">
+      <label class="field-label" for="inp-id">ID пациента / Номер карты</label>
+      <input id="inp-id" type="text" placeholder="Например: ID 4082 или № карты..." />
+    </div>
+    <div class="field-group">
+      <label class="field-label" for="inp-type">Тип конструкции</label>
+      <input id="inp-type" type="text" placeholder="Например: коронка, винир, вкладка..." />
+    </div>
+    <div class="field-group">
+      <label class="field-label" for="inp-material">Материал</label>
+      <input id="inp-material" type="text" placeholder="Например: циркон, E.max..." />
+    </div>
+    <div class="field-group">
+      <label class="field-label" for="inp-color">Цвет</label>
+      <input id="inp-color" type="text" placeholder="Например: А2..." />
+    </div>
+  </div>
+
+  <!-- 3. Фотопротокол -->
+  <div class="card">
+    <span class="step-title">3. Фотопротокол</span>
+    <div id="photoBox" class="photo-box">
+      <div id="photoText" style="font-size:15px; font-weight:600; color:#1f2937;">📷 Фотопротокол?</div>
+      <div class="btn-row">
+        <label class="file-btn">
+          📁 Выбрать фото
+          <input id="fileInput" type="file" multiple accept="image/*,.raw,.cr2,.nef,.arw,.dng" style="display:none" onchange="onPhotoSelect()" />
+        </label>
+        <button type="button" id="btnNoPhoto" class="gray-btn" onclick="onNoPhoto()">Без фото</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Курьер -->
+  <div class="card">
+    <span class="step-title">4. Вызов курьера</span>
+    <div style="font-size:14px; font-weight:600; margin-bottom:8px;">Нужно забрать слепки / модели?</div>
+    <div class="courier-btns">
+      <button type="button" id="btnYes" class="c-btn" onclick="setCourier(true)">🚚 Да, вызвать</button>
+      <button type="button" id="btnNo" class="c-btn" onclick="setCourier(false)">💻 Нет, цифра</button>
+    </div>
+
+    <div id="courierMore" class="courier-more">
+      <input id="inp-addr" type="text" placeholder="Адрес клиники..." style="margin-bottom:8px;" />
+      <div style="font-size:12px; color:#6b7280; margin-bottom:6px;">Когда лучше подъехать:</div>
+      <div class="chips">
+        <button type="button" class="t-chip" onclick="pickTime(this, 'Первая половина дня (до 13:00)')">🌅 До 13:00</button>
+        <button type="button" class="t-chip" onclick="pickTime(this, 'Вторая половина дня (после 13:00)')">🌇 После 13:00</button>
+        <button type="button" class="t-chip" onclick="pickTime(this, 'Ближайшее время')">⚡ Срочно</button>
+      </div>
+      <input id="inp-time" type="text" placeholder="Или укажите удобное время..." />
+    </div>
+  </div>
+
+  <button type="button" class="submit-btn" onclick="sendOrder()">🚀 Отправить Аршаку в лабораторию</button>
+  <span class="reset-link" onclick="resetAll()">Очистить форму</span>
 </div>
 
 <script>
   // МОЖНО ВПИСАТЬ АДРЕС КЛИНИКИ В КАВЫЧКАХ НИЖЕ:
   const CLINIC_ADDRESS = "";
 
-  // НАСТРОЙКИ ТВОЕЙ ЯНДЕКС ФОРМЫ:
-  const YANDEX_FORM_ACTION = "https://yandex.ru";
-  const FIELD_ID       = "answer_short_text_9008994757384950";
-  const FIELD_TYPE     = "answer_short_text_9008994757427168";
-  const FIELD_MATERIAL = "answer_short_text_9008994757468248";
-  const FIELD_COLOR    = "answer_short_text_9008994757485004";
-  const FIELD_COURIER  = "answer_short_text_9008994757499984";
-  const FIELD_FILES    = "answer_files_9008994757641940";
+  // Твоя Яндекс Форма и её точные идентификаторы полей:
+  const YANDEX_FORM_URL = "https://yandex.ru";
+  const FIELD_ID_PATIENT  = "answer_short_text_9008994757435195";
+  const FIELD_TYPE        = "answer_short_text_9008994757444198";
+  const FIELD_MATERIAL    = "answer_short_text_9008994757463506";
+  const FIELD_COLOR       = "answer_short_text_9008994757485004";
+  const FIELD_COURIER     = "answer_short_text_9008994757499984";
 
   let mediaRecorder = null;
   let audioChunks = [];
@@ -214,3 +197,27 @@
   let timerInt = null;
   let sec = 0;
   let needCourier = null;
+  let noPhoto = false;
+
+  document.getElementById('inp-addr').value = CLINIC_ADDRESS;
+
+  async function toggleRecord() {
+    const btn = document.getElementById('micBtn');
+    const st = document.getElementById('micStatus');
+
+    if (mediaRecorder && mediaRecorder.state === "recording") {
+      mediaRecorder.stop();
+      clearInterval(timerInt);
+      btn.classList.remove('recording');
+      btn.innerText = "🎙";
+      st.innerText = "✅ Голосовое записано!";
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioChunks = [];
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+      mediaRecorder.onstop = () => {
+        audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
