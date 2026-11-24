@@ -6,7 +6,7 @@
   <title>Dt. Arshak Petrosyan WORKSHOP — Заказ</title>
   <style>
     * { box-sizing: border-box; font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif; }
-    body { margin: 0; padding: 14px 14px 124px; background: #FAF7F0; color: #141414; min-height: 100vh; display: flex; justify-content: center; }
+    body { margin: 0; padding: 14px 14px 175px; background: #FAF7F0; color: #141414; min-height: 100vh; display: flex; justify-content: center; }
     .app { width: 100%; max-width: 480px; background: #FFFFFF; border: 1.5px solid #141414; border-radius: 6px; padding: 18px; box-shadow: 0 10px 28px rgba(0,0,0,0.06); }
     .brand { border-bottom: 1.5px solid #141414; padding-bottom: 10px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: flex-end; }
     .brand-sub { font-family: Georgia, "Times New Roman", serif; font-size: 12.5px; color: #444; }
@@ -32,9 +32,9 @@
     .submit-btn:disabled { opacity: 0.6; }
     .send-status { text-align: center; font-size: 12.5px; font-weight: 700; margin-top: 8px; color: #2B5B1E; }
     .mic-dock { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(250,247,240,0.96); backdrop-filter: blur(8px); border-top: 1px solid #BDB8AC; padding: 10px 16px 12px; display: flex; flex-direction: column; align-items: center; z-index: 99; }
-    .mic-btn { width: 78px; height: 78px; border-radius: 50%; border: 2.5px solid #141414; background: #141414; color: #FAF7F0; font-size: 34px; cursor: pointer; box-shadow: 0 6px 16px rgba(0,0,0,0.22); transition: 0.2s; }
-    .mic-btn.rec { background: #D93838; border-color: #D93838; transform: scale(1.07); }
-    .mic-status { font-size: 12px; color: #333; margin-top: 5px; font-weight: 600; text-align: center; }
+    .mic-btn { width: 130px; height: 130px; border-radius: 50%; border: 2.5px solid #141414; background: #141414; color: #FAF7F0; font-size: 50px; cursor: pointer; box-shadow: 0 6px 16px rgba(0,0,0,0.22); transition: 0.2s; }
+    .mic-btn.rec { background: #D93838; border-color: #D93838; transform: scale(1.05); }
+    .mic-status { font-size: 12px; color: #333; margin-top: 6px; font-weight: 600; text-align: center; }
   </style>
 </head>
 <body>
@@ -49,13 +49,13 @@
     </div>
     <div class="card">
       <div class="card-head"><span>1. Голосовая диктовка</span><button type="button" class="clear-btn" id="clearBtn">Очистить всё</button></div>
-      <textarea id="rawText" placeholder="Назовите врача/клинику, ID пациента, конструкцию, материал, цвет, доставку и примечания..."></textarea>
+      <textarea id="rawText" placeholder="Назовите врача/клинику, пациента (ID или фамилию), работу, материал, цвет, доставку и примечания..."></textarea>
       <button type="button" class="ai-btn" id="aiParseBtn">Разобрать текст по полям</button>
     </div>
     <div class="card blue">
       <div class="card-head"><span>2. Параметры заказа</span></div>
-      <div class="field"><label>Врач / Клиника</label><input type="text" id="pDoc" placeholder="Например: Иванов / Клиника Дент"></div>
-      <div class="field"><label>ID пациента</label><input type="text" id="pId" placeholder="Например: 4512"></div>
+      <div class="field"><label>Врач / Клиника</label><input type="text" id="pDoc" placeholder="Например: Петросян / Клиника Дент"></div>
+      <div class="field"><label>ID пациента</label><input type="text" id="pId" placeholder="Например: 4512 или Смирнов"></div>
       <div class="grid">
         <div class="field"><label>Тип конструкции</label><input type="text" id="pType" placeholder="Коронка, на имплантате..."></div>
         <div class="field"><label>Материал</label><input type="text" id="pMat" placeholder="Цирконий, E.max..."></div>
@@ -82,15 +82,24 @@
       const low = txt.toLowerCase();
       let noteRest = ' ' + txt + ' ';
       const rm = rx => { noteRest = noteRest.replace(rx, ' '); };
-      const stopW = /^(врач|доктор|клиника|стоматология|пациент[а-я]*|ид|id|номер|карта|коронка|коронки|коронок|мост|винир|вкладка|абатмент|протез|бюгель|капа|шаблон|временн[а-я]*|имплантат[а-я]*|имплант[а-я]*|своих|культ[а-я]*|зубах|диоксид|циркон[а-я]*|керамик[а-я]*|металлокерам[а-я]*|титан|акрил|нейлон|пластмасс[а-я]*|emax|емакс|pmma|пмма|цвет[а-я]*|оттенок|блич|лич|курьер|доставка|нужен|не|сами|привез[а-я]*|забрать|адрес|улиц[а-я]*|винтов[а-я]*|цементн[а-я]*|фиксац[а-я]*|срок[а-я]*|сдать|готово|срочно|на|из|с|в|к|по|до|от|и|одна|один|одну|две|два|три|четыре|пять|шесть|семь|восемь|девять|десять)$/i;
-      const docM = txt.match(/(?:врач|доктор|д-р|от\s+доктора|от\s+врача)\s+([а-яё\-]{2,25}(?:\s+[а-яё]\.?\s*[а-яё]\.?)?)/i) || txt.match(/(?:клиника|стоматология)\s+([а-яёa-z0-9\-\s«»"]{2,30}?)(?=\s+(?:пациент|ид|номер|карта|корон|винир|мост|протез|вклад|циркон|цвет|курьер|адрес|$)|[,.]|$)/i);
-      if (docM) { $('pDoc').value = docM.at(0).trim().replace(/^[а-яёa-z]/, s => s.toUpperCase()); localStorage.setItem('zakaz_doc', $('pDoc').value); rm(new RegExp(docM.at(0).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')); }
-      else {
-        const w = txt.split(/[\s,]+/).map(x => x.replace(/[^а-яё\-]/gi, '')).filter(x => x.length >= 3 && !stopW.test(x));
-        if (w.length) { $('pDoc').value = w.at(0).replace(/^[а-яё]/, s => s.toUpperCase()); localStorage.setItem('zakaz_doc', $('pDoc').value); rm(new RegExp('(?:^|\\s)' + w.at(0) + '(?=\\s|[.,]|$)', 'i')); }
+      const stopW = /^(врач|доктор|клиника|стоматология|пациент[а-я]*|фамили[яи]|ид|id|номер|карта|коронка|коронки|коронок|мост|винир|вкладка|абатмент|протез|бюгель|капа|шаблон|временн[а-я]*|имплантат[а-я]*|имплант[а-я]*|своих|культ[а-я]*|зубах|диоксид|циркон[а-я]*|керамик[а-я]*|металлокерам[а-я]*|титан|акрил|нейлон|пластмасс[а-я]*|emax|емакс|pmma|пмма|цвет[а-я]*|оттенок|блич|лич|курьер|доставка|нужен|не|сами|привез[а-я]*|забрать|адрес|улиц[а-я]*|винтов[а-я]*|цементн[а-я]*|фиксац[а-я]*|срок[а-я]*|сдать|готово|срочно|на|из|с|в|к|по|до|от|и|одна|один|одну|две|два|три|четыре|пять|шесть|семь|восемь|девять|десять)$/i;
+      let docCaptured = false;
+      const docM = txt.match(/(?:врач|доктор|д-р|от\s+доктора|от\s+врача)\s+([а-яё\-]{2,25}(?:\s+[а-яё]\.?\s*[а-яё]\.?)?)/i) || txt.match(/(?:клиника|стоматология)\s+([а-яёa-z0-9\-\s«»"]{2,30}?)(?=\s+(?:пациент|фамили|ид|номер|карта|корон|винир|мост|протез|вклад|циркон|цвет|курьер|адрес|$)|[,.]|$)/i);
+      if (docM) { $('pDoc').value = docM.at(0).trim().replace(/^[а-яёa-z]/, s => s.toUpperCase()); localStorage.setItem('zakaz_doc', $('pDoc').value); rm(new RegExp(docM.at(0).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')); docCaptured = true; }
+      else if (!/^(?:пациент[а-я]*|фамили[яи]|ид|id)\b/i.test(txt.trim())) {
+        const w0 = txt.split(/[\s,]+/).map(x => x.replace(/[^а-яё\-]/gi, '')).filter(x => x.length >= 3 && !stopW.test(x));
+        if (w0.length) { $('pDoc').value = w0.at(0).replace(/^[а-яё]/, s => s.toUpperCase()); localStorage.setItem('zakaz_doc', $('pDoc').value); rm(new RegExp('(?:^|\\s)' + w0.at(0) + '(?=\\s|[.,]|$)', 'i')); docCaptured = true; }
       }
       const idM = noteRest.match(/(?:пациент[а-я]*|ид|id|номер|карта|№)\s*(?:в|на)?\s*(\d{1,3}[:\-\s]?\d{2,4})/i) || noteRest.match(/\b(\d{3,6})\b/);
       if (idM) { $('pId').value = idM.at(1).replace(/[:\-\s]/g, ''); rm(idM.at(0)); }
+      else {
+        const famM = noteRest.match(/(?:пациент[а-я]*|фамили[яи]|для)\s+([а-яё\-]{3,25})/i);
+        if (famM && !stopW.test(famM.at(1))) { $('pId').value = famM.at(1).replace(/^[а-яё]/, s => s.toUpperCase()); rm(famM.at(0)); }
+        else if (docCaptured) {
+          const w1 = noteRest.split(/[\s,]+/).map(x => x.replace(/[^а-яё\-]/gi, '')).filter(x => x.length >= 3 && !stopW.test(x));
+          if (w1.length) { $('pId').value = w1.at(0).replace(/^[а-яё]/, s => s.toUpperCase()); rm(new RegExp('(?:^|\\s)' + w1.at(0) + '(?=\\s|[.,]|$)', 'i')); }
+        }
+      }
       const numW = {'одна':1,'один':1,'одну':1,'две':2,'два':2,'три':3,'четыре':4,'пять':5,'шесть':6,'семь':7,'восемь':8,'девять':9,'десять':10,'одиннадцать':11,'двенадцать':12,'тринадцать':13,'четырнадцать':14,'пятнадцать':15,'шестнадцать':16,'семнадцать':17,'восемьнадцать':18,'девятнадцать':19,'двадцать':20};
       const tRules = [
         ['коронок на имплант|коронки на имплант|коронка на имплант|на имплант', n => n > 1 ? `${n} коронок на имплантатах` : (n === 1 ? '1 коронка на имплантате' : 'Коронка на имплантате')],
