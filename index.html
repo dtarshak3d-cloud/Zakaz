@@ -8,16 +8,17 @@
   * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
   body { margin: 0; background: #f3f5f8; color: #1f2937; padding: 14px; display: flex; justify-content: center; }
   .wrap { width: 100%; max-width: 460px; }
-  h1 { font-size: 20px; text-align: center; margin: 0 0 12px; }
+  h1 { font-size: 20px; text-align: center; margin: 0 0 4px; }
+  .ver { text-align: center; font-size: 11px; color: #9ca3af; margin-bottom: 12px; }
   .card { background: #fff; border-radius: 16px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 12px; }
   .lbl { font-size: 12px; font-weight: 700; text-transform: uppercase; color: #6b7280; margin-bottom: 8px; display: block; }
   .center { text-align: center; }
-  .mic { width: 110px; height: 110px; border-radius: 50%; border: none; background: #1a73e8; color: #fff; font-size: 46px; cursor: pointer; box-shadow: 0 6px 20px rgba(26,115,232,0.4); -webkit-tap-highlight-color: transparent; }
+  .mic { width: 115px; height: 115px; border-radius: 50%; border: none; background: #1a73e8; color: #fff; font-size: 48px; cursor: pointer; box-shadow: 0 6px 20px rgba(26,115,232,0.4); -webkit-tap-highlight-color: transparent; }
   .mic.rec { background: #d93025; animation: pulse 1.2s infinite; }
   @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(217,48,37,0.6); } 70% { box-shadow: 0 0 0 22px rgba(217,48,37,0); } 100% { box-shadow: 0 0 0 0 rgba(217,48,37,0); } }
-  .st { margin-top: 10px; font-weight: 700; font-size: 15px; }
-  .live { margin-top: 8px; padding: 10px; background: #f8fafc; border-radius: 10px; font-size: 14px; border: 1px dashed #cbd5e1; text-align: left; }
-  audio { width: 100%; height: 36px; margin-top: 10px; display: none; }
+  .st { margin-top: 12px; font-weight: 700; font-size: 15px; }
+  .err { margin-top: 8px; padding: 10px; background: #fef2f2; color: #b91c1c; border-radius: 10px; font-size: 13px; display: none; }
+  audio { width: 100%; height: 40px; margin-top: 12px; display: none; }
   input { width: 100%; border: 1px solid #cbd5e1; border-radius: 10px; padding: 10px; font-size: 15px; margin-bottom: 8px; background: #f8fafc; }
   .row { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
   .btn { padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; background: #f8fafc; font-size: 13px; font-weight: 600; cursor: pointer; flex: 1; }
@@ -32,17 +33,18 @@
 <body>
 <div class="wrap">
   <h1>🦷 Быстрый заказ Аршаку</h1>
+  <div class="ver">Версия 3.0 • Голосовой наряд</div>
 
   <div class="card center">
     <span class="lbl">1. Голосовой диктофон</span>
     <button id="micBtn" type="button" class="mic">🎙</button>
-    <div id="st" class="st">Нажмите на микрофон и говорите</div>
-    <div id="live" class="live">Назовите: ID пациента, тип конструкции, материал и цвет...</div>
-    <audio id="player" controls></audio>
+    <div id="st" class="st">Нажмите на микрофон и продиктуйте заказ</div>
+    <div id="errBox" class="err"></div>
+    <audio id="player" controls playsinline></audio>
   </div>
 
   <div class="card">
-    <span class="lbl">2. Параметры заказа</span>
+    <span class="lbl">2. Параметры (если не сказали в голос)</span>
     <input id="pId" type="text" placeholder="ID пациента..." />
     <input id="pType" type="text" placeholder="Тип конструкции (коронка, винир)..." />
     <input id="pMat" type="text" placeholder="Материал (циркон, E.max)..." />
@@ -80,145 +82,109 @@
 </div>
 
 <script>
-  const CFG = {
-    formUrl: "",
-    email:   "Dt.Arshak@yandex.ru",
-    fId:     "answer_short_text_1",
-    fType:   "answer_short_text_2",
-    fMat:    "answer_short_text_3",
-    fColor:  "answer_short_text_9008994757485004",
-    fCour:   "answer_short_text_9008994757499984"
-  };
-
-  let rec = false, mr = null, chunks = [], blob = null, sr = null, spoken = "", tInt = null, sec = 0, courier = null;
+  let rec = false, mr = null, chunks = [], blob = null, ext = "webm", tInt = null, sec = 0, courier = null;
   const $ = id => document.getElementById(id);
 
+  function showErr(msg) {
+    $('errBox').textContent = msg;
+    $('errBox').style.display = 'block';
+  }
+
   $('micBtn').addEventListener('click', async function() {
+    $('errBox').style.display = 'none';
+
     if (rec) {
       rec = false;
       clearInterval(tInt);
       $('micBtn').classList.remove('rec');
       $('micBtn').textContent = "🎙";
-      $('st').textContent = "✅ Готово! Нажмите 🎙 чтобы додиктовать";
-      if (mr && mr.state === "recording") mr.stop();
-      if (sr) { try { sr.stop(); } catch(e) {} }
+      $('st').textContent = "✅ Голосовое записано! Можно прослушать ниже";
+      if (mr && mr.state !== "inactive") mr.stop();
       return;
     }
 
+    $('st').textContent = "⏳ Включаю микрофон...";
+
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      alert("Браузер не поддерживает запись звука. Откройте в Chrome или Safari.");
+      $('st').textContent = "Нажмите на микрофон";
+      showErr("Браузер блокирует микрофон. Если вы открыли ссылку внутри Telegram/WhatsApp — нажмите «Открыть в Safari / Chrome».");
       return;
     }
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      rec = true;
       chunks = [];
       mr = new MediaRecorder(stream);
-      mr.ondataavailable = function(e) { if (e.data.size > 0) chunks.push(e.data); };
+
+      mr.ondataavailable = function(e) {
+        if (e.data && e.data.size > 0) chunks.push(e.data);
+      };
+
       mr.onstop = function() {
-        blob = new Blob(chunks, { type: 'audio/webm' });
+        const mime = mr.mimeType || 'audio/mp4';
+        ext = mime.includes('webm') ? 'webm' : 'm4a';
+        blob = new Blob(chunks, { type: mime });
         const pl = $('player');
         pl.src = URL.createObjectURL(blob);
         pl.style.display = 'block';
         stream.getTracks().forEach(function(t) { t.stop(); });
       };
-      mr.start();
 
+      mr.start();
+      rec = true;
       sec = 0;
       $('micBtn').classList.add('rec');
       $('micBtn').textContent = "⏹";
-      $('st').textContent = "🔴 Слушаю... 0 сек";
+      $('st').textContent = "🔴 Идёт запись: 0 сек (нажмите ⏹ чтобы остановить)";
       tInt = setInterval(function() {
         sec++;
-        $('st').textContent = "🔴 Слушаю... " + sec + " сек";
+        $('st').textContent = "🔴 Идёт запись: " + sec + " сек (нажмите ⏹ чтобы остановить)";
       }, 1000);
-
-      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (SR) {
-        sr = new SR();
-        sr.lang = 'ru-RU';
-        sr.continuous = true;
-        sr.interimResults = true;
-        sr.onresult = function(e) {
-          let tmp = "";
-          for (let i = e.resultIndex; i < e.results.length; i++) {
-            if (e.results[i].isFinal) {
-              spoken += " " + e.results[i].transcript;
-              parse(spoken);
-            } else {
-              tmp += e.results[i].transcript;
-            }
-          }
-          $('live').textContent = (spoken + " " + tmp).trim();
-        };
-        try { sr.start(); } catch(e) {}
-      }
     } catch (err) {
-      alert("Ошибка микрофона: " + err.name + ". Разрешите доступ к микрофону.");
+      $('st').textContent = "Нажмите на микрофон";
+      showErr("Не удалось включить микрофон (" + err.name + "). Разрешите доступ к микрофону в настройках браузера.");
     }
   });
 
-  function parse(txt) {
-    const t = txt.toLowerCase();
-    const idM = txt.match(/(?:айди|id|номер|карта|пациент)\s*([A-Za-zА-Яа-я0-9\-]+)/i);
-    if (idM && idM[1]) $('pId').value = idM[1];
-    if (/коронк/i.test(t)) $('pType').value = "Коронка";
-    if (/винир/i.test(t)) $('pType').value = "Винир";
-    if (/вкладк/i.test(t)) $('pType').value = "Вкладка";
-    if (/мост/i.test(t)) $('pType').value = "Мост";
-    if (/циркон/i.test(t)) $('pMat').value = "Циркон";
-    if (/емакс|имакс|max/i.test(t)) $('pMat').value = "E.max";
-    const cM = txt.match(/\b([ABCDАВС][1-4]|BL[1-4])\b/i);
-    if (cM && cM[1]) $('pCol').value = cM[1].toUpperCase().replace('А','A').replace('В','B').replace('С','C');
-  }
-
   $('files').addEventListener('change', function() {
     $('noPh').classList.remove('dark');
-    $('phTxt').textContent = "✅ Фото: " + this.files.length + " шт.";
+    $('phTxt').textContent = "✅ Выбрано фото: " + this.files.length + " шт.";
   });
-
   $('noPh').addEventListener('click', function() {
     $('files').value = "";
     this.classList.add('dark');
     $('phTxt').textContent = "✅ Без фото";
   });
-
   $('cYes').addEventListener('click', function() {
-    courier = true;
-    this.className = 'btn blue';
-    $('cNo').className = 'btn';
-    $('cMore').style.display = 'block';
+    courier = true; this.className = 'btn blue'; $('cNo').className = 'btn'; $('cMore').style.display = 'block';
   });
-
   $('cNo').addEventListener('click', function() {
-    courier = false;
-    this.className = 'btn green';
-    $('cYes').className = 'btn';
-    $('cMore').style.display = 'none';
+    courier = false; this.className = 'btn green'; $('cYes').className = 'btn'; $('cMore').style.display = 'none';
   });
-
   document.querySelectorAll('.tchip').forEach(function(b) {
     b.addEventListener('click', function() { $('cTime').value = this.dataset.t; });
   });
 
   $('sendBtn').addEventListener('click', function() {
-    if (courier === null) { alert("Отметьте, нужен ли курьер (Да или Нет)."); return; }
+    if (courier === null) { alert("Отметьте в пункте 4, нужен ли курьер (Да или Нет)."); return; }
     const courText = courier ? "ДА (" + $('cAddr').value + ", " + $('cTime').value + ")" : "НЕТ (цифра)";
-    const summary = "ID пациента: " + ($('pId').value || "в голосе") + "\nТип конструкции: " + ($('pType').value || "в голосе") +
-      "\nМатериал: " + ($('pMat').value || "в голосе") + "\nЦвет: " + ($('pCol').value || "в голосе") +
-      "\nДиктовка: " + (spoken.trim() || "см. аудио") + "\nФотопротокол: " + $('phTxt').textContent + "\nКурьер: " + courText;
+    const summary = "ID пациента: " + ($('pId').value || "в голосе") +
+      "\nТип конструкции: " + ($('pType').value || "в голосе") +
+      "\nМатериал: " + ($('pMat').value || "в голосе") +
+      "\nЦвет: " + ($('pCol').value || "в голосе") +
+      "\nФотопротокол: " + $('phTxt').textContent +
+      "\nКурьер: " + courText;
 
     if (blob) {
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = "Голос_" + ($('pId').value || "заказ") + ".webm";
+      a.download = "Голос_Аршаку_" + ($('pId').value || "заказ") + "." + ext;
       a.click();
     }
-    if (CFG.formUrl.startsWith("http")) {
-      const p = new URLSearchParams();
-      p.set(CFG.fId, $('pId').value || spoken);
-      p.set(CFG.fType, $('pType').value);
-      p.set(CFG.fMat, $('pMat').value);
-      p.set(CFG.fColor, $('pCol').value);
-      p.set(CFG.fCour, courText);
+    window.location.href = "mailto:Dt.Arshak@yandex.ru?subject=" + encodeURIComponent("Заказ Аршаку: " + ($('pId').value || "новый")) + "&body=" + encodeURIComponent(summary);
+  });
+
+  $('clrBtn').addEventListener('click', function() { location.reload(); });
+</script>
+</body>
+</html>
