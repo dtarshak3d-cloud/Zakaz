@@ -326,3 +326,29 @@
               $('micBtn').textContent = '🎤';
             }
           };
+        mediaRecorder.start();
+        isRecording = true;
+        $('micBtn').className = 'mic-btn rec';
+        $('micBtn').textContent = '⏹';
+        $('micStatus').textContent = '🔴 Идёт запись... Нажмите стоп, когда закончите';
+      } catch (e) {
+        $('micStatus').textContent = '⚠️ Нет доступа к микрофону: ' + e.message;
+      }
+    } else {
+      mediaRecorder.stop();
+      isRecording = false;
+    }
+  };
+
+  $('sendBtn').onclick = () => {
+    const params = new URLSearchParams();
+    if ($('pId').value) params.set(CFG.fId, $('pId').value);
+    if ($('pType').value) params.set(CFG.fType, $('pType').value);
+    if ($('pMat').value) params.set(CFG.fMat, $('pMat').value);
+    if ($('pCol').value) params.set(CFG.fCol, $('pCol').value);
+    if ($('pCour').value) params.set(CFG.fCour, $('pCour').value);
+    window.open(`${FORM_URL}?${params.toString()}`, '_blank');
+  };
+  </script>
+</body>
+</html>
