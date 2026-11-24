@@ -9,10 +9,10 @@
     body { margin: 0; padding: 14px 14px 175px; background: #FAF7F0; color: #141414; min-height: 100vh; display: flex; justify-content: center; }
     .app { width: 100%; max-width: 480px; background: #FFFFFF; border: 1.5px solid #141414; border-radius: 6px; padding: 18px; box-shadow: 0 10px 28px rgba(0,0,0,0.06); }
     .brand { border-bottom: 1.5px solid #141414; padding-bottom: 10px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: flex-end; }
-    .brand-sub { font-family: Georgia, "Times New Roman", serif; font-size: 12.5px; color: #444; }
-    .brand-name { font-size: 13.5px; font-weight: 700; color: #111; }
+    .brand-title { font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 3px; color: #111; }
+    .brand-name { font-size: 13.5px; font-weight: 700; color: #222; }
     .brand-logo { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; line-height: 1; text-transform: uppercase; }
-    .brand-phones { text-align: right; font-size: 11px; line-height: 1.35; font-weight: 600; color: #222; }
+    .brand-phones { text-align: right; font-size: 11px; line-height: 1.4; font-weight: 600; color: #222; }
     .card { background: #FAF7F0; border: 1px solid #BDB8AC; padding: 13px 13px 13px 19px; margin-bottom: 12px; position: relative; }
     .card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: #7FB069; }
     .card.blue::before { background: #5C95D6; }
@@ -41,11 +41,11 @@
   <div class="app">
     <div class="brand">
       <div>
-        <div class="brand-sub">Digital Dental Studio</div>
+        <div class="brand-title">Голосовой заказ-наряд</div>
         <div class="brand-name">Dt. Arshak Petrosyan</div>
         <div class="brand-logo">WORKSHOP</div>
       </div>
-      <div class="brand-phones">+7 919 544-48-88<br>+7 917 648-50-01<br>Заказ-наряд</div>
+      <div class="brand-phones">+7 919 544-48-88<br>+7 917 648-50-01</div>
     </div>
     <div class="card">
       <div class="card-head"><span>1. Голосовая диктовка</span><button type="button" class="clear-btn" id="clearBtn">Очистить всё</button></div>
@@ -64,7 +64,7 @@
       <label>Доставка</label>
       <div class="delivery-btns"><button type="button" class="del-btn active" id="btnCourier">Нужен курьер</button><button type="button" class="del-btn" id="btnSelf">Сами привезём</button></div>
       <div class="field" id="courierBox"><label>Курьер: адрес и время</label><input type="text" id="pCour" placeholder="Откуда и во сколько забрать"></div>
-      <div class="field"><label>Примечание</label><textarea id="pNote" rows="2" placeholder="Зубы, фиксация, сроки сдачи, детали прикуса..."></textarea></div>
+      <div class="field"><label>Примечание</label><textarea id="pNote" rows="2" placeholder="Сроки сдачи и детали работы..."></textarea></div>
       <button type="button" class="submit-btn" id="sendBtn">Отправить Аршаку в лабораторию ➔</button>
       <div class="send-status" id="sendStatus"></div>
     </div>
@@ -78,27 +78,19 @@
     const $ = id => document.getElementById(id);
     if (localStorage.getItem('zakaz_doc')) $('pDoc').value = localStorage.getItem('zakaz_doc');
     $('pDoc').addEventListener('input', e => localStorage.setItem('zakaz_doc', e.target.value));
+    const cap = s => s.trim().split(/\s+/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
     function localParse(txt) {
       const low = txt.toLowerCase();
       let noteRest = ' ' + txt + ' ';
       const rm = rx => { noteRest = noteRest.replace(rx, ' '); };
       const stopW = /^(врач|доктор|клиника|стоматология|пациент[а-я]*|фамили[яи]|ид|id|номер|карта|коронка|коронки|коронок|мост|винир|вкладка|абатмент|протез|бюгель|капа|шаблон|временн[а-я]*|имплантат[а-я]*|имплант[а-я]*|своих|культ[а-я]*|зубах|диоксид|циркон[а-я]*|керамик[а-я]*|металлокерам[а-я]*|титан|акрил|нейлон|пластмасс[а-я]*|emax|емакс|pmma|пмма|цвет[а-я]*|оттенок|блич|лич|курьер|доставка|нужен|не|сами|привез[а-я]*|забрать|адрес|улиц[а-я]*|винтов[а-я]*|цементн[а-я]*|фиксац[а-я]*|срок[а-я]*|сдать|готово|срочно|на|из|с|в|к|по|до|от|и|одна|один|одну|две|два|три|четыре|пять|шесть|семь|восемь|девять|десять)$/i;
-      let docCaptured = false;
-      const docM = txt.match(/(?:врач|доктор|д-р|от\s+доктора|от\s+врача)\s+([а-яё\-]{2,25}(?:\s+[а-яё]\.?\s*[а-яё]\.?)?)/i) || txt.match(/(?:клиника|стоматология)\s+([а-яёa-z0-9\-\s«»"]{2,30}?)(?=\s+(?:пациент|фамили|ид|номер|карта|корон|винир|мост|протез|вклад|циркон|цвет|курьер|адрес|$)|[,.]|$)/i);
-      if (docM) { $('pDoc').value = docM.at(0).trim().replace(/^[а-яёa-z]/, s => s.toUpperCase()); localStorage.setItem('zakaz_doc', $('pDoc').value); rm(new RegExp(docM.at(0).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')); docCaptured = true; }
-      else if (!/^(?:пациент[а-я]*|фамили[яи]|ид|id)\b/i.test(txt.trim())) {
-        const w0 = txt.split(/[\s,]+/).map(x => x.replace(/[^а-яё\-]/gi, '')).filter(x => x.length >= 3 && !stopW.test(x));
-        if (w0.length) { $('pDoc').value = w0.at(0).replace(/^[а-яё]/, s => s.toUpperCase()); localStorage.setItem('zakaz_doc', $('pDoc').value); rm(new RegExp('(?:^|\\s)' + w0.at(0) + '(?=\\s|[.,]|$)', 'i')); docCaptured = true; }
-      }
+      const docM = txt.match(/(?:врач|доктор|д-р|от\s+доктора|от\s+врача|клиника|стоматология)\s+([^,.;\d]+?)(?=\s+(?:пациент|фамили|ид|номер|карта|корон|винир|мост|протез|вклад|циркон|цвет|курьер|адрес|одна|один|одну|две|два|три|четыре|пять|шесть|$)|[,.;\d]|$)/i);
+      if (docM) { $('pDoc').value = cap(docM.at(0)); localStorage.setItem('zakaz_doc', $('pDoc').value); rm(new RegExp(docM.at(0).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')); }
       const idM = noteRest.match(/(?:пациент[а-я]*|ид|id|номер|карта|№)\s*(?:в|на)?\s*(\d{1,3}[:\-\s]?\d{2,4})/i) || noteRest.match(/\b(\d{3,6})\b/);
       if (idM) { $('pId').value = idM.at(1).replace(/[:\-\s]/g, ''); rm(idM.at(0)); }
       else {
         const famM = noteRest.match(/(?:пациент[а-я]*|фамили[яи]|для)\s+([а-яё\-]{3,25})/i);
-        if (famM && !stopW.test(famM.at(1))) { $('pId').value = famM.at(1).replace(/^[а-яё]/, s => s.toUpperCase()); rm(famM.at(0)); }
-        else if (docCaptured) {
-          const w1 = noteRest.split(/[\s,]+/).map(x => x.replace(/[^а-яё\-]/gi, '')).filter(x => x.length >= 3 && !stopW.test(x));
-          if (w1.length) { $('pId').value = w1.at(0).replace(/^[а-яё]/, s => s.toUpperCase()); rm(new RegExp('(?:^|\\s)' + w1.at(0) + '(?=\\s|[.,]|$)', 'i')); }
-        }
+        if (famM && !stopW.test(famM.at(1))) { $('pId').value = cap(famM.at(1)); rm(famM.at(0)); }
       }
       const numW = {'одна':1,'один':1,'одну':1,'две':2,'два':2,'три':3,'четыре':4,'пять':5,'шесть':6,'семь':7,'восемь':8,'девять':9,'десять':10,'одиннадцать':11,'двенадцать':12,'тринадцать':13,'четырнадцать':14,'пятнадцать':15,'шестнадцать':16,'семнадцать':17,'восемьнадцать':18,'девятнадцать':19,'двадцать':20};
       const tRules = [
@@ -131,9 +123,8 @@
         if (cm && cm.at(1).trim().length > 2) { $('pCour').value = cm.at(1).trim(); rm(cm.at(0)); }
       }
       const cleanNote = noteRest.replace(/^(?:[\s,.;:\-]|и|а|но|также|ещё|еще|примечание)+/i, '').replace(/[\s,.;:\-]+$/g, '').replace(/\s{2,}/g, ' ').trim();
-      if (cleanNote.length > 2) $('pNote').value = cleanNote.charAt(0).toUpperCase() + cleanNote.slice(1);
+      $('pNote').value = cleanNote.length > 2 ? cleanNote.charAt(0).toUpperCase() + cleanNote.slice(1) : '';
     }
-    $('rawText').addEventListener('input', e => localParse(e.target.value));
     $('aiParseBtn').onclick = () => { localParse($('rawText').value); $('micStatus').textContent = 'Поля заполнены!'; };
     $('btnCourier').onclick = () => { $('btnCourier').classList.add('active'); $('btnSelf').classList.remove('active'); $('courierBox').style.display = 'block'; if ($('pCour').value === 'Сами привезём') $('pCour').value = ''; };
     $('btnSelf').onclick = () => { $('btnSelf').classList.add('active'); $('btnCourier').classList.remove('active'); $('courierBox').style.display = 'none'; $('pCour').value = 'Сами привезём'; };
@@ -142,10 +133,10 @@
     let rec = null, listening = false;
     if (SR && !isYa) {
       rec = new SR(); rec.lang = 'ru-RU'; rec.continuous = true; rec.interimResults = true;
-      rec.onresult = e => { let f = ''; for (let i = 0; i < e.results.length; i++) { const it = e.results.item ? e.results.item(i) : e.results.at(i), al = it.item ? it.item(0) : it.at(0); if (al && al.transcript) f += al.transcript; } $('rawText').value = f; localParse(f); };
-      rec.onend = () => { listening = false; $('micBtn').className = 'mic-btn'; $('micStatus').textContent = 'Готово! Проверьте поля ниже'; };
+      rec.onresult = e => { let f = ''; for (let i = 0; i < e.results.length; i++) { const it = e.results.item ? e.results.item(i) : e.results.at(i), al = it.item ? it.item(0) : it.at(0); if (al && al.transcript) f += al.transcript; } $('rawText').value = f; };
+      rec.onend = () => { listening = false; $('micBtn').className = 'mic-btn'; localParse($('rawText').value); $('micStatus').textContent = 'Готово! Проверьте поля ниже'; };
     }
-    $('micBtn').onclick = () => { if (rec) { if (!listening) { rec.start(); listening = true; $('micBtn').className = 'mic-btn rec'; $('micStatus').textContent = 'Говорите...'; } else rec.stop(); } else { $('rawText').focus(); $('micStatus').innerHTML = 'В Яндекс Браузере нажмите <b>Win + H</b> и диктуйте'; } };
+    $('micBtn').onclick = () => { if (rec) { if (!listening) { rec.start(); listening = true; $('micBtn').className = 'mic-btn rec'; $('micStatus').textContent = 'Говорите... Нажмите ещё раз, когда закончите'; } else rec.stop(); } else { $('rawText').focus(); $('micStatus').innerHTML = 'В Яндекс Браузере нажмите <b>Win + H</b> и диктуйте'; } };
     $('sendBtn').onclick = async () => {
       const btn = $('sendBtn'); btn.disabled = true; $('sendStatus').textContent = 'Отправляем на Dt.Arshak@yandex.ru...';
       try { localStorage.setItem('zakaz_doc', $('pDoc').value); const q = new URLSearchParams({ action: 'sendEmail', doctor: $('pDoc').value, id: $('pId').value, type: $('pType').value, material: $('pMat').value, color: $('pCol').value, courier: $('pCour').value, note: $('pNote').value, rawText: $('rawText').value }); await fetch(GAS_URL + '?' + q.toString(), { mode: 'no-cors' }); $('sendStatus').textContent = '✓ Отправлено на Dt.Arshak@yandex.ru!'; }
