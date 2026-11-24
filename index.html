@@ -3,110 +3,258 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Быстрый заказ Аршаку</title>
+  <title>Dt. Arshak Petrosyan WORKSHOP — Заказ-наряд</title>
   <style>
-    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { margin: 0; padding: 16px; background: linear-gradient(160deg, #1b3358 0%, #2b4c7e 100%); color: #fff; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; }
-    .app { width: 100%; max-width: 480px; background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.18); border-radius: 24px; padding: 22px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-    h1 { margin: 0; font-size: 22px; text-align: center; }
-    .sub { text-align: center; font-size: 13px; color: #b8d0f5; margin: 4px 0 18px; }
-    .card { background: rgba(15, 29, 51, 0.55); border: 1px solid rgba(255,255,255,0.12); border-radius: 18px; padding: 16px; margin-bottom: 14px; }
-    .card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-weight: 600; font-size: 15px; }
-    .clear-btn { background: none; border: none; color: #8ab4f8; text-decoration: underline; cursor: pointer; font-size: 13px; padding: 0; }
-    .mic-wrap { display: flex; flex-direction: column; align-items: center; margin: 8px 0 14px; }
-    .mic-btn { width: 72px; height: 72px; border-radius: 50%; border: none; background: linear-gradient(135deg, #4da3ff, #2673d9); color: #fff; font-size: 30px; cursor: pointer; box-shadow: 0 8px 20px rgba(38,115,217,0.45); transition: 0.2s; }
-    .mic-btn.rec { background: linear-gradient(135deg, #ff5252, #d32f2f); transform: scale(1.06); }
-    .mic-status { font-size: 13px; color: #d0e2ff; margin-top: 10px; text-align: center; line-height: 1.4; }
-    textarea, input { width: 100%; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22); border-radius: 12px; color: #fff; padding: 11px 13px; font-size: 15px; outline: none; }
-    textarea::placeholder, input::placeholder { color: rgba(255,255,255,0.55); }
-    textarea { min-height: 78px; resize: vertical; }
-    .ai-btn { width: 100%; padding: 10px; border: 1px solid rgba(96,165,250,0.5); border-radius: 11px; background: rgba(59,130,246,0.25); color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 8px; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .field { margin-bottom: 11px; }
-    label { display: block; font-size: 12px; color: #b8d0f5; margin-bottom: 5px; font-weight: 500; }
-    .delivery-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 11px; }
-    .del-btn { padding: 10px; border-radius: 11px; border: 1px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.08); color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; }
-    .del-btn.active { background: #3b82f6; border-color: #60a5fa; }
-    .submit-btn { width: 100%; padding: 15px; border: none; border-radius: 14px; background: linear-gradient(135deg, #65c43a, #4aa122); color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 4px; }
+    * { box-sizing: border-box; font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif; }
+    body { margin: 0; padding: 14px; background: #FAF7F0; color: #141414; min-height: 100vh; display: flex; justify-content: center; }
+    .app { width: 100%; max-width: 540px; background: #FFFFFF; border: 1.5px solid #141414; border-radius: 4px; padding: 18px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+    .brand { border-bottom: 1.5px solid #141414; padding-bottom: 12px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: flex-end; gap: 8px; }
+    .brand-sub { font-family: Georgia, "Times New Roman", serif; font-size: 12.5px; color: #444; }
+    .brand-name { font-size: 14px; font-weight: 700; color: #111; margin-top: 1px; }
+    .brand-logo { font-size: 23px; font-weight: 900; letter-spacing: -0.5px; line-height: 1; text-transform: uppercase; }
+    .brand-info { text-align: right; font-size: 11px; line-height: 1.4; font-weight: 600; color: #222; }
+    .sec { border: 1px solid #BDB8AC; margin-bottom: 12px; background: #FAF7F0; position: relative; padding: 12px 12px 12px 19px; }
+    .sec::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; }
+    .s-green::before { background: #7FB069; }
+    .s-blue::before { background: #5C95D6; }
+    .s-yellow::before { background: #E5C158; }
+    .s-pink::before { background: #DF7A7A; }
+    .sec-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 9px; font-weight: 800; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.4px; }
+    .clear-btn { background: none; border: none; color: #555; text-decoration: underline; cursor: pointer; font-size: 12px; padding: 0; }
+    .mic-row { display: flex; align-items: center; gap: 11px; margin-bottom: 8px; }
+    .mic-btn { width: 50px; height: 50px; border-radius: 50%; border: 1.5px solid #141414; background: #141414; color: #FAF7F0; font-size: 20px; cursor: pointer; flex-shrink: 0; transition: 0.15s; }
+    .mic-btn.rec { background: #D93838; border-color: #D93838; transform: scale(1.05); }
+    .mic-status { font-size: 12px; color: #333; line-height: 1.35; }
+    textarea, input, select { width: 100%; background: #FFFFFF; border: 1px solid #9E998E; border-radius: 2px; color: #111; padding: 8px 10px; font-size: 13.5px; outline: none; }
+    textarea:focus, input:focus { border-color: #141414; }
+    textarea { min-height: 60px; resize: vertical; }
+    .ai-btn { width: 100%; padding: 8px; border: 1px solid #141414; background: #FFFFFF; color: #141414; font-size: 12px; font-weight: 700; cursor: pointer; margin-top: 7px; text-transform: uppercase; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .grid3 { display: grid; grid-template-columns: 2fr 1fr; gap: 8px; }
+    .field { margin-bottom: 8px; }
+    label { display: block; font-size: 10.5px; color: #4A4740; margin-bottom: 3px; font-weight: 700; text-transform: uppercase; }
+    .teeth-box { background: #FFFFFF; border: 1px solid #9E998E; padding: 6px 4px; margin-bottom: 8px; overflow-x: auto; }
+    .teeth-row { display: grid; grid-template-columns: repeat(16, 1fr); gap: 2px; }
+    .teeth-row.top { border-bottom: 1.5px solid #141414; padding-bottom: 3px; margin-bottom: 3px; }
+    .t-btn { padding: 4px 0; font-size: 10.5px; font-weight: 700; border: 1px solid #D5D0C5; background: #FAF7F0; color: #141414; cursor: pointer; text-align: center; }
+    .t-btn:nth-child(8) { border-right: 1.5px solid #141414; }
+    .t-btn.sel { background: #141414; color: #FAF7F0; border-color: #141414; }
+    .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+    .chip { padding: 5px 8px; font-size: 11px; font-weight: 600; border: 1px solid #9E998E; background: #FFFFFF; cursor: pointer; user-select: none; }
+    .chip.on { background: #141414; color: #FAF7F0; border-color: #141414; }
+    details { background: #FFFFFF; border: 1px solid #BDB8AC; padding: 7px 10px; margin-top: 6px; }
+    summary { font-size: 11.5px; font-weight: 700; cursor: pointer; text-transform: uppercase; }
+    .del-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+    .del-btn { padding: 8px; border: 1px solid #9E998E; background: #FFFFFF; color: #222; font-size: 12px; font-weight: 700; cursor: pointer; }
+    .del-btn.active { background: #141414; color: #FAF7F0; border-color: #141414; }
+    .submit-btn { width: 100%; padding: 14px; border: 1.5px solid #141414; background: #141414; color: #FAF7F0; font-size: 13.5px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; cursor: pointer; }
     .submit-btn:disabled { opacity: 0.6; }
-    .send-status { text-align: center; font-size: 13px; margin-top: 10px; color: #6ee7b7; }
+    .send-status { text-align: center; font-size: 12.5px; font-weight: 700; margin-top: 8px; color: #2B5B1E; }
   </style>
 </head>
 <body>
   <div class="app">
-    <h1>🦷 Быстрый заказ Аршаку</h1>
-    <div class="sub">Версия 9.0 • Голос + Почта</div>
-    <div class="card">
-      <div class="card-head"><span>1. Голосовой диктофон 🎙️</span><button type="button" class="clear-btn" id="clearBtn">Очистить всё</button></div>
-      <div class="mic-wrap"><button type="button" class="mic-btn" id="micBtn">🎤</button><div class="mic-status" id="micStatus">Нажмите на микрофон и продиктуйте заказ</div></div>
-      <textarea id="rawText" placeholder="Назовите: фамилию или ID, тип конструкции, материал, цвет и доставку..."></textarea>
-      <button type="button" class="ai-btn" id="aiParseBtn">✨ Разобрать текст по полям</button>
-    </div>
-    <div class="card">
-      <div class="card-head"><span>2. Параметры заказа</span></div>
-      <div class="field"><label>ID или фамилия пациента</label><input type="text" id="pId" placeholder="Например: Иванов или 4512"></div>
-      <div class="grid">
-        <div class="field"><label>Тип конструкции</label><input type="text" id="pType" placeholder="Коронка, на имплантате..."></div>
-        <div class="field"><label>Материал</label><input type="text" id="pMat" placeholder="Цирконий, E.max..."></div>
+    <div class="brand">
+      <div>
+        <div class="brand-sub">Digital Dental Studio</div>
+        <div class="brand-name">Dt. Arshak Petrosyan</div>
+        <div class="brand-logo">WORKSHOP</div>
       </div>
-      <div class="field"><label>Цвет</label><input type="text" id="pCol" placeholder="Например: А2, BL1"></div>
-      <label>Доставка</label>
-      <div class="delivery-btns"><button type="button" class="del-btn active" id="btnCourier">Нужен курьер</button><button type="button" class="del-btn" id="btnSelf">Сами привезём</button></div>
-      <div class="field" id="courierBox"><label>Курьер: адрес и время</label><input type="text" id="pCour" placeholder="Откуда и во сколько забрать"></div>
-      <button type="button" class="submit-btn" id="sendBtn">Отправить Аршаку в лабораторию ➔</button>
-      <div class="send-status" id="sendStatus"></div>
+      <div class="brand-info">+7 919 544-48-88<br>+7 917 648-50-01<br>Заказ-наряд</div>
     </div>
+
+    <div class="sec s-green">
+      <div class="sec-head"><span>1. Голосовой ввод заказа</span><button type="button" class="clear-btn" id="clearBtn">Очистить</button></div>
+      <div class="mic-row">
+        <button type="button" class="mic-btn" id="micBtn">🎤</button>
+        <div class="mic-status" id="micStatus">Нажмите микрофон и продиктуйте заказ-наряд</div>
+      </div>
+      <textarea id="rawText" placeholder="Фамилия или ID, номера зубов, наименование работы из прайса, цвет (A2, BL1) и доставка..."></textarea>
+      <button type="button" class="ai-btn" id="aiParseBtn">Разобрать диктовку по полям</button>
+    </div>
+
+    <div class="sec s-yellow">
+      <div class="sec-head"><span>2. Клиника, Врач и Пациент</span></div>
+      <div class="grid2">
+        <div class="field"><label>Клиника (запоминается)</label><input type="text" id="pClinic" placeholder="Название клиники"></div>
+        <div class="field"><label>Врач (запоминается)</label><input type="text" id="pDoc" placeholder="ФИО врача"></div>
+      </div>
+      <div class="grid2">
+        <div class="field" style="margin-bottom:0;"><label>ID или фамилия пациента</label><input type="text" id="pId" placeholder="Петров / 4512"></div>
+        <div class="field" style="margin-bottom:0;"><label>Дата / время сдачи</label><input type="text" id="pDue" placeholder="Например: 28.11 к 14:00"></div>
+      </div>
+    </div>
+
+    <div class="sec s-blue">
+      <div class="sec-head"><span>3. Зубная формула и работа из прайса</span></div>
+      <label>Отметьте зубы нажатием (или назовите голосом)</label>
+      <div class="teeth-box">
+        <div class="teeth-row top" id="tTop"></div>
+        <div class="teeth-row" id="tBot"></div>
+      </div>
+      <div class="grid3">
+        <div class="field"><label>Выбранные зубы</label><input type="text" id="pTeeth" placeholder="Напр: 16, 21, 22"></div>
+        <div class="field"><label>Кол-во (шт.)</label><input type="text" id="pQty" placeholder="1"></div>
+      </div>
+      <div class="field">
+        <label>Тип конструкции / работа из прайса (начните ввод или выберите)</label>
+        <input type="text" id="pType" list="priceList" placeholder="Введите: коронка, имплантат, E-max, бюгель, вкладка...">
+        <datalist id="priceList"></datalist>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Материал / доп. уточнение</label><input type="text" id="pMat" placeholder="ZrO2, E-max Press, КХС..."></div>
+        <div class="field"><label>Цвет зуба (Vita / Bleach)</label><input type="text" id="pCol" placeholder="A2, BL1, OM2..."></div>
+      </div>
+      <details>
+        <summary>+ Доп. параметры бланка (фиксация, имплант, транслюцентность)</summary>
+        <div style="margin-top:8px;">
+          <label>Вид фиксации</label>
+          <div class="chips" id="grpFix"><span class="chip">Цементная</span><span class="chip">Винтовая</span><span class="chip">Локатор</span><span class="chip">Телескоп</span></div>
+          <label style="margin-top:7px;">Имплантационная система</label>
+          <div class="chips" id="grpImp"><span class="chip">Титановое основание</span><span class="chip">Мультиюнит</span><span class="chip">Индивидуальный абатмент</span><span class="chip">Балка</span><span class="chip">ZrO2</span><span class="chip">Titan</span></div>
+          <label style="margin-top:7px;">Артикулятор и транслюцентность</label>
+          <div class="chips" id="grpArt"><span class="chip">Среднеанатомические</span><span class="chip">Индивидуальные</span><span class="chip">HT</span><span class="chip">MT</span><span class="chip">LT</span><span class="chip">MO</span><span class="chip">HO</span><span class="chip">Impulse</span></div>
+        </div>
+      </details>
+    </div>
+
+    <div class="sec s-pink">
+      <div class="sec-head"><span>4. Доставка и примечания</span></div>
+      <div class="del-btns"><button type="button" class="del-btn active" id="btnCourier">Нужен курьер</button><button type="button" class="del-btn" id="btnSelf">Сами привезём</button></div>
+      <div class="field" id="courierBox"><label>Адрес клиники и время забора</label><input type="text" id="pCour" placeholder="Откуда и во сколько забрать"></div>
+      <div class="field" style="margin-bottom:0;"><label>Примечания / Промокод</label><input type="text" id="pNotes" placeholder="Особенности окклюзии, цвет культи/десны, промокод..."></div>
+    </div>
+
+    <button type="button" class="submit-btn" id="sendBtn">Отправить заказ-наряд в WORKSHOP ➔</button>
+    <div class="send-status" id="sendStatus"></div>
   </div>
   <script>
-    const GAS_URL = 'https://' + 'script.google' + '.com/macros/s/AKfycbyeHWKmbbvUtTkhXHeXSmJn9Zby9qfhziAqXFg0K0ACnE6dpIRxnVzZdZjDg912HVsXrg/exec';
+    const GAS_URL = 'https://' + 'script.google' + '.com/macros/s/AKfycbyeHWKmbbvUtTkhXHeXSmJn92by9qfhziAqXFg0K0ACnE6dpIRxnVzZdZjDg912HVsXrg/exec';
     const $ = id => document.getElementById(id);
+
+    const PRICE_ITEMS = [
+      '1.1.1 Коронка металлокерамическая — 3 300 ₽ (5+5 дн.)',
+      '1.1.2 Коронка металлокерамическая с эффект-массами и внутренними красителями — 4 500 ₽ (5+5 дн.)',
+      '1.1.3 Коронка металлокерамическая с плечевой массой — 4 500 ₽ (5+5 дн.)',
+      '1.1.4 Коронка металлокерамическая (бюгельная с фрезеровкой) — 4 500 ₽ (5+5 дн.)',
+      '1.1.5 Коронка металлокерамическая с десневой массой — 4 500 ₽ (5+5 дн.)',
+      '1.1.6 Коронка металлокерамическая на имплантате с винтом и выжигаемым абатментом — 7 000 ₽ (5+5 дн.)',
+      '1.1.7 Коронка безметалловая (диоксид циркония ZrO2) с нанесением — 6 000 ₽ (2+2 дн.)',
+      '1.1.8 Коронка безметалловая на имплантате с титановым основанием (ZrO2) — 8 000 ₽ (5+2 дн.)',
+      '1.1.9 Коронка цельнокерамическая безметалловая (диоксид циркония ZrO2) — 5 000 ₽ (2+1 дн.)',
+      '1.1.10 Коронка композитная временная — 3 500 ₽ (5+5 дн.)',
+      '1.1.11 Коронка металлокомпозитная — 4 500 ₽ (5+5 дн.)',
+      '1.1.12 Коронка керамическая прессованная (E-max Press) — 8 000 ₽ (5+5 дн.)',
+      '1.1.13 Коронка керамическая прессованная (E-max Press) с нанесением — 10 000 ₽ (5+5 дн.)',
+      '1.1.14 Коронка металлоакриловая — 3 000 ₽ (5+5 дн.)',
+      '1.1.15 Коронка цельнолитая (КХС) — 2 000 ₽ (5+5 дн.)',
+      '1.1.16 Коронка цельнолитая (КХС) с напылением — 2 300 ₽ (5+5 дн.)',
+      '1.1.17 Коронка цельнолитая (КХС) с фасеткой — 3 000 ₽ (5+5 дн.)',
+      '1.1.18 Коронка пластмассовая временная — 1 000 ₽ (5 дн.)',
+      '1.1.19 Коронка Wax-up — 500 ₽ (5 дн.)',
+      '1.2.1 Вкладка культевая (КХС) — 1 000 ₽ (3 дн.)',
+      '1.2.2 Вкладка культевая (КХС) разборная — 1 800 ₽ (3 дн.)',
+      '1.2.3 Вкладка культевая (КХС) с замком — 3 000 ₽ (4 дн.)',
+      '1.2.4 Вкладка композитная — 2 300 ₽ (3 дн.)',
+      '1.2.5 Вкладка керамическая прессованная (E-max Press) — 7 000 ₽ (4 дн.)',
+      '1.2.6 Вкладка керамическая полевошпатная (Noritake) — 7 000 ₽ (4 дн.)',
+      '1.2.7 Вкладка керамическая (на диоксиде циркония) — 5 000 ₽ (3+3 дн.)',
+      '1.3.1 Винир на рефракторе (Noritake) — 15 000 ₽ (4+3 дн.)',
+      '1.3.2 Винир прессованный (E-max Press) — 8 000 ₽ (4+3 дн.)',
+      '1.3.3 Винир прессованный (E-max Press) с нанесением — 10 000 ₽ (4+4 дн.)',
+      '1.4.1 Каппа, сплинт, ортотик — 5 000 ₽ (3 дн.)',
+      '1.4.2 Каппа для отбеливания и разгрузочная — 1 600 ₽ (2 дн.)',
+      '1.4.3 Каппа спортивная — 3 000 ₽ (2 дн.)',
+      '1.4.4 Каппа боксерская многослойная — 7 000 ₽ (4 дн.)',
+      '1.4.5 Абатмент фрезерованный — 3 000 ₽ (3 дн.)',
+      '1.4.6 Изготовление хирургического шаблона (без стоимости втулок) — 7 000 ₽ (4 дн.)',
+      '1.4.7 Диагностическая wax-up композиция (план тотала) + 2 ключа ВЧ и НЧ — 10 000 ₽ (5 дн.)',
+      '1.4.8 Изготовление диагностической модели — 500 ₽ (1 дн.)',
+      '2.1 Съемный протез (частичный) — 9 000 ₽ (5+5 дн.)',
+      '2.2 Протез (частичный) в артикуляторе с индивидуализацией — 35 000 ₽ (5+5 дн.)',
+      '2.3 Полный съемный протез — 10 000 ₽ (5+5 дн.)',
+      '2.4 Полный съемный протез в артикуляторе с индивидуализацией — 40 000 ₽ (5+5 дн.)',
+      '2.5 Термопрессованные съемные протезы — 16 000 ₽ (5+5 дн.)',
+      '2.6 Микропротез (иммедиат) 1-2 зуба — 2 500 ₽ (2 дн.)',
+      '2.7 Изготовление индивидуальной ложки — 1 000 ₽ (2 дн.)',
+      '2.8 Изготовление прикусного шаблона — 500 ₽ (2 дн.)',
+      '2.9 Починка съемного протеза с одной манипуляцией — 1 000 ₽ (2 дн.)',
+      '2.10 Дополнительный элемент починки протеза — 300 ₽ (2 дн.)',
+      '2.11 Перебазировка съемного протеза — 3 000 ₽ (2 дн.)',
+      '3.1 Протез бюгельный на кламмерах — 16 500 ₽ (5+5 дн.)',
+      '3.2 Бюгельный протез на замках (2 замка) — 22 000 ₽ (5+5 дн.)',
+      '3.3 Односторонний бюгель с запирающимся замком МК-1 — 28 000 ₽ (5+5 дн.)',
+      '3.4 Бюгель с двумя запирающимися замками МК-1 — 33 000 ₽ (5+5 дн.)',
+      '3.5 Телескопическое крепление (первичная и вторичная коронки) — 10 000 ₽ (5+5 дн.)',
+      '3.6 Установка замковых креплений на телескопические коронки — 4 500–10 000 ₽ (5+5 дн.)',
+      '3.7 Шинирующий бюгельный протез — 20 000 ₽ (5+5 дн.)',
+      '4.1 Коронка безметалловая на имплантате с титановым основанием (ZrO2) — 8 000 ₽ (5+2 дн.)',
+      '4.2 Коронка металлокерамическая на имплантате с титановым основанием (ZrO2) — 8 000 ₽ (5+4 дн.)',
+      '4.3 Индивидуальная ложка — 1 000 ₽ (2 дн.)',
+      '4.4 Трансфер-чек, Абатмент-чек из пластмассы — 1 500 ₽ (2 дн.)',
+      '4.5 Трансфер-чек, Абатмент-чек из композита — 1 000 ₽ (2 дн.)',
+      '4.6 Модель диагностическая с аналогами и десной — 3 000 ₽ (2 дн.)',
+      '4.7 Прикусной шаблон на жестком базисе — 1 000 ₽ (2 дн.)',
+      '4.8 All-on-4 временный армированный с титановыми колпачками — 25 000 ₽ (10 дн.)',
+      '4.9 All-on-4 акриловый на титановой балке — от 50 000 ₽ (12 дн.)',
+      '4.10 Дуга циркониевая на титановой балке 12 зубов — от 70 000 ₽ (12 дн.)',
+      '4.11 Хирургический шаблон (без стоимости втулок) — 7 000 ₽ (2-5 дн.)'
+    ];
+    PRICE_ITEMS.forEach(item => { const o = document.createElement('option'); o.value = item; $('priceList').appendChild(o); });
+
+    $('pClinic').value = localStorage.getItem('ws_clinic') || '';
+    $('pDoc').value = localStorage.getItem('ws_doc') || '';
+    $('pClinic').addEventListener('input', e => localStorage.setItem('ws_clinic', e.target.value));
+    $('pDoc').addEventListener('input', e => localStorage.setItem('ws_doc', e.target.value));
+
+    const topNums =;
+    const botNums =;
+    const allTeeth = new Set([...topNums, ...botNums]);
+    function syncTeeth() {
+      const sel = [...document.querySelectorAll('.t-btn.sel')].map(b => b.textContent);
+      $('pTeeth').value = sel.join(', ');
+      if (sel.length) $('pQty').value = sel.length;
+    }
+    function buildRow(nums, el) {
+      nums.forEach(n => {
+        const b = document.createElement('button'); b.type = 'button'; b.className = 't-btn'; b.textContent = n; b.dataset.t = n;
+        b.onclick = () => { b.classList.toggle('sel'); syncTeeth(); };
+        el.appendChild(b);
+      });
+    }
+    buildRow(topNums, $('tTop')); buildRow(botNums, $('tBot'));
+    document.querySelectorAll('.chip').forEach(c => c.onclick = () => c.classList.toggle('on'));
+
     function localParse(txt) {
       const low = txt.toLowerCase();
-      const stopW = /^(пациент[а-я]*|фамили[яи]|ид|id|номер|карта|коронка|коронки|мост|винир|вкладка|абатмент|протез|бюгель|капа|шаблон|временн[а-я]*|имплантат[а-я]*|имплант[а-я]*|диоксид|циркон[а-я]*|керамик[а-я]*|металлокерам[а-я]*|титан|акрил|нейлон|пластмасс[а-я]*|emax|емакс|pmma|пмма|цвет|цвета|оттенок|блич|лич|курьер|доставка|нужен|не|сами|привез[а-я]*|забрать|адрес|улиц[а-я]*|клиник[а-я]*|завтра|сегодня|на|из|с|в|к|по|до|от)$/i;
-      const idM = txt.match(/(?:пациент[а-я]*|ид|id|номер|карта|№)\s*(?:в|на)?\s*(\d{1,3}[:\-\s]?\d{2,4})/i) || txt.match(/\b(\d{3,6})\b/);
+      const stopW = /^(пациент[а-я]*|фамили[яи]|ид|id|номер|карта|зуб[а-я]*|коронка|коронки|мост|винир|вкладка|абатмент|протез|бюгель|капа|шаблон|хиршаблон|сплинт|индоложка|рефрактор|телескоп|балка|модель|печать|временн[а-я]*|имплантат[а-я]*|имплант[а-я]*|диоксид|циркон[а-я]*|керамик[а-я]*|металлокерам[а-я]*|титан|акрил|нейлон|пластмасс[а-я]*|emax|емакс|pmma|пмма|cocr|кхс|цвет[а-я]*|оттенок|блич|лич|курьер|доставка|нужен|не|сами|привез[а-я]*|забрать|адрес|улиц[а-я]*|клиник[а-я]*|завтра|сегодня|на|из|с|в|к|по|до|от|чсп|псп|винтов[а-я]*|цементн[а-я]*)$/i;
+      const idM = txt.match(/(?:пациент[а-я]*|ид|id|номер|карта|№)\s*(?:в|на)?\s*(\d{3,6}|\d{1,2}[:\-]\d{2})/i);
       if (idM) $('pId').value = idM.at(1).replace(/[:\-\s]/g, '');
       else {
         const famM = txt.match(/(?:пациент[а-я]*|фамили[яи]|для)\s+([а-яё\-]{3,25})/i);
         if (famM && !stopW.test(famM.at(1))) $('pId').value = famM.at(1).replace(/^[а-яё]/, s => s.toUpperCase());
         else { const w = txt.split(/[\s,]+/).map(x => x.replace(/[^а-яё\-]/gi, '')).filter(x => x.length >= 3 && !stopW.test(x)); if (w.length) $('pId').value = w.at(0).replace(/^[а-яё]/, s => s.toUpperCase()); }
       }
-      const types = [['коронка на имплант','Коронка на имплантате'],['на имплант','Коронка на имплантате'],['коронка','Коронка'],['коронки','Коронки'],['мост','Мостовидный протез'],['винир','Винир'],['вкладка','Вкладка'],['абатмент','Индивидуальный абатмент'],['протез','Съёмный протез'],['бюгель','Бюгельный протез'],['капа','Капа'],['шаблон','Хирургический шаблон'],['временн','Временная коронка']];
-      for (const [k, v] of types) if (low.includes(k)) { $('pType').value = v; break; }
-      const mats = [['циркон','Диоксид циркония'],['emax','E.max'],['е макс','E.max'],['емакс','E.max'],['металлокерам','Металлокерамика'],['керамик','Керамика'],['титан','Титан'],['акрил','Акрил'],['нейлон','Нейлон'],['pmma','PMMA'],['пмма','PMMA'],['пластмасс','Пластмасса']];
-      for (const [k, v] of mats) if (low.includes(k)) { $('pMat').value = v; break; }
-      const blM = low.match(/(?:б?лич|bleach|bl)\s*(1|2|3|4|один|два|три|четыре)/);
-      const cA = low.match(/цвета\s*([1-4](?:\.5)?)/);
-      if (blM) { const m = {'один':'1','два':'2','три':'3','четыре':'4'}; $('pCol').value = 'BL' + (m[blM.at(1)] || blM.at(1)); }
-      else if (cA) $('pCol').value = 'A' + cA.at(1);
-      else { const cM = txt.match(/(?:цвет|оттенок)?\s*(?:^|\s)([аaбbсcдd]\s*[1-4](?:\.5)?|ом\s*[1-3])(?=\s|$|[.,])/i); if (cM) $('pCol').value = cM.at(1).toUpperCase().replace(/\s+/g,'').replace('А','A').replace('Б','B').replace('С','C').replace('Д','D'); }
-      if (low.includes('не нужен') || low.includes('сами') || low.includes('привезем') || low.includes('привезём')) $('btnSelf').click();
-      else if (low.includes('курьер') || low.includes('забрать') || low.includes('адрес') || low.includes('улиц') || low.includes('клиник')) {
-        $('btnCourier').click();
-        const cm = txt.match(/(?:нужен\s+курьер|курьер|забрать|адрес|по\s+адресу|из\s+клиники|с\s+улицы|ул\.?)\s*[:\-]?\s*(.+)$/i);
-        if (cm && cm.at(1).trim().length > 2) $('pCour').value = cm.at(1).trim();
+      const toothHits = txt.match(/\b([1-4][1-8])\b/g);
+      if (toothHits) {
+        toothHits.forEach(num => { const n = Number(num); if (allTeeth.has(n)) { const btn = document.querySelector(`.t-btn[data-t="${n}"]`); if (btn) btn.classList.add('sel'); } });
+        syncTeeth();
       }
-    }
-    $('rawText').addEventListener('input', e => localParse(e.target.value));
-    $('aiParseBtn').onclick = () => { localParse($('rawText').value); $('micStatus').textContent = '✅ Поля заполнены!'; };
-    $('btnCourier').onclick = () => { $('btnCourier').classList.add('active'); $('btnSelf').classList.remove('active'); $('courierBox').style.display = 'block'; if ($('pCour').value === 'Сами привезём') $('pCour').value = ''; };
-    $('btnSelf').onclick = () => { $('btnSelf').classList.add('active'); $('btnCourier').classList.remove('active'); $('courierBox').style.display = 'none'; $('pCour').value = 'Сами привезём'; };
-    $('clearBtn').onclick = () => { ['rawText','pId','pType','pMat','pCol','pCour'].forEach(k => $(k).value = ''); $('btnCourier').click(); $('micStatus').textContent = 'Нажмите на микрофон и продиктуйте заказ'; $('sendStatus').textContent = ''; };
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition, isYa = /YaBrowser/i.test(navigator.userAgent);
-    let rec = null, listening = false;
-    if (SR && !isYa) {
-      rec = new SR(); rec.lang = 'ru-RU'; rec.continuous = true; rec.interimResults = true;
-      rec.onresult = e => { let f = ''; for (let i = 0; i < e.results.length; i++) { const it = e.results.item ? e.results.item(i) : e.results.at(i), al = it.item ? it.item(0) : it.at(0); if (al && al.transcript) f += al.transcript; } $('rawText').value = f; localParse(f); };
-      rec.onend = () => { listening = false; $('micBtn').className = 'mic-btn'; $('micStatus').textContent = '✅ Готово! Проверьте поля ниже'; };
-    }
-    $('micBtn').onclick = () => { if (rec) { if (!listening) { rec.start(); listening = true; $('micBtn').className = 'mic-btn rec'; $('micStatus').textContent = '🔴 Говорите...'; } else rec.stop(); } else { $('rawText').focus(); $('micStatus').innerHTML = '💡 В Яндекс Браузере нажмите <b>Win + H</b> и диктуйте'; } };
-    $('sendBtn').onclick = async () => {
-      const btn = $('sendBtn'); btn.disabled = true; $('sendStatus').textContent = '⏳ Отправляем на Dt.Arshak@yandex.ru...';
-      try {
-        const q = new URLSearchParams({ action: 'sendEmail', id: $('pId').value, type: $('pType').value, material: $('pMat').value, color: $('pCol').value, courier: $('pCour').value, rawText: $('rawText').value });
-        await fetch(GAS_URL + '?' + q.toString(), { mode: 'no-cors' });
-        $('sendStatus').textContent = '✅ Отправлено на Dt.Arshak@yandex.ru!';
-      } catch (e) { $('sendStatus').textContent = '❌ Ошибка: ' + e.message; } finally { btn.disabled = false; }
-    };
-  </script>
-</body>
-</html>
+      const rules = [
+        [/коронка.*имплант.*металлокерам|металлокерам.*имплант/, '1.1.6 Коронка металлокерамическая на имплантате с винтом и выжигаемым абатментом — 7 000 ₽ (5+5 дн.)'],
+        [/коронка.*имплант|на имплант/, '1.1.8 Коронка безметалловая на имплантате с титановым основанием (ZrO2) — 8 000 ₽ (5+2 дн.)'],
+        [/all.?on.?4.*врем|все на 4.*врем/, '4.8 All-on-4 временный армированный с титановыми колпачками — 25 000 ₽ (10 дн.)'],
+        [/all.?on.?4|все на 4/, '4.9 All-on-4 акриловый на титановой балке — от 50 000 ₽ (12 дн.)'],
+        [/дуга.*циркон|all.?on.?6|все на 6/, '4.10 Дуга циркониевая на титановой балке 12 зубов — от 70 000 ₽ (12 дн.)'],
+        [/винир.*рефрактор|рефрактор/, '1.3.1 Винир на рефракторе (Noritake) — 15 000 ₽ (4+3 дн.)'],
+        [/винир.*нанес/, '1.3.3 Винир прессованный (E-max Press) с нанесением — 10 000 ₽ (4+4 дн.)'],
+        [/винир/, '1.3.2 Винир прессованный (E-max Press) — 8 000 ₽ (4+3 дн.)'],
+        [/вкладк.*разбор/, '1.2.2 Вкладка культевая (КХС) разборная — 1 800 ₽ (3 дн.)'],
+        [/вкладк.*e.?max|вкладк.*керам/, '1.2.5 Вкладка керамическая прессованная (E-max Press) — 7 000 ₽ (4 дн.)'],
+        [/вкладк/, '1.2.1 Вкладка культевая (КХС) — 1 000 ₽ (3 дн.)'],
+        [/бюгель.*мк|запирающ/, '3.3 Односторонний бюгель с запирающимся замком МК-1 — 28 000 ₽ (5+5 дн.)'],
+        [/бюгель.*замк/, '3.2 Бюгельный протез на замках (2 замка) — 22 000 ₽ (5+5 дн.)'],
+        [/бюгель/, '3.1 Протез бюгельный на кламмерах — 16 500 ₽ (5+5 дн.)'],
+        [/чсп|частичн.*съем/, '2.1 Съемный протез (частичный) — 9 000 ₽ (5+5 дн.)'],
+        [/псп|полн.*съем/, '2.3 Полный съемный протез — 10 000 ₽ (5+5 дн.)'],
+        [/сплинт|ортотик/, '1.4.1 Каппа, сплинт, ортотик — 5 000 ₽ (3 дн.)'],
