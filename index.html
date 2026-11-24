@@ -138,17 +138,12 @@
       rec.onend = () => { listening = false; $('micBtn').className = 'mic-btn'; localParse($('rawText').value); $('micStatus').textContent = 'Готово! Проверьте поля ниже'; };
     }
     $('micBtn').onclick = () => { if (rec) { if (!listening) { rec.start(); listening = true; $('micBtn').className = 'mic-btn rec'; $('micStatus').textContent = 'Говорите... Нажмите ещё раз, когда закончите'; } else rec.stop(); } else { $('rawText').focus(); $('micStatus').innerHTML = 'В Яндекс Браузере нажмите <b>Win + H</b> и диктуйте'; } };
-       $('sendBtn').onclick = () => {
+          $('sendBtn').onclick = async () => {
       const btn = $('sendBtn'); btn.disabled = true; $('sendStatus').textContent = 'Отправляем на Dt.Arshak@yandex.ru...';
-      localStorage.setItem('zakaz_doc', $('pDoc').value);
-      let ifr = $('gasFrame');
-      if (!ifr) { ifr = document.createElement('iframe'); ifr.name = 'gasFrame'; ifr.id = 'gasFrame'; ifr.style.display = 'none'; document.body.appendChild(ifr); }
-      const f = document.createElement('form'); f.method = 'POST'; f.action = GAS_URL; f.target = 'gasFrame'; f.style.display = 'none';
-      const fields = { action: 'sendEmail', doctor: $('pDoc').value, id: $('pId').value, type: $('pType').value, material: $('pMat').value, color: $('pCol').value, courier: $('pCour').value, note: $('pNote').value, rawText: $('rawText').value };
-      for (const [k, v] of Object.entries(fields)) { const inp = document.createElement('input'); inp.type = 'hidden'; inp.name = k; inp.value = v; f.appendChild(inp); }
-      document.body.appendChild(f); f.submit(); f.remove();
-      setTimeout(() => { $('sendStatus').textContent = '✓ Отправлено на Dt.Arshak@yandex.ru!'; btn.disabled = false; }, 1200);
+      try { localStorage.setItem('zakaz_doc', $('pDoc').value); const q = new URLSearchParams({ action: 'sendEmail', doctor: $('pDoc').value, id: $('pId').value, type: $('pType').value, material: $('pMat').value, color: $('pCol').value, courier: $('pCour').value, note: $('pNote').value, rawText: $('rawText').value }); await fetch(GAS_URL + '?' + q.toString(), { mode: 'no-cors' }); $('sendStatus').textContent = '✓ Отправлено на Dt.Arshak@yandex.ru!'; }
+      catch (e) { $('sendStatus').textContent = 'Ошибка: ' + e.message; } finally { btn.disabled = false; }
     };
+
   </script>
 </body>
 </html>
