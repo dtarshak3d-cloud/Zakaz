@@ -161,12 +161,13 @@
     const edM = low.match(/\b(\d{1,2}|двадцать\s+(?:одна|два|две|три|четыре|пять|шесть|семь|восемь)|одна|один|одну|две|два|три|четыре|пять|шесть|семь|восемь|девять|десять|одиннадцать|двенадцать|тринадцать|четырнадцать|пятнадцать|шестнадцать|семнадцать|восемнадцать|девятнадцать|двадцать)\s+(?:ед\.?|единиц[а-я]*)\b/i);
     if (edM && edM.at(1)) { const n = toN(edM.at(1)); if (n > 0) { foundTypes.push(n + ' ед.'); rm(edM.at(0)); } }
     let extras = [];
-          const allOn = low.match(/(?:вс[её]\s+на|all[\s-]*on[\s-]*|alone\s+(?:for|four|fuck|six)|олон\s*фоллон|фоллон|олонх[а-я]*|олонф[а-я]*|олон|полон\s*фу[а-я]*)\s*(\d{1,2}|четыр[а-я]*|шест[а-я]*|восьм[а-я]*|for|four|fuck|фон[а-я]*|six)?/i);
-      if (allOn) {
+              const allOn = low.match(/(?:вс[её]\s+на|all[\s-]*on[\s-]*|alone\s+(?:for|four|fuck|six)|олон\s*фоллон|фоллон|олонх[а-я]*|олонф[а-я]*|олон|полон\s*фу[а-я]*)\s*(\d{1,2}|четыр[а-я]*|шест[а-я]*|восьм[а-я]*|for|four|fuck|фон[а-я]*|six)?/i);
+    if (allOn) {
       const full = allOn.at(0).toLowerCase();
       const w = (allOn.at(1) || '').toLowerCase();
-          const n = toN(w) || (w.startsWith('четыр') || w === 'for' || w === 'four' || w === 'fuck' || w.startsWith('фон') || full.includes('фу') || full.includes('for') || full.includes('fuck') ? 4 : (w.startsWith('шест') || w === 'six' ? 6 : (w.startsWith('восьм') ? 8 : 0)));
-      else if (!foundTypes.some(t => t.includes('Балоч'))) foundTypes.push('All-on-4 / Балочная конструкция');
+      const n = toN(w) || (w.startsWith('четыр') || w === 'for' || w === 'four' || w === 'fuck' || w.startsWith('фон') || full.includes('фу') || full.includes('for') || full.includes('fuck') ? 4 : (w.startsWith('шест') || w === 'six' ? 6 : (w.startsWith('восьм') ? 8 : 0)));
+      if (n > 0) extras.push(`All-on-${n} (на ${n} опорах)`);
+      if (n === 0 && !foundTypes.some(t => t.includes('Балоч'))) foundTypes.push('All-on-4 / Балочная конструкция');
       rm(allOn.at(0));
     }
     const opM = low.match(/(?:на\s+)?(\d{1,2}|одна|один|одну|две|два|три|четыре|четыр[её]х|пять|пят[иь]|шесть|шест[иь]|семь|сем[иь]|восемь|восьм[иь])\s+опор[а-я]*/i);
