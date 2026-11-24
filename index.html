@@ -3,57 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dt. Arshak Petrosyan WORKSHOP — Заказ</title>
+  <title>Быстрый заказ Аршаку</title>
   <style>
-    * { box-sizing: border-box; font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif; }
-    body { margin: 0; padding: 16px; background: #FAF7F0; color: #141414; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; }
-    .app { width: 100%; max-width: 480px; background: #FFFFFF; border: 1.5px solid #141414; border-radius: 6px; padding: 20px; box-shadow: 0 10px 28px rgba(0,0,0,0.06); }
-    .brand { border-bottom: 1.5px solid #141414; padding-bottom: 12px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: flex-end; }
-    .brand-sub { font-family: Georgia, "Times New Roman", serif; font-size: 13px; color: #444; }
-    .brand-name { font-size: 14px; font-weight: 700; color: #111; }
-    .brand-logo { font-size: 24px; font-weight: 900; letter-spacing: -0.5px; line-height: 1; text-transform: uppercase; }
-    .brand-phones { text-align: right; font-size: 11px; line-height: 1.4; font-weight: 600; color: #222; }
-    .card { background: #FAF7F0; border: 1px solid #BDB8AC; padding: 15px 15px 15px 21px; margin-bottom: 14px; position: relative; }
-    .card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: #7FB069; }
-    .card.blue::before { background: #5C95D6; }
-    .card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-weight: 800; font-size: 13px; text-transform: uppercase; letter-spacing: 0.4px; }
-    .clear-btn { background: none; border: none; color: #555; text-decoration: underline; cursor: pointer; font-size: 12.5px; padding: 0; }
-    .mic-wrap { display: flex; flex-direction: column; align-items: center; margin: 6px 0 12px; }
-    .mic-btn { width: 66px; height: 66px; border-radius: 50%; border: 1.5px solid #141414; background: #141414; color: #FAF7F0; font-size: 26px; cursor: pointer; transition: 0.2s; }
-    .mic-btn.rec { background: #D93838; border-color: #D93838; transform: scale(1.06); }
-    .mic-status { font-size: 12.5px; color: #333; margin-top: 8px; text-align: center; }
-    textarea, input { width: 100%; background: #FFFFFF; border: 1px solid #9E998E; border-radius: 3px; color: #111; padding: 10px 12px; font-size: 14.5px; outline: none; }
-    textarea:focus, input:focus { border-color: #141414; }
-    textarea { min-height: 74px; resize: vertical; }
-    .ai-btn { width: 100%; padding: 9px; border: 1px solid #141414; border-radius: 3px; background: #FFFFFF; color: #141414; font-size: 12.5px; font-weight: 700; cursor: pointer; margin-top: 8px; text-transform: uppercase; }
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { margin: 0; padding: 14px 14px 150px; background: #F5F2EB; color: #1A1A1A; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; }
+    .app { width: 100%; max-width: 480px; background: #FFFFFF; border: 1px solid #DCD7CC; border-radius: 22px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
+    h1 { margin: 0; font-size: 21px; font-weight: 800; text-align: center; color: #141414; letter-spacing: -0.3px; }
+    .sub { text-align: center; font-size: 13px; color: #6E6A61; margin: 4px 0 18px; }
+    .card { background: #FAF8F4; border: 1px solid #E3DFD5; border-radius: 16px; padding: 15px; margin-bottom: 14px; }
+    .card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: 700; font-size: 14px; color: #222; }
+    .clear-btn { background: none; border: none; color: #2B6CB0; text-decoration: underline; cursor: pointer; font-size: 13px; padding: 0; font-weight: 500; }
+    textarea, input { width: 100%; background: #FFFFFF; border: 1px solid #CFC9BC; border-radius: 11px; color: #141414; padding: 11px 13px; font-size: 15px; outline: none; transition: 0.15s; }
+    textarea:focus, input:focus { border-color: #141414; box-shadow: 0 0 0 2px rgba(20,20,20,0.08); }
+    textarea::placeholder, input::placeholder { color: #969187; }
+    textarea { min-height: 82px; resize: vertical; line-height: 1.45; }
+    .ai-btn { width: 100%; padding: 10px; border: 1px solid #CFC9BC; border-radius: 10px; background: #EFECE4; color: #1A1A1A; font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 8px; }
     .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .field { margin-bottom: 10px; }
-    label { display: block; font-size: 11px; color: #4A4740; margin-bottom: 4px; font-weight: 700; text-transform: uppercase; }
-    .delivery-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-    .del-btn { padding: 9px; border-radius: 3px; border: 1px solid #9E998E; background: #FFFFFF; color: #222; font-size: 12.5px; font-weight: 700; cursor: pointer; }
-    .del-btn.active { background: #141414; color: #FAF7F0; border-color: #141414; }
-    .submit-btn { width: 100%; padding: 14px; border: 1.5px solid #141414; border-radius: 4px; background: #141414; color: #FAF7F0; font-size: 14px; font-weight: 800; letter-spacing: 0.4px; text-transform: uppercase; cursor: pointer; margin-top: 4px; }
+    .field { margin-bottom: 11px; }
+    label { display: block; font-size: 12px; color: #5C584F; margin-bottom: 5px; font-weight: 600; }
+    .delivery-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 11px; }
+    .del-btn { padding: 10px; border-radius: 10px; border: 1px solid #CFC9BC; background: #FFFFFF; color: #333; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .del-btn.active { background: #1A1A1A; color: #FFFFFF; border-color: #1A1A1A; }
+    .submit-btn { width: 100%; padding: 15px; border: none; border-radius: 13px; background: #2E7D32; color: #FFFFFF; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 4px; box-shadow: 0 6px 16px rgba(46,125,50,0.22); }
     .submit-btn:disabled { opacity: 0.6; }
-    .send-status { text-align: center; font-size: 13px; font-weight: 700; margin-top: 10px; color: #2B5B1E; }
+    .send-status { text-align: center; font-size: 13px; font-weight: 600; margin-top: 10px; color: #2E7D32; }
+    .mic-dock { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(12px); border-top: 1px solid #DCD7CC; padding: 10px 16px 16px; display: flex; flex-direction: column; align-items: center; z-index: 999; box-shadow: 0 -6px 24px rgba(0,0,0,0.08); }
+    .mic-btn { width: 92px; height: 92px; border-radius: 50%; border: none; background: #1A1A1A; color: #FFFFFF; font-size: 40px; cursor: pointer; box-shadow: 0 8px 22px rgba(0,0,0,0.22); transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+    .mic-btn.rec { background: #D93838; transform: scale(1.07); box-shadow: 0 8px 26px rgba(217,56,56,0.4); }
+    .mic-status { font-size: 12.5px; color: #4A4740; margin-top: 6px; text-align: center; font-weight: 500; }
   </style>
 </head>
 <body>
   <div class="app">
-    <div class="brand">
-      <div>
-        <div class="brand-sub">Digital Dental Studio</div>
-        <div class="brand-name">Dt. Arshak Petrosyan</div>
-        <div class="brand-logo">WORKSHOP</div>
-      </div>
-      <div class="brand-phones">+7 919 544-48-88<br>+7 917 648-50-01<br>Заказ-наряд</div>
-    </div>
+    <h1>Быстрый заказ Аршаку</h1>
+    <div class="sub">Dt. Arshak Petrosyan WORKSHOP</div>
     <div class="card">
-      <div class="card-head"><span>1. Голосовой диктофон 🎙️</span><button type="button" class="clear-btn" id="clearBtn">Очистить всё</button></div>
-      <div class="mic-wrap"><button type="button" class="mic-btn" id="micBtn">🎤</button><div class="mic-status" id="micStatus">Нажмите на микрофон и продиктуйте заказ</div></div>
-      <textarea id="rawText" placeholder="Назовите: фамилию или ID, тип конструкции, материал, цвет и доставку..."></textarea>
+      <div class="card-head"><span>1. Голосовая диктовка</span><button type="button" class="clear-btn" id="clearBtn">Очистить всё</button></div>
+      <textarea id="rawText" placeholder="Нажмите большую кнопку микрофона внизу экрана и продиктуйте заказ..."></textarea>
       <button type="button" class="ai-btn" id="aiParseBtn">Разобрать текст по полям</button>
     </div>
-    <div class="card blue">
+    <div class="card">
       <div class="card-head"><span>2. Параметры заказа</span></div>
       <div class="field"><label>ID или фамилия пациента</label><input type="text" id="pId" placeholder="Например: Петров или 4512"></div>
       <div class="grid">
@@ -64,9 +53,13 @@
       <label>Доставка</label>
       <div class="delivery-btns"><button type="button" class="del-btn active" id="btnCourier">Нужен курьер</button><button type="button" class="del-btn" id="btnSelf">Сами привезём</button></div>
       <div class="field" id="courierBox"><label>Курьер: адрес и время</label><input type="text" id="pCour" placeholder="Откуда и во сколько забрать"></div>
-      <button type="button" class="submit-btn" id="sendBtn">Отправить заказ-наряд в WORKSHOP ➔</button>
+      <button type="button" class="submit-btn" id="sendBtn">Отправить Аршаку в лабораторию ➔</button>
       <div class="send-status" id="sendStatus"></div>
     </div>
+  </div>
+  <div class="mic-dock">
+    <button type="button" class="mic-btn" id="micBtn">🎤</button>
+    <div class="mic-status" id="micStatus">Нажмите на микрофон внизу и продиктуйте заказ</div>
   </div>
   <script>
     const GAS_URL = 'https://' + 'script.google' + '.com/macros/s/AKfycbyeHWKmbbvUtTkhXHeXSmJn92by9qfhziAqXFg0K0ACnE6dpIRxnVzZdZjDg912HVsXrg/exec';
@@ -100,15 +93,15 @@
     $('aiParseBtn').onclick = () => { localParse($('rawText').value); $('micStatus').textContent = 'Поля заполнены!'; };
     $('btnCourier').onclick = () => { $('btnCourier').classList.add('active'); $('btnSelf').classList.remove('active'); $('courierBox').style.display = 'block'; if ($('pCour').value === 'Сами привезём') $('pCour').value = ''; };
     $('btnSelf').onclick = () => { $('btnSelf').classList.add('active'); $('btnCourier').classList.remove('active'); $('courierBox').style.display = 'none'; $('pCour').value = 'Сами привезём'; };
-    $('clearBtn').onclick = () => { ['rawText','pId','pType','pMat','pCol','pCour'].forEach(k => $(k).value = ''); $('btnCourier').click(); $('micStatus').textContent = 'Нажмите на микрофон и продиктуйте заказ'; $('sendStatus').textContent = ''; };
+    $('clearBtn').onclick = () => { ['rawText','pId','pType','pMat','pCol','pCour'].forEach(k => $(k).value = ''); $('btnCourier').click(); $('micStatus').textContent = 'Нажмите на микрофон внизу и продиктуйте заказ'; $('sendStatus').textContent = ''; };
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition, isYa = /YaBrowser/i.test(navigator.userAgent);
     let rec = null, listening = false;
     if (SR && !isYa) {
       rec = new SR(); rec.lang = 'ru-RU'; rec.continuous = true; rec.interimResults = true;
       rec.onresult = e => { let f = ''; for (let i = 0; i < e.results.length; i++) { const it = e.results.item ? e.results.item(i) : e.results.at(i), al = it.item ? it.item(0) : it.at(0); if (al && al.transcript) f += al.transcript; } $('rawText').value = f; localParse(f); };
-      rec.onend = () => { listening = false; $('micBtn').className = 'mic-btn'; $('micStatus').textContent = 'Готово! Проверьте поля ниже'; };
+      rec.onend = () => { listening = false; $('micBtn').className = 'mic-btn'; $('micStatus').textContent = 'Готово! Проверьте поля выше'; };
     }
-    $('micBtn').onclick = () => { if (rec) { if (!listening) { rec.start(); listening = true; $('micBtn').className = 'mic-btn rec'; $('micStatus').textContent = 'Говорите...'; } else rec.stop(); } else { $('rawText').focus(); $('micStatus').innerHTML = 'В Яндекс Браузере нажмите <b>Win + H</b> и диктуйте'; } };
+    $('micBtn').onclick = () => { if (rec) { if (!listening) { rec.start(); listening = true; $('micBtn').className = 'mic-btn rec'; $('micStatus').textContent = 'Говорите... Нажмите ещё раз, чтобы остановить'; } else rec.stop(); } else { $('rawText').focus(); $('micStatus').innerHTML = 'В Яндекс Браузере нажмите <b>Win + H</b> и диктуйте'; } };
     $('sendBtn').onclick = async () => {
       const btn = $('sendBtn'); btn.disabled = true; $('sendStatus').textContent = 'Отправляем на Dt.Arshak@yandex.ru...';
       try { const q = new URLSearchParams({ action: 'sendEmail', id: $('pId').value, type: $('pType').value, material: $('pMat').value, color: $('pCol').value, courier: $('pCour').value, rawText: $('rawText').value }); await fetch(GAS_URL + '?' + q.toString(), { mode: 'no-cors' }); $('sendStatus').textContent = '✓ Отправлено на Dt.Arshak@yandex.ru!'; }
