@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Быстрый заказ Аршаку в лабораторию</title>
+  <title>Заказ-наряд Аршаку в лабораторию</title>
   <style>
     :root {
       --bg: #f3f5f8;
@@ -22,32 +22,34 @@
     .header p { font-size: 13px; color: var(--muted); margin: 0; }
 
     .card {
-      background: var(--card); border-radius: 14px; padding: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 12px;
+      background: var(--card); border-radius: 16px; padding: 18px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 12px;
     }
-    .step-title { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; display: block; }
+    .step-title { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; display: block; }
 
-    /* Диктофон */
+    /* БОЛЬШОЙ МИКРОФОН */
     .mic-area { text-align: center; }
     .mic-btn {
-      width: 80px; height: 80px; border-radius: 50%; border: none;
-      background: var(--primary); color: #fff; font-size: 34px; cursor: pointer;
-      box-shadow: 0 4px 14px rgba(26,115,232,0.35); transition: 0.2s;
+      width: 110px; height: 110px; border-radius: 50%; border: none;
+      background: var(--primary); color: #fff; font-size: 46px; cursor: pointer;
+      box-shadow: 0 6px 20px rgba(26,115,232,0.4); transition: 0.2s;
+      display: inline-flex; align-items: center; justify-content: center;
     }
+    .mic-btn:active { transform: scale(0.95); }
     .mic-btn.recording { background: var(--danger); animation: pulse 1.2s infinite; }
     @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(217,48,37,0.6); }
-      70% { box-shadow: 0 0 0 16px rgba(217,48,37,0); }
+      0% { box-shadow: 0 0 0 0 rgba(217,48,37,0.65); }
+      70% { box-shadow: 0 0 0 24px rgba(217,48,37,0); }
       100% { box-shadow: 0 0 0 0 rgba(217,48,37,0); }
     }
-    .mic-status { margin-top: 8px; font-weight: 600; font-size: 14px; }
-    .mic-hint {
-      margin-top: 10px; padding: 9px 12px; background: #f8fafc; border-radius: 10px;
-      font-size: 13px; color: #475569; border: 1px solid #e2e8f0;
+    .mic-status { margin-top: 12px; font-weight: 700; font-size: 15px; color: var(--text); }
+    .live-text {
+      margin-top: 10px; padding: 10px 12px; background: #f8fafc; border-radius: 10px;
+      font-size: 14px; color: #334155; border: 1px dashed #cbd5e1; min-height: 42px; text-align: left;
     }
     .audio-preview { margin-top: 10px; display: none; }
     .audio-preview.show { display: block; }
-    .audio-preview audio { width: 100%; height: 36px; }
+    .audio-preview audio { width: 100%; height: 38px; }
 
     /* Поля ввода */
     .field-group { margin-bottom: 10px; }
@@ -102,17 +104,15 @@
 <div class="container">
   <div class="header">
     <h1>🦷 Быстрый заказ Аршаку</h1>
-    <p>Надиктуйте заказ голосом и отправьте в 1 клик</p>
+    <p>Нажмите на микрофон и продиктуйте заказ</p>
   </div>
 
-  <!-- 1. Голос -->
+  <!-- 1. Большой микрофон -->
   <div class="card mic-area">
-    <span class="step-title">1. Голосовое сообщение Аршаку</span>
-    <button id="micBtn" type="button" class="mic-btn" onclick="toggleRecord()">🎙</button>
-    <div id="micStatus" class="mic-status">Нажмите, чтобы надиктовать заказ</div>
-    <div class="mic-hint">
-      Назовите: <b>ID пациента, тип конструкции, материал и цвет</b>
-    </div>
+    <span class="step-title">1. Голосовой диктофон</span>
+    <button id="micBtn" type="button" class="mic-btn" onclick="toggleMic()">🎙</button>
+    <div id="micStatus" class="mic-status">Нажмите на микрофон и говорите</div>
+    <div id="liveText" class="live-text">Назовите: ID пациента, тип конструкции, материал и цвет...</div>
     <div id="audioPreview" class="audio-preview">
       <audio id="audioPlayer" controls></audio>
     </div>
@@ -120,14 +120,14 @@
 
   <!-- 2. Ключевые параметры -->
   <div class="card">
-    <span class="step-title">2. Параметры заказа (если не назвали в голос)</span>
+    <span class="step-title">2. Параметры заказа</span>
     <div class="field-group">
-      <label class="field-label" for="inp-id">ID пациента / Номер карты</label>
-      <input id="inp-id" type="text" placeholder="Например: ID 4082 или № карты..." />
+      <label class="field-label" for="inp-id">ID пациента</label>
+      <input id="inp-id" type="text" placeholder="Например: ID 4082..." />
     </div>
     <div class="field-group">
       <label class="field-label" for="inp-type">Тип конструкции</label>
-      <input id="inp-type" type="text" placeholder="Например: коронка, винир, вкладка..." />
+      <input id="inp-type" type="text" placeholder="Например: коронка, винир..." />
     </div>
     <div class="field-group">
       <label class="field-label" for="inp-material">Материал</label>
@@ -180,20 +180,14 @@
 </div>
 
 <script>
-  // МОЖНО ВПИСАТЬ АДРЕС КЛИНИКИ В КАВЫЧКАХ НИЖЕ:
   const CLINIC_ADDRESS = "";
 
-  // Твоя Яндекс Форма и её точные идентификаторы полей:
-  const YANDEX_FORM_URL = "https://yandex.ru";
-  const FIELD_ID_PATIENT  = "answer_short_text_9008994757435195";
-  const FIELD_TYPE        = "answer_short_text_9008994757444198";
-  const FIELD_MATERIAL    = "answer_short_text_9008994757463506";
-  const FIELD_COLOR       = "answer_short_text_9008994757485004";
-  const FIELD_COURIER     = "answer_short_text_9008994757499984";
-
+  let isRecording = false;
   let mediaRecorder = null;
   let audioChunks = [];
   let audioBlob = null;
+  let recognition = null;
+  let fullSpokenText = "";
   let timerInt = null;
   let sec = 0;
   let needCourier = null;
@@ -201,23 +195,29 @@
 
   document.getElementById('inp-addr').value = CLINIC_ADDRESS;
 
-  async function toggleRecord() {
+  async function toggleMic() {
     const btn = document.getElementById('micBtn');
     const st = document.getElementById('micStatus');
 
-    if (mediaRecorder && mediaRecorder.state === "recording") {
-      mediaRecorder.stop();
+    if (isRecording) {
+      isRecording = false;
       clearInterval(timerInt);
       btn.classList.remove('recording');
       btn.innerText = "🎙";
-      st.innerText = "✅ Голосовое записано!";
+      st.innerText = "✅ Запись завершена! Нажмите 🎙 чтобы додиктовать";
+      if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
+      if (recognition) { try { recognition.stop(); } catch(e) {} }
       return;
     }
 
+    // 1. Запускаем реальную запись звука (работает везде)
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      isRecording = true;
       audioChunks = [];
       mediaRecorder = new MediaRecorder(stream);
       mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
       mediaRecorder.onstop = () => {
         audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        document.getElementById('audioPlayer').src = URL.createObjectURL(audioBlob);
+        document.getElementById('audioPreview').classList.add('show');
