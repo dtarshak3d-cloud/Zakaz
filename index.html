@@ -60,8 +60,11 @@
                     <div class="field"><label>Тип конструкции</label><input type="text" id="pType" placeholder="Коронка, мост, балка..."></div>
         <div class="field"><label>Материал</label><input type="text" id="pMat" placeholder="Цирконий, E.max..."></div>
       </div>
-      <div class="field"><label>Цвет</label><input type="text" id="pCol" placeholder="Например: А2, BL1"></div>
-             <div class="field"><label>Примечание</label><textarea id="pNote" rows="2" placeholder="Укажите: сроки сдачи и детали: одиночками или мостом (кол-во опор и промеж.), балка,..."></textarea></div>
+         <div class="grid">
+      <div class="field"><label>Цвет</label><input type="text" id="pCol" placeholder="Например: A2, BL1"></div>
+      <div class="field"><label>Система имплантатов</label><input type="text" id="pImp" placeholder="Medentika, Straumann, МЮ..."></div>
+    </div>
+     <div class="field"><label>Примечание</label><textarea id="pNote" rows="2" placeholder="Укажите: сроки сдачи и детали: одиночками или мостом (кол-во опор и промеж.), балка,..."></textarea></div>
           <div class="field">
       <label>Фотопротокол / Файлы</label>
       <input type="text" id="pPhoto" placeholder="Куда отправили фото (если есть)">
@@ -128,7 +131,7 @@
     const docM = docBefore || docAfter;
     if (docM && docM.at(1) && $('pDoc')) { $('pDoc').value = cap(docM.at(1)); localStorage.setItem('zakaz_doc', $('pDoc').value); rm(docM.at(0)); }
     const idM = noteRest.match(/(?:пациент[а-я]*|ид|id|номер|карта|№)\s*(?:в|на)?\s*(\d{1,3}[:\-\s]?\d{2,4})/i) || noteRest.match(/\b(\d{3,6})\b/);
-    const famM = noteRest.match(/(?:пациент[а-я]*|фамили[яи]|для)\s+(?:и\s+)?([^,.;\d]+?)(?=\s+(?:одна|один|одну|две|два|три|четыре|пять|шесть|корон|винир|мост|протез|вклад|абатмент|капа|шаблон|циркон|дисиликат|силикат|материал|цвет|курьер|адрес|$)|[,.;\d]|$)/i);
+        const famM = noteRest.match(/(?:пациент[а-я]*|фамили[яи]|для)\s*(?::|\s)\s*([а-яёa-z-]{2,})(?=\s+(?:одна|один|одну|две|два|три|четыре|пять|шесть|корон|винир|мост|протез|вклад|абатмент|капа|шаблон|циркон|дисиликат|акрил|пластмасс|титан|кхс|золот|керамик|цвет|достав|курьер|врач|доктор|фото|олон|фоллон|alone|полон|вс[её]|all|на\s+балк|балк|на\s+мульт|мульт|мю\b|муа\b|medentik|медентик|straumann|штрауман|страус|osstem|осстем|астем|nobel|нобел|astra|астр|neodent|неодент|dentium|дентиум|ankylos|анкилос|megagen|мегаджен|anyridge|эниридж|alpha|альфа|mis\b|мис\b)|[.,;!?\s]|$)/i);
     const idParts = [];
     if (famM && famM.at(1)) { idParts.push(cap(famM.at(1))); rm(famM.at(0)); }
     if (idM && idM.at(1)) { idParts.push(idM.at(1).replace(/[:\-\s]/g, '')); rm(idM.at(0)); }
@@ -158,8 +161,8 @@
     const edM = low.match(/\b(\d{1,2}|двадцать\s+(?:одна|два|две|три|четыре|пять|шесть|семь|восемь)|одна|один|одну|две|два|три|четыре|пять|шесть|семь|восемь|девять|десять|одиннадцать|двенадцать|тринадцать|четырнадцать|пятнадцать|шестнадцать|семнадцать|восемнадцать|девятнадцать|двадцать)\s+(?:ед\.?|единиц[а-я]*)\b/i);
     if (edM && edM.at(1)) { const n = toN(edM.at(1)); if (n > 0) { foundTypes.push(n + ' ед.'); rm(edM.at(0)); } }
     let extras = [];
-       const allOn = low.match(/(?:вс[её]\s+на|all[\s-]*on[\s-]*|alone\s+(?:for|four|fuck|six)|олон\s*фоллон|фоллон|олонх[а-я]*|олон|полон\s*фу[а-я]*)\s*(\d{1,2}|четыр[а-я]*|шест[а-я]*|восьм[а-я]*|for|four|fuck|six)?/i);
-    if (allOn) {
+           const allOn = low.match(/(?:вс[её]\s+на|all[\s-]*on[\s-]*|alone\s+(?:for|four|fuck|six)|олон\s*фоллон|фоллон|олонх[а-я]*|олонф[а-я]*|олон|полон\s*фу[а-я]*)\s*(\d{1,2}|четыр[а-я]*|шест[а-я]*|восьм[а-я]*|for|four|fuck|six)?/i);
+      if (allOn) {
       const full = allOn.at(0).toLowerCase();
       const w = (allOn.at(1) || '').toLowerCase();
       const n = toN(w) || (w.startsWith('четыр') || w === 'for' || w === 'four' || w === 'fuck' || full.includes('фу') || full.includes('for') || full.includes('fuck') ? 4 : (w.startsWith('шест') || w === 'six' ? 6 : (w.startsWith('восьм') ? 8 : 0)));
@@ -193,7 +196,34 @@
       if (mRx.test(low)) { foundMats.push(v); rm(mRx); }
     }
     if (foundMats.length && $('pMat')) $('pMat').value = [...new Set(foundMats)].join(', ');
-
+    const impSys = [
+      ['medentik[а-я]*|медентик[а-я]*', 'Medentika'],
+      ['straumann|штрауман[а-я]*|страус[а-я]*', 'Straumann'],
+      ['osstem|осстем[а-я]*|астем[а-я]*|остем[а-я]*', 'Osstem'],
+      ['nobel[а-я]*|нобел[а-я]*', 'Nobel Biocare'],
+      ['astra[\\s-]*tech|астр[а-я]*', 'Astra Tech'],
+      ['neodent|неодент[а-я]*', 'Neodent'],
+      ['dentium|дентиум[а-я]*', 'Dentium'],
+      ['ankylos|анкилос[а-я]*', 'Ankylos'],
+      ['megagen|мегаджен[а-я]*', 'MegaGen'],
+      ['anyridge|эниридж[а-я]*', 'AnyRidge'],
+      ['alpha[\\s-]*bio|альфа[\\s-]*био', 'Alpha-Bio'],
+      ['\\bmis\\b|\\bмис\\b', 'MIS'],
+      ['impro|импро', 'Impro'],
+      ['xive|ксайв', 'Xive']
+    ];
+    let foundImp = [];
+    for (const [pat, name] of impSys) {
+      const rx = new RegExp('(?:на\\s+|систем[а-я]*\\s+|имплантат[а-я]*\\s+)?(?:' + pat + ')', 'gi');
+      if (rx.test(low)) { foundImp.push(name); rm(rx); }
+    }
+    const muRx = /(?:на\s+)?(?:мультиюнит[а-я]*|мульти[\s-]*юнит[а-я]*|мульт[а-я]*|мультях[а-я]*|мю|муа)(?=\s|[.,;!?]|$)/gi;
+    const hasMu = muRx.test(low);
+    if (hasMu) rm(muRx);
+    if ((foundImp.length || hasMu) && $('pImp')) {
+      const sysStr = [...new Set(foundImp)].join(', ');
+      $('pImp').value = sysStr ? (hasMu ? `${sysStr} (Multi-unit)` : sysStr) : 'Multi-unit';
+    }
     const numC = {'один':'1','два':'2','три':'3','четыре':'4'};
     const blM = low.match(/(?:цвет|оттенок|цвета)?\s*(?:б?лич|bleach|bl)\s*(1|2|3|4|один|два|три|четыре)/);
     const caM = low.match(/(?:цвета|цвет)\s*([1-4](?:[\.,]5|\s+с\s+половиной)?)(?=\s|$|[.,])/);
@@ -224,7 +254,7 @@
   if ($('aiParseBtn')) $('aiParseBtn').onclick = () => { localParse($('rawText').value); if ($('micStatus')) $('micStatus').textContent = 'Поля заполнены!'; };
   if ($('btnCourier')) $('btnCourier').onclick = () => { $('btnCourier').classList.add('active'); $('btnSelf').classList.remove('active'); if ($('courierBox')) $('courierBox').style.display = 'block'; };
   if ($('btnSelf')) $('btnSelf').onclick = () => { $('btnSelf').classList.add('active'); $('btnCourier').classList.remove('active'); if ($('courierBox')) $('courierBox').style.display = 'none'; if ($('pCour')) $('pCour').value = ''; };
-   if ($('clearBtn')) $('clearBtn').onclick = () => { ['rawText','pDoc','pId','pType','pMat','pCol','pCour','pNote','pPhoto'].forEach(id => { if ($(id)) $(id).value = ''; }); localStorage.removeItem('zakaz_doc'); if ($('btnSelf')) $('btnSelf').click(); if ($('sendStatus')) $('sendStatus').textContent = ''; };
+     if ($('clearBtn')) $('clearBtn').onclick = () => { ['rawText','pDoc','pId','pType','pMat','pCol','pImp','pCour','pNote','pPhoto'].forEach(id => { if ($(id)) $(id).value = ''; }); localStorage.removeItem('zakaz_doc'); if ($('btnSelf')) $('btnSelf').click(); if ($('sendStatus')) $('sendStatus').textContent = ''; };
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   let rec = null, listening = false;
   if (SR) {
