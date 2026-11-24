@@ -133,7 +133,7 @@
     let rec = null, listening = false;
     if (SR && !isYa) {
       rec = new SR(); rec.lang = 'ru-RU'; rec.continuous = true; rec.interimResults = true;
-      rec.onresult = e => { let f = ''; for (let i = 0; i < e.results.length; i++) { const it = e.results.item ? e.results.item(i) : e.results.at(i), al = it.item ? it.item(0) : it.at(0); if (al && al.transcript) f += al.transcript; } $('rawText').value = f; };
+     rec.onresult = e => { let f = ''; for (let i = 0; i < e.results.length; i++) { const it = e.results.item ? e.results.item(i) : e.results.at(i), al = it.item ? it.item(0) : it.at(0); if (al && al.transcript) f += al.transcript; } $('rawText').value = f; localParse(f); };
       rec.onend = () => { listening = false; $('micBtn').className = 'mic-btn'; localParse($('rawText').value); $('micStatus').textContent = 'Готово! Проверьте поля ниже'; };
     }
     $('micBtn').onclick = () => { if (rec) { if (!listening) { rec.start(); listening = true; $('micBtn').className = 'mic-btn rec'; $('micStatus').textContent = 'Говорите... Нажмите ещё раз, когда закончите'; } else rec.stop(); } else { $('rawText').focus(); $('micStatus').innerHTML = 'В Яндекс Браузере нажмите <b>Win + H</b> и диктуйте'; } };
