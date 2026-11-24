@@ -142,7 +142,7 @@
       const btn = $('sendBtn'); btn.disabled = true; $('sendStatus').textContent = 'Отправляем на Dt.Arshak@yandex.ru...';
       try {
         const q = new URLSearchParams({ action: 'sendEmail', doctor: $('pDoc').value, id: $('pId').value, type: $('pType').value, material: $('pMat').value, color: $('pCol').value, courier: $('pCour').value, note: $('pNote').value, rawText: $('rawText').value });
-        await fetch(GAS_URL + '?' + q.toString(), { mode: 'no-cors' });
+      await new Promise(res => { const img = new Image(); img.onload = img.onerror = res; img.src = GAS_URL + '?' + q.toString() + '&_t=' + Date.now(); });
         $('sendStatus').textContent = '✓ Отправлено на Dt.Arshak@yandex.ru!';
       } catch (e) { $('sendStatus').textContent = 'Ошибка: ' + e.message; } finally { btn.disabled = false; }
     };
