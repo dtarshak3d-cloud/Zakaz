@@ -1,223 +1,224 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Заказ-наряд Аршаку в лабораторию</title>
-  <style>
-    :root {
-      --bg: #f3f5f8;
-      --card: #ffffff;
-      --primary: #1a73e8;
-      --danger: #d93025;
-      --success: #188038;
-      --text: #1f2937;
-      --muted: #6b7280;
-    }
-    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { margin: 0; background: var(--bg); color: var(--text); padding: 14px; display: flex; justify-content: center; }
-    .container { width: 100%; max-width: 480px; }
-    .header { text-align: center; margin-bottom: 14px; }
-    .header h1 { font-size: 20px; margin: 0 0 4px; }
-    .header p { font-size: 13px; color: var(--muted); margin: 0; }
-
-    .card {
-      background: var(--card); border-radius: 16px; padding: 18px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 12px;
-    }
-    .step-title { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; display: block; }
-
-    /* БОЛЬШОЙ МИКРОФОН */
-    .mic-area { text-align: center; }
-    .mic-btn {
-      width: 110px; height: 110px; border-radius: 50%; border: none;
-      background: var(--primary); color: #fff; font-size: 46px; cursor: pointer;
-      box-shadow: 0 6px 20px rgba(26,115,232,0.4); transition: 0.2s;
-      display: inline-flex; align-items: center; justify-content: center;
-    }
-    .mic-btn:active { transform: scale(0.95); }
-    .mic-btn.recording { background: var(--danger); animation: pulse 1.2s infinite; }
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(217,48,37,0.65); }
-      70% { box-shadow: 0 0 0 24px rgba(217,48,37,0); }
-      100% { box-shadow: 0 0 0 0 rgba(217,48,37,0); }
-    }
-    .mic-status { margin-top: 12px; font-weight: 700; font-size: 15px; color: var(--text); }
-    .live-text {
-      margin-top: 10px; padding: 10px 12px; background: #f8fafc; border-radius: 10px;
-      font-size: 14px; color: #334155; border: 1px dashed #cbd5e1; min-height: 42px; text-align: left;
-    }
-    .audio-preview { margin-top: 10px; display: none; }
-    .audio-preview.show { display: block; }
-    .audio-preview audio { width: 100%; height: 38px; }
-
-    /* Поля ввода */
-    .field-group { margin-bottom: 10px; }
-    .field-group:last-child { margin-bottom: 0; }
-    .field-label { display: block; font-size: 12px; font-weight: 600; color: #4b5563; margin-bottom: 4px; }
-    input[type="text"] {
-      width: 100%; border: 1px solid #cbd5e1; border-radius: 10px; padding: 10px 12px;
-      font-size: 15px; color: var(--text); outline: none; background: #f8fafc;
-    }
-    input[type="text"]:focus { border-color: var(--primary); background: #fff; }
-
-    /* Фотопротокол */
-    .photo-box { border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 14px; text-align: center; background: #f8fafc; }
-    .photo-box.done { border-color: var(--success); background: #f0fdf4; }
-    .btn-row { display: flex; gap: 8px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
-    .file-btn {
-      background: var(--primary); color: #fff; padding: 9px 16px; border-radius: 8px;
-      font-size: 13px; font-weight: 600; cursor: pointer;
-    }
-    .gray-btn {
-      background: #e5e7eb; color: #374151; border: none; padding: 9px 16px;
-      border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
-    }
-    .gray-btn.active { background: #374151; color: #fff; }
-
-    /* Курьер */
-    .courier-btns { display: flex; gap: 8px; }
-    .c-btn {
-      flex: 1; padding: 11px; border-radius: 10px; border: 1px solid #cbd5e1;
-      background: #f8fafc; font-size: 14px; font-weight: 600; cursor: pointer;
-    }
-    .c-btn.yes { background: var(--primary); color: #fff; border-color: var(--primary); }
-    .c-btn.no { background: var(--success); color: #fff; border-color: var(--success); }
-    .courier-more { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb; }
-    .courier-more.show { display: block; }
-    .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
-    .t-chip {
-      background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155;
-      padding: 7px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;
-    }
-    .t-chip.sel { background: var(--primary); color: #fff; border-color: var(--primary); }
-
-    /* Отправка */
-    .submit-btn {
-      width: 100%; padding: 16px; border: none; border-radius: 12px; font-size: 16px; font-weight: 700;
-      background: var(--success); color: #fff; cursor: pointer; box-shadow: 0 4px 12px rgba(24,128,56,0.25);
-    }
-    .reset-link { display: block; text-align: center; margin-top: 12px; font-size: 13px; color: var(--muted); cursor: pointer; text-decoration: underline; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Заказ-наряд Аршаку</title>
+<style>
+  * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  body { margin: 0; background: #f3f5f8; color: #1f2937; padding: 14px; display: flex; justify-content: center; }
+  .wrap { width: 100%; max-width: 460px; }
+  h1 { font-size: 20px; text-align: center; margin: 0 0 12px; }
+  .card { background: #fff; border-radius: 16px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 12px; }
+  .lbl { font-size: 12px; font-weight: 700; text-transform: uppercase; color: #6b7280; margin-bottom: 8px; display: block; }
+  .center { text-align: center; }
+  .mic { width: 110px; height: 110px; border-radius: 50%; border: none; background: #1a73e8; color: #fff; font-size: 46px; cursor: pointer; box-shadow: 0 6px 20px rgba(26,115,232,0.4); -webkit-tap-highlight-color: transparent; }
+  .mic.rec { background: #d93025; animation: pulse 1.2s infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(217,48,37,0.6); } 70% { box-shadow: 0 0 0 22px rgba(217,48,37,0); } 100% { box-shadow: 0 0 0 0 rgba(217,48,37,0); } }
+  .st { margin-top: 10px; font-weight: 700; font-size: 15px; }
+  .live { margin-top: 8px; padding: 10px; background: #f8fafc; border-radius: 10px; font-size: 14px; border: 1px dashed #cbd5e1; text-align: left; }
+  audio { width: 100%; height: 36px; margin-top: 10px; display: none; }
+  input { width: 100%; border: 1px solid #cbd5e1; border-radius: 10px; padding: 10px; font-size: 15px; margin-bottom: 8px; background: #f8fafc; }
+  .row { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+  .btn { padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; background: #f8fafc; font-size: 13px; font-weight: 600; cursor: pointer; flex: 1; }
+  .btn.blue { background: #1a73e8; color: #fff; border-color: #1a73e8; }
+  .btn.green { background: #188038; color: #fff; border-color: #188038; }
+  .btn.dark { background: #374151; color: #fff; border-color: #374151; }
+  .hide { display: none; margin-top: 10px; }
+  .send { width: 100%; padding: 16px; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; background: #188038; color: #fff; cursor: pointer; margin-bottom: 8px; }
+  .clr { display: block; text-align: center; font-size: 13px; color: #6b7280; cursor: pointer; text-decoration: underline; margin-top: 6px; }
+</style>
 </head>
 <body>
-<div class="container">
-  <div class="header">
-    <h1>🦷 Быстрый заказ Аршаку</h1>
-    <p>Нажмите на микрофон и продиктуйте заказ</p>
+<div class="wrap">
+  <h1>🦷 Быстрый заказ Аршаку</h1>
+
+  <div class="card center">
+    <span class="lbl">1. Голосовой диктофон</span>
+    <button id="micBtn" type="button" class="mic">🎙</button>
+    <div id="st" class="st">Нажмите на микрофон и говорите</div>
+    <div id="live" class="live">Назовите: ID пациента, тип конструкции, материал и цвет...</div>
+    <audio id="player" controls></audio>
   </div>
 
-  <!-- 1. Большой микрофон -->
-  <div class="card mic-area">
-    <span class="step-title">1. Голосовой диктофон</span>
-    <button id="micBtn" type="button" class="mic-btn" onclick="toggleMic()">🎙</button>
-    <div id="micStatus" class="mic-status">Нажмите на микрофон и говорите</div>
-    <div id="liveText" class="live-text">Назовите: ID пациента, тип конструкции, материал и цвет...</div>
-    <div id="audioPreview" class="audio-preview">
-      <audio id="audioPlayer" controls></audio>
-    </div>
-  </div>
-
-  <!-- 2. Ключевые параметры -->
   <div class="card">
-    <span class="step-title">2. Параметры заказа</span>
-    <div class="field-group">
-      <label class="field-label" for="inp-id">ID пациента</label>
-      <input id="inp-id" type="text" placeholder="Например: ID 4082..." />
-    </div>
-    <div class="field-group">
-      <label class="field-label" for="inp-type">Тип конструкции</label>
-      <input id="inp-type" type="text" placeholder="Например: коронка, винир..." />
-    </div>
-    <div class="field-group">
-      <label class="field-label" for="inp-material">Материал</label>
-      <input id="inp-material" type="text" placeholder="Например: циркон, E.max..." />
-    </div>
-    <div class="field-group">
-      <label class="field-label" for="inp-color">Цвет</label>
-      <input id="inp-color" type="text" placeholder="Например: А2..." />
+    <span class="lbl">2. Параметры заказа</span>
+    <input id="pId" type="text" placeholder="ID пациента..." />
+    <input id="pType" type="text" placeholder="Тип конструкции (коронка, винир)..." />
+    <input id="pMat" type="text" placeholder="Материал (циркон, E.max)..." />
+    <input id="pCol" type="text" placeholder="Цвет (А2)..." style="margin-bottom:0" />
+  </div>
+
+  <div class="card center">
+    <span class="lbl">3. Фотопротокол</span>
+    <div id="phTxt" style="font-weight:600; margin-bottom:8px;">📷 Фотопротокол?</div>
+    <div class="row">
+      <label class="btn blue">📁 Выбрать фото<input id="files" type="file" accept="image/*" multiple style="display:none" /></label>
+      <button id="noPh" type="button" class="btn">Без фото</button>
     </div>
   </div>
 
-  <!-- 3. Фотопротокол -->
   <div class="card">
-    <span class="step-title">3. Фотопротокол</span>
-    <div id="photoBox" class="photo-box">
-      <div id="photoText" style="font-size:15px; font-weight:600; color:#1f2937;">📷 Фотопротокол?</div>
-      <div class="btn-row">
-        <label class="file-btn">
-          📁 Выбрать фото
-          <input id="fileInput" type="file" multiple accept="image/*,.raw,.cr2,.nef,.arw,.dng" style="display:none" onchange="onPhotoSelect()" />
-        </label>
-        <button type="button" id="btnNoPhoto" class="gray-btn" onclick="onNoPhoto()">Без фото</button>
+    <span class="lbl">4. Вызов курьера</span>
+    <div class="row">
+      <button id="cYes" type="button" class="btn">🚚 Да, вызвать</button>
+      <button id="cNo" type="button" class="btn">💻 Нет, цифра</button>
+    </div>
+    <div id="cMore" class="hide">
+      <input id="cAddr" type="text" placeholder="Адрес клиники..." />
+      <div class="row" style="margin-bottom:8px;">
+        <button type="button" class="btn tchip" data-t="До 13:00">🌅 До 13:00</button>
+        <button type="button" class="btn tchip" data-t="После 13:00">🌇 После 13:00</button>
+        <button type="button" class="btn tchip" data-t="Срочно">⚡ Срочно</button>
       </div>
+      <input id="cTime" type="text" placeholder="Или укажите удобное время..." style="margin-bottom:0" />
     </div>
   </div>
 
-  <!-- 4. Курьер -->
-  <div class="card">
-    <span class="step-title">4. Вызов курьера</span>
-    <div style="font-size:14px; font-weight:600; margin-bottom:8px;">Нужно забрать слепки / модели?</div>
-    <div class="courier-btns">
-      <button type="button" id="btnYes" class="c-btn" onclick="setCourier(true)">🚚 Да, вызвать</button>
-      <button type="button" id="btnNo" class="c-btn" onclick="setCourier(false)">💻 Нет, цифра</button>
-    </div>
-
-    <div id="courierMore" class="courier-more">
-      <input id="inp-addr" type="text" placeholder="Адрес клиники..." style="margin-bottom:8px;" />
-      <div style="font-size:12px; color:#6b7280; margin-bottom:6px;">Когда лучше подъехать:</div>
-      <div class="chips">
-        <button type="button" class="t-chip" onclick="pickTime(this, 'Первая половина дня (до 13:00)')">🌅 До 13:00</button>
-        <button type="button" class="t-chip" onclick="pickTime(this, 'Вторая половина дня (после 13:00)')">🌇 После 13:00</button>
-        <button type="button" class="t-chip" onclick="pickTime(this, 'Ближайшее время')">⚡ Срочно</button>
-      </div>
-      <input id="inp-time" type="text" placeholder="Или укажите удобное время..." />
-    </div>
-  </div>
-
-  <button type="button" class="submit-btn" onclick="sendOrder()">🚀 Отправить Аршаку в лабораторию</button>
-  <span class="reset-link" onclick="resetAll()">Очистить форму</span>
+  <button id="sendBtn" type="button" class="send">🚀 Отправить Аршаку в лабораторию</button>
+  <span id="clrBtn" class="clr">Очистить форму</span>
 </div>
 
 <script>
-  const CLINIC_ADDRESS = "";
+  const CFG = {
+    formUrl: "",
+    email:   "Dt.Arshak@yandex.ru",
+    fId:     "answer_short_text_1",
+    fType:   "answer_short_text_2",
+    fMat:    "answer_short_text_3",
+    fColor:  "answer_short_text_9008994757485004",
+    fCour:   "answer_short_text_9008994757499984"
+  };
 
-  let isRecording = false;
-  let mediaRecorder = null;
-  let audioChunks = [];
-  let audioBlob = null;
-  let recognition = null;
-  let fullSpokenText = "";
-  let timerInt = null;
-  let sec = 0;
-  let needCourier = null;
-  let noPhoto = false;
+  let rec = false, mr = null, chunks = [], blob = null, sr = null, spoken = "", tInt = null, sec = 0, courier = null;
+  const $ = id => document.getElementById(id);
 
-  document.getElementById('inp-addr').value = CLINIC_ADDRESS;
-
-  async function toggleMic() {
-    const btn = document.getElementById('micBtn');
-    const st = document.getElementById('micStatus');
-
-    if (isRecording) {
-      isRecording = false;
-      clearInterval(timerInt);
-      btn.classList.remove('recording');
-      btn.innerText = "🎙";
-      st.innerText = "✅ Запись завершена! Нажмите 🎙 чтобы додиктовать";
-      if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
-      if (recognition) { try { recognition.stop(); } catch(e) {} }
+  $('micBtn').addEventListener('click', async function() {
+    if (rec) {
+      rec = false;
+      clearInterval(tInt);
+      $('micBtn').classList.remove('rec');
+      $('micBtn').textContent = "🎙";
+      $('st').textContent = "✅ Готово! Нажмите 🎙 чтобы додиктовать";
+      if (mr && mr.state === "recording") mr.stop();
+      if (sr) { try { sr.stop(); } catch(e) {} }
       return;
     }
 
-    // 1. Запускаем реальную запись звука (работает везде)
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert("Браузер не поддерживает запись звука. Откройте в Chrome или Safari.");
+      return;
+    }
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      isRecording = true;
-      audioChunks = [];
-      mediaRecorder = new MediaRecorder(stream);
-      mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
-      mediaRecorder.onstop = () => {
-        audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-        document.getElementById('audioPlayer').src = URL.createObjectURL(audioBlob);
-        document.getElementById('audioPreview').classList.add('show');
+      rec = true;
+      chunks = [];
+      mr = new MediaRecorder(stream);
+      mr.ondataavailable = function(e) { if (e.data.size > 0) chunks.push(e.data); };
+      mr.onstop = function() {
+        blob = new Blob(chunks, { type: 'audio/webm' });
+        const pl = $('player');
+        pl.src = URL.createObjectURL(blob);
+        pl.style.display = 'block';
+        stream.getTracks().forEach(function(t) { t.stop(); });
+      };
+      mr.start();
+
+      sec = 0;
+      $('micBtn').classList.add('rec');
+      $('micBtn').textContent = "⏹";
+      $('st').textContent = "🔴 Слушаю... 0 сек";
+      tInt = setInterval(function() {
+        sec++;
+        $('st').textContent = "🔴 Слушаю... " + sec + " сек";
+      }, 1000);
+
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SR) {
+        sr = new SR();
+        sr.lang = 'ru-RU';
+        sr.continuous = true;
+        sr.interimResults = true;
+        sr.onresult = function(e) {
+          let tmp = "";
+          for (let i = e.resultIndex; i < e.results.length; i++) {
+            if (e.results[i].isFinal) {
+              spoken += " " + e.results[i].transcript;
+              parse(spoken);
+            } else {
+              tmp += e.results[i].transcript;
+            }
+          }
+          $('live').textContent = (spoken + " " + tmp).trim();
+        };
+        try { sr.start(); } catch(e) {}
+      }
+    } catch (err) {
+      alert("Ошибка микрофона: " + err.name + ". Разрешите доступ к микрофону.");
+    }
+  });
+
+  function parse(txt) {
+    const t = txt.toLowerCase();
+    const idM = txt.match(/(?:айди|id|номер|карта|пациент)\s*([A-Za-zА-Яа-я0-9\-]+)/i);
+    if (idM && idM[1]) $('pId').value = idM[1];
+    if (/коронк/i.test(t)) $('pType').value = "Коронка";
+    if (/винир/i.test(t)) $('pType').value = "Винир";
+    if (/вкладк/i.test(t)) $('pType').value = "Вкладка";
+    if (/мост/i.test(t)) $('pType').value = "Мост";
+    if (/циркон/i.test(t)) $('pMat').value = "Циркон";
+    if (/емакс|имакс|max/i.test(t)) $('pMat').value = "E.max";
+    const cM = txt.match(/\b([ABCDАВС][1-4]|BL[1-4])\b/i);
+    if (cM && cM[1]) $('pCol').value = cM[1].toUpperCase().replace('А','A').replace('В','B').replace('С','C');
+  }
+
+  $('files').addEventListener('change', function() {
+    $('noPh').classList.remove('dark');
+    $('phTxt').textContent = "✅ Фото: " + this.files.length + " шт.";
+  });
+
+  $('noPh').addEventListener('click', function() {
+    $('files').value = "";
+    this.classList.add('dark');
+    $('phTxt').textContent = "✅ Без фото";
+  });
+
+  $('cYes').addEventListener('click', function() {
+    courier = true;
+    this.className = 'btn blue';
+    $('cNo').className = 'btn';
+    $('cMore').style.display = 'block';
+  });
+
+  $('cNo').addEventListener('click', function() {
+    courier = false;
+    this.className = 'btn green';
+    $('cYes').className = 'btn';
+    $('cMore').style.display = 'none';
+  });
+
+  document.querySelectorAll('.tchip').forEach(function(b) {
+    b.addEventListener('click', function() { $('cTime').value = this.dataset.t; });
+  });
+
+  $('sendBtn').addEventListener('click', function() {
+    if (courier === null) { alert("Отметьте, нужен ли курьер (Да или Нет)."); return; }
+    const courText = courier ? "ДА (" + $('cAddr').value + ", " + $('cTime').value + ")" : "НЕТ (цифра)";
+    const summary = "ID пациента: " + ($('pId').value || "в голосе") + "\nТип конструкции: " + ($('pType').value || "в голосе") +
+      "\nМатериал: " + ($('pMat').value || "в голосе") + "\nЦвет: " + ($('pCol').value || "в голосе") +
+      "\nДиктовка: " + (spoken.trim() || "см. аудио") + "\nФотопротокол: " + $('phTxt').textContent + "\nКурьер: " + courText;
+
+    if (blob) {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = "Голос_" + ($('pId').value || "заказ") + ".webm";
+      a.click();
+    }
+    if (CFG.formUrl.startsWith("http")) {
+      const p = new URLSearchParams();
+      p.set(CFG.fId, $('pId').value || spoken);
+      p.set(CFG.fType, $('pType').value);
+      p.set(CFG.fMat, $('pMat').value);
+      p.set(CFG.fColor, $('pCol').value);
+      p.set(CFG.fCour, courText);
