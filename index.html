@@ -193,17 +193,17 @@
       if (mRx.test(low)) { foundMats.push(v); rm(mRx); }
     }
     if (foundMats.length && $('pMat')) $('pMat').value = [...new Set(foundMats)].join(', ');
-    const impSys = [
-      ['medentik[а-я]*|медентик[а-я]*', 'Medentika'],
-      ['straumann|штрауман[а-я]*|страус[а-я]*', 'Straumann'],
-      ['osstem|осстем[а-я]*|астем[а-я]*|остем[а-я]*', 'Osstem'],
-      ['nobel[а-я]*|нобел[а-я]*', 'Nobel Biocare'],
+        const impSys = [
+      ['medentik[а-я]*|медентик[а-я]*|мидентик[а-я]*', 'Medentika'],
+      ['straumann|штрауман[а-я]*|страуман[а-я]*|страус[а-я]*|штраус[а-я]*', 'Straumann'],
+      ['osstem|[ао]\\s*ст[еэ]м[а-я]*|[ао]\\s*steam|[ао]\\s*stem|\\bhtm\\b|осстем[а-я]*|астем[а-я]*|остем[а-я]*|асем[а-я]*|осем[а-я]*', 'Osstem'],
+      ['nobel[а-я]*|нобел[а-я]*|нобель[а-я]*', 'Nobel Biocare'],
       ['astra[\\s-]*tech|астр[а-я]*', 'Astra Tech'],
-      ['neodent|неодент[а-я]*', 'Neodent'],
-      ['dentium|дентиум[а-я]*', 'Dentium'],
+      ['neodent|неодент[а-я]*|неодэнт[а-я]*', 'Neodent'],
+      ['dentium|дентиум[а-я]*|дэнтиум[а-я]*', 'Dentium'],
       ['ankylos|анкилос[а-я]*', 'Ankylos'],
-      ['megagen|мегаджен[а-я]*', 'MegaGen'],
-      ['any[\\s-]*ridge|any[\\s-]*rich|enich|enige|эни[\\s-]*ридж[а-я]*|эни[\\s-]*рич[а-я]*|ани[\\s-]*ридж[а-я]*|ани[\\s-]*рич[а-я]*|(?:и\\s+)?не\\s+(?:rich|рич[а-я]*|ридж[а-я]*)', 'AnyRidge'],
+      ['megagen|мегаджен[а-я]*|мегаген[а-я]*', 'MegaGen'],
+      ['any[\\s-]*ridge|any[\\s-]*rich|enich|enige|эни[\\s-]*ридж[а-я]*|эни[\\s-]*рич[а-я]*|ани[\\s-]*ридж[а-я]*|ани[\\s-]*рич[а-я]*|(?:и\\s+)?не\\s+(?:rich|рич[а-я]*|ридж[а-я]*|реч[а-я]*)', 'AnyRidge'],
       ['alpha[\\s-]*bio|альфа[\\s-]*био', 'Alpha-Bio'],
       ['\\bmis\\b|\\bмис\\b', 'MIS'],
       ['impro|импро', 'Impro'],
@@ -211,11 +211,11 @@
     ];
     let foundImp = [];
     for (const [pat, name] of impSys) {
-      const rx = new RegExp('(?:на\\s+|систем[а-я]*\\s+|имплантат[а-я]*\\s+)?(?:' + pat + ')', 'gi');
+      const rx = new RegExp('(?:на\\s+|систем[а-я]*\\s+имплантат[а-я]*\\s+|имплантационн[а-я]*\\s+систем[а-я]*\\s+|систем[а-я]*\\s+|имплантат[а-я]*\\s+)?(?:' + pat + ')(?:\\s+имплантационн[а-я]*\\s+систем[а-я]*|\\s+систем[а-я]*\\s+имплантат[а-я]*|\\s+систем[а-я]*|\\s+имплантат[а-я]*)?', 'gi');
       if (rx.test(low)) { foundImp.push(name); rm(rx); }
     }
-   const muRx = /(?:на\s+)?(?:мультиюнит[а-я]*|мульти[\s-]*(?:юнит[а-я]*|unit)|мульт[а-я]*|мультях[а-я]*|мю|муа)(?=\s|[.,;!?]|$)/gi;
-   const hasMu = muRx.test(low);
+    const muRx = new RegExp('(?:на\\s+)?(?:мультиюнит[а-я]*|мульти[\\s-]*(?:юнит[а-я]*|unit)|мульт[а-я]*|мультях[а-я]*|мю|муа)(?=[\\s.,;!?]|$)', 'gi');
+    const hasMu = muRx.test(low);
     if (hasMu) rm(muRx);
     if ((foundImp.length || hasMu) && $('pImp')) {
       const sysStr = [...new Set(foundImp)].join(', ');
