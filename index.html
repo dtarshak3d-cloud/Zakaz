@@ -7,218 +7,90 @@
   <style>
     * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { margin: 0; padding: 16px; background: linear-gradient(160deg, #1b3358 0%, #2b4c7e 100%); color: #fff; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; }
-    .app { width: 100%; max-width: 480px; background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.18); border-radius: 20px; padding: 20px; box-shadow: 0 12px 32px rgba(0,0,0,0.3); }
-    .header { text-align: center; margin-bottom: 18px; }
-    .header h1 { margin: 0; font-size: 22px; font-weight: 700; }
-    .header .ver { font-size: 12px; color: #a8c5f0; margin-top: 4px; }
-    .card { background: rgba(15, 28, 48, 0.55); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 14px; margin-bottom: 14px; }
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 13px; font-weight: 600; color: #9ec1f7; }
-    .clear-btn { background: none; border: none; color: #9ec1f7; text-decoration: underline; font-size: 12px; cursor: pointer; padding: 0; }
-    .mic-wrap { display: flex; flex-direction: column; align-items: center; margin: 10px 0 14px; }
-    .mic-btn { width: 72px; height: 72px; border-radius: 50%; border: none; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: #0b1c36; font-size: 30px; cursor: pointer; box-shadow: 0 6px 20px rgba(79,172,254,0.45); display: flex; align-items: center; justify-content: center; }
-    .mic-btn.rec { background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%); color: #fff; }
-    .mic-hint { font-size: 12px; color: #cbdcf7; margin-top: 8px; text-align: center; line-height: 1.4; }
-    textarea, input { width: 100%; background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; padding: 10px 12px; color: #fff; font-size: 14px; outline: none; }
-    textarea::placeholder, input::placeholder { color: rgba(255,255,255,0.45); }
-    .ai-btn { width: 100%; padding: 10px; border: 1px solid rgba(96,165,250,0.5); border-radius: 10px; background: rgba(59,130,246,0.25); color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 8px; }
-    .row { display: flex; gap: 10px; margin-bottom: 10px; }
-    .field { flex: 1; margin-bottom: 10px; }
-    .row .field { margin-bottom: 0; }
-    label { display: block; font-size: 12px; color: #b7cff5; margin-bottom: 4px; }
-    .delivery-btns { display: flex; gap: 8px; margin-bottom: 10px; }
-    .del-btn { flex: 1; padding: 9px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.07); color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .app { width: 100%; max-width: 480px; background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.18); border-radius: 24px; padding: 22px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+    h1 { margin: 0; font-size: 22px; text-align: center; }
+    .sub { text-align: center; font-size: 13px; color: #b8d0f5; margin: 4px 0 18px; }
+    .card { background: rgba(15, 29, 51, 0.55); border: 1px solid rgba(255,255,255,0.12); border-radius: 18px; padding: 16px; margin-bottom: 14px; }
+    .card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-weight: 600; font-size: 15px; }
+    .clear-btn { background: none; border: none; color: #8ab4f8; text-decoration: underline; cursor: pointer; font-size: 13px; padding: 0; }
+    .mic-wrap { display: flex; flex-direction: column; align-items: center; margin: 8px 0 14px; }
+    .mic-btn { width: 72px; height: 72px; border-radius: 50%; border: none; background: linear-gradient(135deg, #4da3ff, #2673d9); color: #fff; font-size: 30px; cursor: pointer; box-shadow: 0 8px 20px rgba(38,115,217,0.45); transition: 0.2s; }
+    .mic-btn.rec { background: linear-gradient(135deg, #ff5252, #d32f2f); transform: scale(1.06); }
+    .mic-status { font-size: 13px; color: #d0e2ff; margin-top: 10px; text-align: center; line-height: 1.4; }
+    textarea, input { width: 100%; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22); border-radius: 12px; color: #fff; padding: 11px 13px; font-size: 15px; outline: none; }
+    textarea::placeholder, input::placeholder { color: rgba(255,255,255,0.55); }
+    textarea { min-height: 78px; resize: vertical; }
+    .ai-btn { width: 100%; padding: 10px; border: 1px solid rgba(96,165,250,0.5); border-radius: 11px; background: rgba(59,130,246,0.25); color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 8px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .field { margin-bottom: 11px; }
+    label { display: block; font-size: 12px; color: #b8d0f5; margin-bottom: 5px; font-weight: 500; }
+    .delivery-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 11px; }
+    .del-btn { padding: 10px; border-radius: 11px; border: 1px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.08); color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; }
     .del-btn.active { background: #3b82f6; border-color: #60a5fa; }
-    .submit-btn { width: 100%; padding: 14px; border-radius: 12px; border: none; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 6px; }
-    .submit-btn:disabled { opacity: 0.6; cursor: wait; }
-    .send-status { text-align: center; font-size: 13px; margin-top: 10px; }
+    .submit-btn { width: 100%; padding: 15px; border: none; border-radius: 14px; background: linear-gradient(135deg, #65c43a, #4aa122); color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 4px; }
+    .submit-btn:disabled { opacity: 0.6; }
+    .send-status { text-align: center; font-size: 13px; margin-top: 10px; color: #6ee7b7; }
   </style>
 </head>
 <body>
   <div class="app">
-    <div class="header">
-      <h1>🦷 Быстрый заказ Аршаку</h1>
-      <div class="ver">Версия 6.2 • GigaChat + Почта</div>
-    </div>
-
+    <h1>🦷 Быстрый заказ Аршаку</h1>
+    <div class="sub">Версия 7.0 • Голос + Почта</div>
     <div class="card">
-      <div class="card-header">
-        <span>1. Голосовой диктофон 🎙️</span>
-        <button type="button" class="clear-btn" id="clearBtn">Очистить всё</button>
-      </div>
-      <div class="mic-wrap">
-        <button type="button" class="mic-btn" id="micBtn">🎤</button>
-        <div class="mic-hint" id="micStatus">Нажмите на микрофон и продиктуйте заказ</div>
-      </div>
-      <textarea id="rawText" rows="3" placeholder="Назовите: ID пациента, тип конструкции, материал, цвет и адрес/время курьера..."></textarea>
-      <button type="button" class="ai-btn" id="aiParseBtn">✨ Разобрать текст через ИИ GigaChat</button>
+      <div class="card-head"><span>1. Голосовой диктофон 🎙️</span><button type="button" class="clear-btn" id="clearBtn">Очистить всё</button></div>
+      <div class="mic-wrap"><button type="button" class="mic-btn" id="micBtn">🎤</button><div class="mic-status" id="micStatus">Нажмите на микрофон и продиктуйте заказ</div></div>
+      <textarea id="rawText" placeholder="Назовите: ID пациента, тип конструкции, материал, цвет и доставку..."></textarea>
+      <button type="button" class="ai-btn" id="aiParseBtn">✨ Разобрать текст по полям</button>
     </div>
-
     <div class="card">
-      <div class="card-header"><span>2. Параметры заказа</span></div>
-      <div class="field">
-        <label>ID пациента</label>
-        <input type="text" id="pId" placeholder="Например: 4512">
+      <div class="card-head"><span>2. Параметры заказа</span></div>
+      <div class="field"><label>ID пациента</label><input type="text" id="pId" placeholder="Например: 4512"></div>
+      <div class="grid">
+        <div class="field"><label>Тип конструкции</label><input type="text" id="pType" placeholder="Коронка, мост..."></div>
+        <div class="field"><label>Материал</label><input type="text" id="pMat" placeholder="Цирконий, E.max..."></div>
       </div>
-      <div class="row">
-        <div class="field">
-          <label>Тип конструкции</label>
-          <input type="text" id="pType" placeholder="Коронка, мост...">
-        </div>
-        <div class="field">
-          <label>Материал</label>
-          <input type="text" id="pMat" placeholder="Цирконий, E.max...">
-        </div>
-      </div>
-      <div class="field">
-        <label>Цвет</label>
-        <input type="text" id="pCol" placeholder="Например: A2, B1">
-      </div>
+      <div class="field"><label>Цвет</label><input type="text" id="pCol" placeholder="Например: А2, BL1"></div>
       <label>Доставка</label>
-      <div class="delivery-btns">
-        <button type="button" class="del-btn active" id="btnCourier">Нужен курьер</button>
-        <button type="button" class="del-btn" id="btnSelf">Сами привезём</button>
-      </div>
-      <div class="field" id="courierBox">
-        <label>Курьер: адрес и время</label>
-        <input type="text" id="pCour" placeholder="Адрес клиники, к какому времени забрать">
-      </div>
+      <div class="delivery-btns"><button type="button" class="del-btn active" id="btnCourier">Нужен курьер</button><button type="button" class="del-btn" id="btnSelf">Сами привезём</button></div>
+      <div class="field" id="courierBox"><label>Курьер: адрес и время</label><input type="text" id="pCour" placeholder="Адрес клиники, к какому времени забрать"></div>
       <button type="button" class="submit-btn" id="sendBtn">Отправить Аршаку в лабораторию ➔</button>
       <div class="send-status" id="sendStatus"></div>
     </div>
   </div>
-
   <script>
     const GAS_URL = 'https://' + 'script.google' + '.com/macros/s/AKfycbyeHWKmbbvUITkhXHeXSmJn92by9qfhziAqXFg0KOACnE6dpiRxnVzZdZJDg912HVsXrg/exec';
     const $ = id => document.getElementById(id);
-
     function localParse(txt) {
       const low = txt.toLowerCase();
-      const idM = txt.match(/(?:пациент|ид|id|номер|карта|№)\s*[:\-]?\s*(\d+)/i) || txt.match(/\b(\d{3,6})\b/);
-      if (idM && !$('pId').value) $('pId').value = idM.at(1);
-
-      const types = [
-        ['коронка', 'Коронка'], ['коронки', 'Коронки'], ['мост', 'Мостовидный протез'],
-        ['винир', 'Винир'], ['вкладка', 'Вкладка'], ['абатмент', 'Индивидуальный абатмент'],
-        ['протез', 'Съёмный протез'], ['бюгель', 'Бюгельный протез'], ['капа', 'Капа'],
-        ['шаблон', 'Хирургический шаблон'], ['временн', 'Временная коронка']
-      ];
-      for (const [k, v] of types) { if (low.includes(k) && !$('pType').value) { $('pType').value = v; break; } }
-
-      const mats = [
-        ['циркон', 'Диоксид циркония'], ['emax', 'E.max'], ['е макс', 'E.max'], ['емакс', 'E.max'],
-        ['металлокерам', 'Металлокерамика'], ['керамик', 'Керамика'], ['титан', 'Титан'],
-        ['акрил', 'Акрил'], ['нейлон', 'Нейлон'], ['pmma', 'PMMA'], ['пмма', 'PMMA'], ['пластмасс', 'Пластмасса']
-      ];
-      for (const [k, v] of mats) { if (low.includes(k) && !$('pMat').value) { $('pMat').value = v; break; } }
-
-      const colM = txt.match(/(?:цвет|оттенок)?\s*\b([аaбbсcдd]\s*[1-4](?:\.5)?|bl\s*[1-4]|ом\s*[1-3])\b/i);
-      if (colM && !$('pCol').value) $('pCol').value = colM.at(1).toUpperCase().replace(/\s+/g, '').replace('А', 'A').replace('Б', 'B').replace('С', 'C').replace('Д', 'D');
-
-      if (low.includes('сами') || low.includes('привезем') || low.includes('привезём')) {
-        $('btnSelf').click();
-      } else if (low.includes('курьер') || low.includes('забрать') || low.includes('адрес') || low.includes('улиц')) {
-        $('btnCourier').click();
-        const courM = txt.match(/(?:курьер|забрать|адрес|по адресу|с улицы|ул\.?)\s*[:\-]?\s*(.+)$/i);
-        if (courM && !$('pCour').value) $('pCour').value = courM.at(1).trim();
-      }
+      const idM = txt.match(/(?:пациент[а-я]*|ид|id|номер|карта|№)\s*(?:в|на)?\s*(\d{1,3}[:\-\s]?\d{2,4})/i) || txt.match(/\b(\d{3,6})\b/);
+      if (idM) $('pId').value = idM.at(1).replace(/[:\-\s]/g, '');
+      const types = [['коронка','Коронка'],['коронки','Коронки'],['мост','Мостовидный протез'],['винир','Винир'],['вкладка','Вкладка'],['абатмент','Индивидуальный абатмент'],['протез','Съёмный протез'],['бюгель','Бюгельный протез'],['капа','Капа'],['шаблон','Хирургический шаблон'],['временн','Временная коронка']];
+      for (const [k, v] of types) if (low.includes(k)) { $('pType').value = v; break; }
+      const mats = [['циркон','Диоксид циркония'],['emax','E.max'],['е макс','E.max'],['емакс','E.max'],['металлокерам','Металлокерамика'],['керамик','Керамика'],['титан','Титан'],['акрил','Акрил'],['нейлон','Нейлон'],['pmma','PMMA'],['пмма','PMMA'],['пластмасс','Пластмасса']];
+      for (const [k, v] of mats) if (low.includes(k)) { $('pMat').value = v; break; }
+      const blM = low.match(/(?:б?лич|bleach|bl)\s*(1|2|3|4|один|два|три|четыре)/);
+      if (blM) { const m = {'один':'1','два':'2','три':'3','четыре':'4'}; $('pCol').value = 'BL' + (m[blM.at(1)] || blM.at(1)); }
+      else { const cM = txt.match(/(?:цвет|оттенок)?\s*\b([аaбbсcдd]\s*[1-4](?:\.5)?|ом\s*[1-3])\b/i); if (cM) $('pCol').value = cM.at(1).toUpperCase().replace(/\s+/g,'').replace('А','A').replace('Б','B').replace('С','C').replace('Д','D'); }
+      if (low.includes('не нужен') || low.includes('сами') || low.includes('привезем') || low.includes('привезём')) $('btnSelf').click();
+      else if (low.includes('курьер') || low.includes('забрать') || low.includes('адрес') || low.includes('улиц')) { $('btnCourier').click(); const cm = txt.match(/(?:курьер|забрать|адрес|по адресу|с улицы|ул\.?)\s*[:\-]?\s*(.+)$/i); if (cm) $('pCour').value = cm.at(1).trim(); }
     }
-
-    async function runGigaChat() {
-      const txt = $('rawText').value.trim();
-      if (!txt) return;
-      localParse(txt);
-      $('micStatus').textContent = '⏳ ИИ GigaChat уточняет поля...';
-      try {
-        const res = await fetch(GAS_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'parse', rawText: txt })
-        });
-        const data = await res.json();
-        if (data.error) throw new Error(data.error);
-        if (data.fields) {
-          if (data.fields.id) $('pId').value = data.fields.id;
-          if (data.fields.type) $('pType').value = data.fields.type;
-          if (data.fields.material) $('pMat').value = data.fields.material;
-          if (data.fields.color) $('pCol').value = data.fields.color;
-          if (data.fields.courier) {
-            $('btnCourier').click();
-            $('pCour').value = data.fields.courier;
-          }
-        }
-        $('micStatus').textContent = '✅ ИИ GigaChat заполнил поля!';
-      } catch (e) {
-        $('micStatus').textContent = '⚠️ Поля заполнены локально (' + e.message + ')';
-      }
-    }
-
-    $('aiParseBtn').onclick = runGigaChat;
     $('rawText').addEventListener('input', e => localParse(e.target.value));
-
-    $('btnCourier').onclick = () => {
-      $('btnCourier').classList.add('active');
-      $('btnSelf').classList.remove('active');
-      $('courierBox').style.display = 'block';
-      if ($('pCour').value === 'Сами привезём') $('pCour').value = '';
-    };
-    $('btnSelf').onclick = () => {
-      $('btnSelf').classList.add('active');
-      $('btnCourier').classList.remove('active');
-      $('courierBox').style.display = 'none';
-      $('pCour').value = 'Сами привезём';
-    };
-
-    $('clearBtn').onclick = () => {
-      ['rawText', 'pId', 'pType', 'pMat', 'pCol', 'pCour'].forEach(k => $(k).value = '');
-      $('btnCourier').click();
-      $('micStatus').textContent = 'Нажмите на микрофон и продиктуйте заказ';
-      $('sendStatus').textContent = '';
-    };
-
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const isYandex = /YaBrowser/i.test(navigator.userAgent);
+    $('aiParseBtn').onclick = () => { localParse($('rawText').value); $('micStatus').textContent = '✅ Поля заполнены!'; };
+    $('btnCourier').onclick = () => { $('btnCourier').classList.add('active'); $('btnSelf').classList.remove('active'); $('courierBox').style.display = 'block'; if ($('pCour').value === 'Сами привезём') $('pCour').value = ''; };
+    $('btnSelf').onclick = () => { $('btnSelf').classList.add('active'); $('btnCourier').classList.remove('active'); $('courierBox').style.display = 'none'; $('pCour').value = 'Сами привезём'; };
+    $('clearBtn').onclick = () => { ['rawText','pId','pType','pMat','pCol','pCour'].forEach(k => $(k).value = ''); $('btnCourier').click(); $('micStatus').textContent = 'Нажмите на микрофон и продиктуйте заказ'; $('sendStatus').textContent = ''; };
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition, isYa = /YaBrowser/i.test(navigator.userAgent);
     let rec = null, listening = false;
-
-    if (SR && !isYandex) {
-      rec = new SR();
-      rec.lang = 'ru-RU';
-      rec.continuous = true;
-      rec.interimResults = true;
-      rec.onresult = e => {
-        let full = '';
-        for (let i = 0; i < e.results.length; i++) full += e.results[i].item(0).transcript;
-        $('rawText').value = full;
-        localParse(full);
-      };
-      rec.onend = () => { listening = false; $('micBtn').className = 'mic-btn'; runGigaChat(); };
+    if (SR && !isYa) {
+      rec = new SR(); rec.lang = 'ru-RU'; rec.continuous = true; rec.interimResults = true;
+      rec.onresult = e => { let f = ''; for (let i = 0; i < e.results.length; i++) { const it = e.results.item ? e.results.item(i) : e.results.at(i), al = it.item ? it.item(0) : it.at(0); if (al && al.transcript) f += al.transcript; } $('rawText').value = f; localParse(f); };
+      rec.onend = () => { listening = false; $('micBtn').className = 'mic-btn'; $('micStatus').textContent = '✅ Готово! Проверьте поля ниже'; };
     }
-
-    $('micBtn').onclick = () => {
-      if (rec) {
-        if (!listening) { rec.start(); listening = true; $('micBtn').className = 'mic-btn rec'; $('micStatus').textContent = '🔴 Говорите...'; }
-        else { rec.stop(); }
-      } else {
-        $('rawText').focus();
-        $('micStatus').innerHTML = '💡 В Яндекс Браузере нажмите <b>Win + H</b> и диктуйте';
-      }
-    };
-
+    $('micBtn').onclick = () => { if (rec) { if (!listening) { rec.start(); listening = true; $('micBtn').className = 'mic-btn rec'; $('micStatus').textContent = '🔴 Говорите...'; } else rec.stop(); } else { $('rawText').focus(); $('micStatus').innerHTML = '💡 В Яндекс Браузере нажмите <b>Win + H</b> и диктуйте'; } };
     $('sendBtn').onclick = async () => {
-      const btn = $('sendBtn');
-      btn.disabled = true;
-      $('sendStatus').textContent = '⏳ Отправляем на Dr.Arshak@yandex.ru...';
-      try {
-        const res = await fetch(GAS_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'sendEmail', id: $('pId').value, type: $('pType').value, material: $('pMat').value, color: $('pCol').value, courier: $('pCour').value, rawText: $('rawText').value })
-        });
-        const data = await res.json();
-        if (data.error) throw new Error(data.error);
-        $('sendStatus').textContent = '✅ Отправлено на Dr.Arshak@yandex.ru!';
-      } catch (e) {
-        $('sendStatus').textContent = '❌ Ошибка: ' + e.message;
-      } finally { btn.disabled = false; }
+      const btn = $('sendBtn'); btn.disabled = true; $('sendStatus').textContent = '⏳ Отправляем на Dr.Arshak@yandex.ru...';
+      try { await fetch(GAS_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'sendEmail', id: $('pId').value, type: $('pType').value, material: $('pMat').value, color: $('pCol').value, courier: $('pCour').value, rawText: $('rawText').value }) }); $('sendStatus').textContent = '✅ Отправлено на Dr.Arshak@yandex.ru!'; }
+      catch (e) { $('sendStatus').textContent = '❌ Ошибка: ' + e.message; } finally { btn.disabled = false; }
     };
   </script>
 </body>
