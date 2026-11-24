@@ -112,10 +112,10 @@
       if (foundTypes.length) $('pType').value = [...new Set(foundTypes)].join(', ');
       const mats = [['диоксид циркония','Диоксид циркония'],['циркон','Диоксид циркония'],['emax','E.max'],['е макс','E.max'],['емакс','E.max'],['металлокерам','Металлокерамика'],['керамик','Керамика'],['титан','Титан'],['акрил','Акрил'],['нейлон','Нейлон'],['pmma','PMMA'],['пмма','PMMA'],['пластмасс','Пластмасса']];
       for (const [k, v] of mats) if (low.includes(k)) { $('pMat').value = v; rm(new RegExp(k + '[а-я]*', 'gi')); break; }
-      const blM = low.match(/(?:цвет|оттенок)?\s*(?:б?лич|bleach|bl)\s*(1|2|3|4|один|два|три|четыре)/), caM = low.match(/цвета\s*([1-4](?:\.5)?)/);
-      if (blM) { const m = {'один':'1','два':'2','три':'3','четыре':'4'}; $('pCol').value = 'BL' + (m[blM.at(1)] || blM.at(1)); rm(blM.at(0)); }
-      else if (caM) { $('pCol').value = 'A' + caM.at(1); rm(caM.at(0)); }
-      else { const cM = txt.match(/(?:цвет|оттенок)?\s*(?:^|\s)([аaбbсcдd]\s*[1-4](?:\.5)?|ом\s*[1-3])(?=\s|$|[.,])/i); if (cM) { $('pCol').value = cM.at(1).toUpperCase().replace(/\s+/g,'').replace('А','A').replace('Б','B').replace('С','C').replace('Д','D'); rm(cM.at(0)); } }
+     const blM = low.match(/(?:цвет|оттенок)?\s*(?:б?лич|bleach|bl)\s*(1|2|3|4|один|два|три|четыре)/), caM = low.match(/цвета\s*([1-4](?:[\.,]5|\s+с\s+половиной)?)/);
+if (blM) { const m = {'один':'1','два':'2','три':'3','четыре':'4'}; $('pCol').value = 'BL' + (m[blM.at(1)] || blM.at(1)); rm(blM.at(0)); }
+else if (caM) { $('pCol').value = 'A' + caM.at(1).replace(/\s+с\s+половиной/, '.5').replace(',', '.'); rm(caM.at(0)); }
+else { const cM = txt.match(/(?:цвет|оттенок)?\s*(?:^|\s)([аaбbсcдd]\s*[1-4](?:[\.,]5|\s+с\s+половиной)?|ом\s*[1-3])(?=\s|$|[.,])/i); if (cM) { $('pCol').value = cM.at(1).toUpperCase().replace(/\s+с\s+половиной/i, '.5').replace(',', '.').replace(/\s+/g,'').replace('А','A').replace('Б','B').replace('С','C').replace('Д','D'); rm(cM.at(0)); } }
       if (low.includes('не нужен') || low.includes('сами') || low.includes('привезем') || low.includes('привезём')) { $('btnSelf').click(); rm(/курьер\s+не\s+нужен|сами\s+привез[а-яё]*/gi); }
       else if (low.includes('курьер') || low.includes('забрать') || low.includes('адрес') || low.includes('улиц') || low.includes('клиник')) {
         $('btnCourier').click();
