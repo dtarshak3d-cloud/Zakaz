@@ -35,7 +35,7 @@
 <body>
   <div class="app">
     <h1>🦷 Быстрый заказ Аршаку</h1>
-    <div class="sub">Версия 7.1 • Голос + Почта</div>
+    <div class="sub">Версия 7.2 • Голос + Почта</div>
     <div class="card">
       <div class="card-head"><span>1. Голосовой диктофон 🎙️</span><button type="button" class="clear-btn" id="clearBtn">Очистить всё</button></div>
       <div class="mic-wrap"><button type="button" class="mic-btn" id="micBtn">🎤</button><div class="mic-status" id="micStatus">Нажмите на микрофон и продиктуйте заказ</div></div>
@@ -58,7 +58,7 @@
     </div>
   </div>
   <script>
-    const GAS_URL = 'ВСТАВЬТЕ_СЮДА_ВАШ_URL_С_EXEC';
+    const GAS_URL = 'https://' + 'script.google' + '.com/macros/s/AKfycbyeHWKmbbvUtTkhXHeXSmJn9Zby9qfhziAqXFg0K0ACnE6dpIRxnVzZdZjDg912HVsXrg/exec';
     const $ = id => document.getElementById(id);
     function localParse(txt) {
       const low = txt.toLowerCase();
