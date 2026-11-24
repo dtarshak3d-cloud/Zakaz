@@ -161,12 +161,11 @@
     const edM = low.match(/\b(\d{1,2}|двадцать\s+(?:одна|два|две|три|четыре|пять|шесть|семь|восемь)|одна|один|одну|две|два|три|четыре|пять|шесть|семь|восемь|девять|десять|одиннадцать|двенадцать|тринадцать|четырнадцать|пятнадцать|шестнадцать|семнадцать|восемнадцать|девятнадцать|двадцать)\s+(?:ед\.?|единиц[а-я]*)\b/i);
     if (edM && edM.at(1)) { const n = toN(edM.at(1)); if (n > 0) { foundTypes.push(n + ' ед.'); rm(edM.at(0)); } }
     let extras = [];
-           const allOn = low.match(/(?:вс[её]\s+на|all[\s-]*on[\s-]*|alone\s+(?:for|four|fuck|six)|олон\s*фоллон|фоллон|олонх[а-я]*|олонф[а-я]*|олон|полон\s*фу[а-я]*)\s*(\d{1,2}|четыр[а-я]*|шест[а-я]*|восьм[а-я]*|for|four|fuck|six)?/i);
+          const allOn = low.match(/(?:вс[её]\s+на|all[\s-]*on[\s-]*|alone\s+(?:for|four|fuck|six)|олон\s*фоллон|фоллон|олонх[а-я]*|олонф[а-я]*|олон|полон\s*фу[а-я]*)\s*(\d{1,2}|четыр[а-я]*|шест[а-я]*|восьм[а-я]*|for|four|fuck|фон[а-я]*|six)?/i);
       if (allOn) {
       const full = allOn.at(0).toLowerCase();
       const w = (allOn.at(1) || '').toLowerCase();
-      const n = toN(w) || (w.startsWith('четыр') || w === 'for' || w === 'four' || w === 'fuck' || full.includes('фу') || full.includes('for') || full.includes('fuck') ? 4 : (w.startsWith('шест') || w === 'six' ? 6 : (w.startsWith('восьм') ? 8 : 0)));
-      if (n > 0) extras.push(`All-on-${n} (на ${n} опорах)`);
+          const n = toN(w) || (w.startsWith('четыр') || w === 'for' || w === 'four' || w === 'fuck' || w.startsWith('фон') || full.includes('фу') || full.includes('for') || full.includes('fuck') ? 4 : (w.startsWith('шест') || w === 'six' ? 6 : (w.startsWith('восьм') ? 8 : 0)));
       else if (!foundTypes.some(t => t.includes('Балоч'))) foundTypes.push('All-on-4 / Балочная конструкция');
       rm(allOn.at(0));
     }
@@ -206,7 +205,7 @@
       ['dentium|дентиум[а-я]*', 'Dentium'],
       ['ankylos|анкилос[а-я]*', 'Ankylos'],
       ['megagen|мегаджен[а-я]*', 'MegaGen'],
-      ['any[\\s-]*ridge|any[\\s-]*rich|эни[\\s-]*ридж[а-я]*|эни[\\s-]*рич[а-я]*|ани[\\s-]*ридж[а-я]*|ани[\\s-]*рич[а-я]*|(?:и\\s+)?не\\s+(?:rich|рич[а-я]*|ридж[а-я]*)', 'AnyRidge'],
+      ['any[\\s-]*ridge|any[\\s-]*rich|enich|enige|эни[\\s-]*ридж[а-я]*|эни[\\s-]*рич[а-я]*|ани[\\s-]*ридж[а-я]*|ани[\\s-]*рич[а-я]*|(?:и\\s+)?не\\s+(?:rich|рич[а-я]*|ридж[а-я]*)', 'AnyRidge'],
       ['alpha[\\s-]*bio|альфа[\\s-]*био', 'Alpha-Bio'],
       ['\\bmis\\b|\\bмис\\b', 'MIS'],
       ['impro|импро', 'Impro'],
@@ -217,8 +216,8 @@
       const rx = new RegExp('(?:на\\s+|систем[а-я]*\\s+|имплантат[а-я]*\\s+)?(?:' + pat + ')', 'gi');
       if (rx.test(low)) { foundImp.push(name); rm(rx); }
     }
-    const muRx = /(?:на\s+)?(?:мультиюнит[а-я]*|мульти[\s-]*юнит[а-я]*|мульт[а-я]*|мультях[а-я]*|мю|муа)(?=\s|[.,;!?]|$)/gi;
-    const hasMu = muRx.test(low);
+   const muRx = /(?:на\s+)?(?:мультиюнит[а-я]*|мульти[\s-]*(?:юнит[а-я]*|unit)|мульт[а-я]*|мультях[а-я]*|мю|муа)(?=\s|[.,;!?]|$)/gi;
+   const hasMu = muRx.test(low);
     if (hasMu) rm(muRx);
     if ((foundImp.length || hasMu) && $('pImp')) {
       const sysStr = [...new Set(foundImp)].join(', ');
