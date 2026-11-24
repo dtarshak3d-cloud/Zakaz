@@ -113,9 +113,10 @@
     const rm = rx => { noteRest = noteRest.replace(rx, ' '); };
     const cap = s => String(s || '').trim().replace(/\s+/g, ' ').replace(/(^|\s)\S/g, l => l.toUpperCase());
 
-    const docM = txt.match(/(?:врач|доктор|фреш|клиника)\s+([^,.;\d]+?)(?=\s+(?:пациент|ид|id|номер|карта|№|одна|один|одну|две|два|три|четыре|пять|шесть|корон|винир|мост|протез|вклад|абатмент|капа|шаблон|циркон|дисиликат|силикат|материал|цвет|курьер|адрес|$)|[,.;\d]|$)/i);
+        const docBefore = txt.match(/^([^,.;\d]+?)\s+(?:врач|доктор|фреш)\b/i);
+    const docAfter = txt.match(/(?:врач|доктор|фреш|клиника)\s+([^,.;\d]+?)(?=\s+(?:пациент|ид|id|номер|карта|№|одна|один|одну|две|два|три|четыре|пять|шесть|корон|винир|мост|протез|вклад|абатмент|капа|шаблон|циркон|дисиликат|силикат|материал|цвет|курьер|адрес|$)|[,.;\d]|$)/i);
+    const docM = docBefore || docAfter;
     if (docM && docM.at(1) && $('pDoc')) { $('pDoc').value = cap(docM.at(1)); localStorage.setItem('zakaz_doc', $('pDoc').value); rm(docM.at(0)); }
-
     const idM = noteRest.match(/(?:пациент[а-я]*|ид|id|номер|карта|№)\s*(?:в|на)?\s*(\d{1,3}[:\-\s]?\d{2,4})/i) || noteRest.match(/\b(\d{3,6})\b/);
     const famM = noteRest.match(/(?:пациент[а-я]*|фамили[яи]|для)\s+(?:и\s+)?([^,.;\d]+?)(?=\s+(?:одна|один|одну|две|два|три|четыре|пять|шесть|корон|винир|мост|протез|вклад|абатмент|капа|шаблон|циркон|дисиликат|силикат|материал|цвет|курьер|адрес|$)|[,.;\d]|$)/i);
     const idParts = [];
@@ -176,7 +177,7 @@
   if ($('aiParseBtn')) $('aiParseBtn').onclick = () => { localParse($('rawText').value); if ($('micStatus')) $('micStatus').textContent = 'Поля заполнены!'; };
   if ($('btnCourier')) $('btnCourier').onclick = () => { $('btnCourier').classList.add('active'); $('btnSelf').classList.remove('active'); if ($('courierBox')) $('courierBox').style.display = 'block'; };
   if ($('btnSelf')) $('btnSelf').onclick = () => { $('btnSelf').classList.add('active'); $('btnCourier').classList.remove('active'); if ($('courierBox')) $('courierBox').style.display = 'none'; if ($('pCour')) $('pCour').value = ''; };
-  if ($('clearBtn')) $('clearBtn').onclick = () => { ['rawText','pId','pType','pMat','pCol','pCour','pNote'].forEach(id => { if ($(id)) $(id).value = ''; }); if ($('btnSelf')) $('btnSelf').click(); if ($('sendStatus')) $('sendStatus').textContent = ''; };
+  if ($('clearBtn')) $('clearBtn').onclick = () => { ['rawText','pDoc','pId','pType','pMat','pCol','pCour','pNote'].forEach(id => { if ($(id)) $(id).value = ''; }); localStorage.removeItem('zakaz_doc'); if ($('btnSelf')) $('btnSelf').click(); if ($('sendStatus')) $('sendStatus').textContent = ''; };
 
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   let rec = null, listening = false;
