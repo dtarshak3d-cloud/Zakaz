@@ -49,7 +49,7 @@
     </div>
     <div class="card">
       <div class="card-head"><span>1. Голосовая диктовка</span><button type="button" class="clear-btn" id="clearBtn">Очистить всё</button></div>
-         <textarea id="rawText" placeholder="Назовите врача/клинику, пациента, вид работы, материал, цвет, кло-во ед. (одиночками или мостом, кол-во опор и промежутков, балка),  фотопротокол и доставку..."></textarea>
+         <textarea id="rawText" placeholder="Назовите врача/клинику, пациента, вид работы, материал, цвет, кло-во ед. опор и промежутков, супраструктуры, фотопротокол и доставку..."></textarea>
       <button type="button" class="ai-btn" id="aiParseBtn">Разобрать текст по полям</button>
     </div>
     <div class="card blue">
@@ -57,14 +57,14 @@
       <div class="field"><label>Врач / Клиника</label><input type="text" id="pDoc" placeholder="Например: Врач Петросян / Клиника Дент"></div>
       <div class="field"><label>ID пациента</label><input type="text" id="pId" placeholder="Например: 4512 или Смирнов"></div>
       <div class="grid">
-                    <div class="field"><label>Тип конструкции</label><input type="text" id="pType" placeholder="Коронка, мост, балка..."></div>
+                    <div class="field"><label>Тип конструкции</label><input type="text" id="pType" placeholder="Коронка, винир, all-on-4..."></div>
         <div class="field"><label>Материал</label><input type="text" id="pMat" placeholder="Цирконий, E.max..."></div>
       </div>
          <div class="grid">
       <div class="field"><label>Цвет</label><input type="text" id="pCol" placeholder="Например: A2, BL1"></div>
-      <div class="field"><label>Система имплантатов</label><input type="text" id="pImp" placeholder="Medentika, Straumann, МЮ..."></div>
+      <div class="field"><label>Система имплантатов</label><input type="text" id="pImp" placeholder="Medentika, OSSTEM, MU..."></div>
     </div>
-     <div class="field"><label>Примечание</label><textarea id="pNote" rows="2" placeholder="Укажите: сроки сдачи и детали: одиночками или мостом (кол-во опор и промеж.), балка,..."></textarea></div>
+     <div class="field"><label>Примечание</label><textarea id="pNote" rows="2" placeholder="Укажите: СРОКИ СДАЧИ и детали: одиночками или мостом, дисколориты, балка,..."></textarea></div>
           <div class="field">
       <label>Фотопротокол / Файлы</label>
       <input type="text" id="pPhoto" placeholder="Куда отправили фото (если есть)">
