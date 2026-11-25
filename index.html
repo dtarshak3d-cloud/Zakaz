@@ -94,16 +94,23 @@
     btn.disabled = true;
     $('sendStatus').textContent = 'Отправляем на Dt.Arshak@yandex.ru...';
     try {
+           const isSelf = $('btnSelf') && $('btnSelf').classList.contains('active');
+      const delVal = isSelf ? 'Сами привезём' : ($('pCour') && $('pCour').value.trim() ? 'Курьер: ' + $('pCour').value.trim() : 'Нужен курьер');
       const q = new URLSearchParams({
         action: 'sendEmail',
+        doc: $('pDoc') ? $('pDoc').value : '',
         doctor: $('pDoc') ? $('pDoc').value : '',
         id: $('pId') ? $('pId').value : '',
         type: $('pType') ? $('pType').value : '',
+        mat: $('pMat') ? $('pMat').value : '',
         material: $('pMat') ? $('pMat').value : '',
         color: $('pCol') ? $('pCol').value : '',
-        courier: $('pCour') ? $('pCour').value : '',
+        implant: $('pImp') ? $('pImp').value : '',
+        delivery: delVal,
+        courier: delVal,
         note: $('pNote') ? $('pNote').value : '',
         photo: $('pPhoto') ? $('pPhoto').value : '',
+        raw: $('rawText') ? $('rawText').value : '',
         rawText: $('rawText') ? $('rawText').value : ''
       });
       await fetch(GAS_URL + '?' + q.toString(), { mode: 'no-cors' });
@@ -114,7 +121,6 @@
       btn.disabled = false;
     }
   };
-
   if (localStorage.getItem('zakaz_doc') && $('pDoc')) $('pDoc').value = localStorage.getItem('zakaz_doc');
   if ($('pDoc')) $('pDoc').addEventListener('input', e => localStorage.setItem('zakaz_doc', e.target.value));
 
@@ -170,11 +176,11 @@
       if (n === 0 && !foundTypes.some(t => t.includes('Балоч'))) foundTypes.push('All-on-4 / Балочная конструкция');
       rm(allOn.at(0));
     }
-    const opM = low.match(/(?:на\s+)?(\d{1,2}|одна|один|одну|две|два|три|четыре|четыр[её]х|пять|пят[иь]|шесть|шест[иь]|семь|сем[иь]|восемь|восьм[иь])\s+опор[а-я]*/i);
+        const opM = low.match(/(?:на\s+)?(\d{1,2}|одна|один|одну|одн[оой]|две|два|двух|три|тр[её]х|четыре|четыр[её]х|пять|пят[иь]|шесть|шест[иь]|семь|сем[иь]|восемь|восьм[иь])\s+опор[а-я]*/i);
     const prM = low.match(/(\d{1,2}|одна|один|одну|две|два|три|четыре|пять|шесть|семь|восемь)\s+промежут[а-я]*(?:\s+част[а-я]*)?/i);
     if (opM || prM) {
       let sp = [];
-      if (opM && opM.at(1)) { const w = opM.at(1).toLowerCase(); const n = toN(w) || (w.startsWith('четыр') ? 4 : (w.startsWith('пят') ? 5 : (w.startsWith('шест') ? 6 : (w.startsWith('сем') ? 7 : (w.startsWith('восьм') ? 8 : 0))))); if (n > 0) sp.push(`опор: ${n}`); rm(opM.at(0)); }
+      if (opM && opM.at(1)) { const w = opM.at(1).toLowerCase(); const n = toN(w) || (w.startsWith('дв') ? 2 : (w.startsWith('тр') ? 3 : (w.startsWith('четыр') ? 4 : (w.startsWith('пят') ? 5 : (w.startsWith('шест') ? 6 : (w.startsWith('сем') ? 7 : (w.startsWith('восьм') ? 8 : 0))))))); if (n > 0) sp.push(`опор: ${n}`); rm(opM.at(0)); }
       if (prM && prM.at(1)) { const n = toN(prM.at(1)); if (n > 0) sp.push(`промеж.: ${n}`); rm(prM.at(0)); }
       if (sp.length) extras.push(sp.join(', '));
     }
@@ -194,7 +200,7 @@
     }
     if (foundMats.length && $('pMat')) $('pMat').value = [...new Set(foundMats)].join(', ');
             const impSys = [
-      ['medentik[а-я]*|медентик[а-я]*|мидентик[а-я]*|медик[а-я]*|мидик[а-я]*', 'Medentika'],
+      ['medentik[а-я]*|медентик[а-я]*|мидентик[а-я]*|медик[а-я]*|мидик[а-я]*|дентик[а-я]*|дэнтик[а-я]*', 'Medentika'],
       ['straumann|штрауман[а-я]*|страуман[а-я]*|страус[а-я]*|штраус[а-я]*', 'Straumann'],
       ['osstem|[ао]\\s*ст[еэ]м[а-я]*|[ао]\\s*steam|[ао]\\s*stem|\\bhtm\\b|осстем[а-я]*|астем[а-я]*|остем[а-я]*|асем[а-я]*|осем[а-я]*', 'Osstem'],
       ['nobel[а-я]*|нобел[а-я]*|нобель[а-я]*', 'Nobel Biocare'],
@@ -221,25 +227,28 @@
       const sysStr = [...new Set(foundImp)].join(', ');
       $('pImp').value = sysStr ? (hasMu ? `${sysStr} (Multi-unit)` : sysStr) : 'Multi-unit';
     }
-    const numC = {'один':'1','два':'2','три':'3','четыре':'4'};
-    const blM = low.match(/(?:цвет|оттенок|цвета)?\s*(?:б?лич|bleach|bl)\s*(1|2|3|4|один|два|три|четыре)/);
-    const caM = low.match(/(?:цвета|цвет)\s*([1-4](?:[\.,]5|\s+с\s+половиной)?)(?=\s|$|[.,])/);
+       const numC = {'один':'1','два':'2','три':'3','четыре':'4'};
+    const blM = low.match(/(?:цвет[а-я]*|оттенок[а-я]*)?\s*(?:б?лич|bleach|bl)\s*(1|2|3|4|один|два|три|четыре)/);
+    const caM = low.match(/(?:цвета|оттенка)\s*([1-4]|один|два|три|четыре)(?:[\.,]5|\s+с\s+половиной)?(?=\s|$|[.,])/);
     if (blM && blM.at(1) && $('pCol')) { $('pCol').value = 'BL' + (numC[blM.at(1)] || blM.at(1)); rm(blM.at(0)); }
-    else if (caM && caM.at(1) && $('pCol')) { $('pCol').value = 'A' + caM.at(1).replace(/\s+с\s+половиной/, '.5').replace(',', '.'); rm(caM.at(0)); }
+    else if (caM && caM.at(1) && $('pCol')) {
+      const dig = numC[caM.at(1)] || caM.at(1);
+      const half = caM.at(0).match(/([\.,]5|\s+с\s+половиной)/) ? '.5' : '';
+      $('pCol').value = 'A' + dig + half;
+      rm(caM.at(0));
+    }
     else {
-      const cM = txt.match(/(?:цвет|оттенок)?\s*(?:^|\s)([аaбbсcдd]\s*(?:[1-4]|один|два|три|четыре)(?:[\.,]5|\s+с\s+половиной)?|ом\s*[1-3])(?=\s|$|[.,])/i);
+      const cM = txt.match(/(?:цвет[а-я]*|оттенок[а-я]*)?\s*(?:^|\s)([аaбbсcдd]\s*(?:[1-4]|один|два|три|четыре)(?:[\.,]5|\s+с\s+половиной)?|ом\s*[1-3])(?=\s|$|[.,])/i);
       if (cM && cM.at(1) && $('pCol')) { let v = cM.at(1).toUpperCase().replace(/\s+с\s+половиной/i, '.5').replace(',', '.').replace(/ОДИН|ДВА|ТРИ|ЧЕТЫРЕ/gi, m => numC[m.toLowerCase()]).replace(/\s+/g,''); $('pCol').value = v.replace('А','A').replace('Б','B').replace('С','C').replace('Д','D'); rm(cM.at(0)); }
     }
-
-    if (low.includes('не нужен') || low.includes('сами') || low.includes('привезем') || low.includes('привезём')) {
+     if (low.includes('не нужен') || low.includes('сами') || low.includes('привезем') || low.includes('привезём')) {
       if ($('btnSelf')) $('btnSelf').click();
       rm(/курьер\s+не\s+нужен|сами\s+привез[а-яё]*/gi);
     } else if (low.includes('курьер') || low.includes('забрать') || low.includes('адрес') || low.includes('улиц') || low.includes('клиник')) {
       if ($('btnCourier')) $('btnCourier').click();
-      const cm = txt.match(/(?:курьер\s+нужен\s+на\s+адрес|нужен\s+курьер|курьер|забрать|по\s+адресу|адрес|из\s+клиники|с\s+улицы|улица|ул\.?)\s*[:\-]?\s*([^,.]+?)(?=\s+(?:нужно|надо|обратить|внимание|диск\s*колорит|дисколорит|особенн|пожелан|винтов|цемент|фиксац|срок|сдать|готово|примечан|$)|[,.]|$)/i);
-      if (cm && cm.at(1) && cm.at(1).trim().length > 2 && $('pCour')) { $('pCour').value = cm.at(1).trim(); rm(cm.at(0)); }
+           const cm = txt.match(/(?:курьер\s+нужен\s+на\s+адрес|курьер\s+нужен|нужен\s+курьер|курьер|забрать|по\s+адресу|адрес|из\s+клиники|с\s+улицы|улица|ул\.?)\s*[:\-]?\s*([^,.]+?)(?=\s+(?:нужно|надо|обратить|внимание|диск\s*колорит|дисколорит|особенн|пожелан|винтов|цемент|фиксац|срок|сдать|готово|примечан|$)|[,.]|$)/i);
     }
-        const phM = noteRest.match(/(?:(?:фото\s*протокол[а-я]*|фотографи[а-я]*|фотк[а-я]*|фото[а-я]*|сним[а-я]*|файл[а-я]*)\s+)?(?:отправил[а-я]*|скинул[а-я]*|выслал[а-я]*|переслал[а-я]*|загрузил[а-я]*|в|на)?\s*(?:в\s+)?(телеграм[а-я]*|telegram|тг|макс[а-я]*|max|ватсап[а-я]*|вотсап[а-я]*|whatsapp)/i);
+          const phM = noteRest.match(/(?:(?:фото\s*протокол[а-я]*|фотографи[а-я]*|фотк[а-я]*|фото[а-я]*|сним[а-я]*|файл[а-я]*|отправил[а-я]*|скинул[а-я]*|выслал[а-я]*|переслал[а-я]*|загрузил[а-я]*|в|на)\s+){0,4}(телеграм[а-я]*|телег[а-я]*|telegram|тг|макс[а-я]*|max|ватсап[а-я]*|вотсап[а-я]*|whatsapp)(?:\s+(?:отправил[а-я]*|скинул[а-я]*|выслал[а-я]*|переслал[а-я]*|загрузил[а-я]*|фото\s*протокол[а-я]*|фотографи[а-я]*|фотк[а-я]*|фото[а-я]*|сним[а-я]*|файл[а-я]*)){0,3}/i);
     if (phM && phM.at(1) && $('pPhoto')) {
       const m = phM.at(1).toLowerCase();
       $('pPhoto').value = 'Отправил в ' + (m.startsWith('тел') || m.startsWith('tel') || m === 'тг' ? 'Telegram' : (m.startsWith('мак') || m.startsWith('max') ? 'MAX' : 'WhatsApp'));
